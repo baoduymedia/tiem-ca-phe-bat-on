@@ -1,0 +1,10 @@
+# Quy tắc dự án: Tiệm Cà Phê Bất Ổn
+- Tech stack bắt buộc: Vite, React 18+, TypeScript (strict mode), Tailwind CSS, Phaser 3, Zustand, Howler.js.
+- Khung hiển thị luôn giữ tỷ lệ dọc 9:16 (mobile-first), căn giữa có khung nền tối khi mở trên desktop.
+- Tách biệt dữ liệu: Không hardcode giá bán, thời gian pha chế hay câu thoại khách hàng trong file logic; mọi thông số phải đọc từ file `tiem_ca_phe_bat_on_game_data.json`.
+- Bảng màu Cozy bắt buộc cho UI & Placeholder: Vàng kem (#FFF3D6), Nâu cà phê (#6F4E37), Xanh lá tán cây (#5C9E54), Đỏ ghế nhựa (#E04F4F), Xanh ngọc (#2EB8AC).
+- Đồ họa placeholder: Khi chưa có sprite vẽ tay, dùng Vector/SVG hoặc Phaser Graphics gọn đẹp theo đúng bảng màu Cozy để game chạy preview được ngay.
+- Kiểm thử: Luôn chạy `npm run build` để đảm bảo không có lỗi TypeScript trước khi báo hoàn thành bất kỳ Milestone nào.
+- Luôn ưu tiên đọc file .agent/PROJECT_MAP.md trước khi tìm kiếm file trong dự án, và cập nhật lại file này sau mỗi lần thêm/xóa/sửa cấu trúc code.
+- Khi hoàn thành mỗi Milestone hoặc khi người dùng yêu cầu "chốt sổ", lập tức cập nhật .agent/PROGRESS.md theo skill session-handoff để sẵn sàng bàn giao phiên làm việc mới.
+- Luôn áp dụng skill lean-coding: không đọc file lock/dist, chỉ sửa cục bộ và trả lời ngắn gọn không dán lại code dài ra chat.

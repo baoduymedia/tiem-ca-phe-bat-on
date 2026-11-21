@@ -1,0 +1,234 @@
+@import "tailwindcss";
+
+/* Cozy Saigon Sidewalk Idle Tycoon Theme System v3.0 */
+:root {
+  /* 12 Semantic Cozy Colors */
+  --color-robusta-dark: #24140B;
+  --color-roasted-coffee: #422615;
+  --color-warm-phin: #633E24;
+  --color-caramel-swirl: #D4A373;
+  --color-condensed-milk: #FFF8E7;
+  --color-pure-milk-foam: #FFFEFA;
+  --color-stool-red: #D94141;
+  --color-stool-teal: #1F9E93;
+  --color-ong-tho-gold: #FFD700;
+  --color-golden-bean: #F59E0B;
+  --color-canopy-green: #4E8A47;
+  --color-shipper-orange: #EA580C;
+
+  /* Legacy / Quick Aliases */
+  --color-cream: #FFF8E7;
+  --color-coffee: #633E24;
+  --color-green: #4E8A47;
+  --color-red: #D94141;
+  --color-teal: #1F9E93;
+  --color-dark: #24140B;
+  --color-gold: #FFD700;
+
+  /* 3D Tactile Cozy Shadows & Borders */
+  --shadow-cozy-card: 0 8px 24px -4px rgba(36, 20, 11, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+  --shadow-wood-inset: inset 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 -2px 4px rgba(255, 255, 255, 0.08);
+  --shadow-kraft-paper: 0 10px 30px -5px rgba(20, 10, 5, 0.55), 0 0 1px 1px rgba(212, 163, 115, 0.3);
+  --shadow-retro-btn: 0 4px 0 #321B0D, 0 6px 12px rgba(0, 0, 0, 0.4);
+  --shadow-retro-btn-pressed: 0 1px 0 #321B0D, 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+@theme {
+  --color-robusta-dark: #24140B;
+  --color-roasted-coffee: #422615;
+  --color-warm-phin: #633E24;
+  --color-caramel-swirl: #D4A373;
+  --color-condensed-milk: #FFF8E7;
+  --color-pure-milk-foam: #FFFEFA;
+  --color-stool-red: #D94141;
+  --color-stool-teal: #1F9E93;
+  --color-ong-tho-gold: #FFD700;
+  --color-golden-bean: #F59E0B;
+  --color-canopy-green: #4E8A47;
+  --color-shipper-orange: #EA580C;
+
+  --color-cream: #FFF8E7;
+  --color-coffee: #633E24;
+  --color-green: #4E8A47;
+  --color-red: #D94141;
+  --color-teal: #1F9E93;
+  --color-dark: #24140B;
+  --color-gold: #FFD700;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #170C06;
+  font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+  color: #FFF8E7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Display Typography */
+.font-display {
+  font-family: 'Comfortaa', 'Nunito', cursive, sans-serif;
+}
+
+.font-pixel {
+  font-family: 'VT323', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* ================= RETRO PIXEL ART UI SYSTEM ================= */
+.pixel-box {
+  background: #2A170C;
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0px #000000;
+  border-radius: 2px;
+}
+
+.pixel-box-wood {
+  background: #3B2211;
+  border: 3px solid #000000;
+  box-shadow: 3px 3px 0px #000000;
+  border-radius: 2px;
+}
+
+.pixel-box-gold {
+  background: #24140B;
+  border: 2px solid #000000;
+  outline: 2px solid #D4A373;
+  box-shadow: 3px 3px 0px #000000;
+  border-radius: 2px;
+}
+
+.pixel-panel {
+  background: #24140B;
+  border-top: 3px solid #000000;
+  border-left: 3px solid #000000;
+  border-right: 3px solid #000000;
+  box-shadow: 0 -4px 0px #000000;
+  border-radius: 0;
+}
+
+/* Pixel Buttons */
+.pixel-btn {
+  font-family: 'VT323', monospace;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.pixel-btn:hover {
+  filter: brightness(1.08);
+}
+
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px #000000;
+}
+
+.pixel-btn-gold {
+  background: #F59E0B;
+  color: #1A0E05;
+  font-weight: bold;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.pixel-btn-wood {
+  background: #4A2810;
+  color: #FFF8E7;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.pixel-btn-red {
+  background: #DC2626;
+  color: #FFFFFF;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.pixel-btn-green {
+  background: #16A34A;
+  color: #FFFFFF;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.pixel-btn-teal {
+  background: #0D9488;
+  color: #FFFFFF;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.pixel-badge {
+  border: 1.5px solid #000000;
+  box-shadow: 1.5px 1.5px 0px #000000;
+  border-radius: 2px;
+}
+
+/* Tactile 3D Retro Button Styles */
+.btn-retro-gold {
+  background: linear-gradient(180deg, #FFE873 0%, #FFD700 40%, #E6A100 100%);
+  color: #24140B;
+  font-weight: 900;
+  box-shadow: 0 4px 0 #9E6B00, 0 6px 14px rgba(0, 0, 0, 0.4);
+  transition: all 0.1s ease;
+}
+.btn-retro-gold:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #9E6B00, 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.btn-retro-wood {
+  background: linear-gradient(180deg, #5A351E 0%, #422615 100%);
+  color: #FFF8E7;
+  font-weight: 800;
+  border: 1px solid rgba(212, 163, 115, 0.5);
+  box-shadow: 0 3px 0 #201007, 0 5px 10px rgba(0, 0, 0, 0.35);
+  transition: all 0.1s ease;
+}
+.btn-retro-wood:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #201007, 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+.btn-retro-red {
+  background: linear-gradient(180deg, #F05555 0%, #D94141 100%);
+  color: #FFFFFF;
+  font-weight: 900;
+  box-shadow: 0 4px 0 #7A1A1A, 0 6px 14px rgba(0, 0, 0, 0.4);
+  transition: all 0.1s ease;
+}
+.btn-retro-red:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #7A1A1A, 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Custom Scrollbar for Cozy Modals */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(36, 20, 11, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 163, 115, 0.6);
+  border-radius: 9999px;
+  border: 1px solid rgba(36, 20, 11, 0.5);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.8);
+}

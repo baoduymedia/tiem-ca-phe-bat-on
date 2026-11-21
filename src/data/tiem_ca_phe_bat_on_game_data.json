@@ -1,0 +1,583 @@
+{
+  "meta": {
+    "projectName": "Tiệm Cà Phê Bất Ổn",
+    "subtitle": "Từ Vỉa Hè Đến Chuỗi Đế Chế!",
+    "version": "1.0.0-mvp",
+    "currency": {
+      "soft": {
+        "id": "gold",
+        "name": "Tiền Xu (VNĐ)",
+        "symbol": "đ"
+      },
+      "hard": {
+        "id": "goldenBeans",
+        "name": "Hạt Cà Phê Vàng",
+        "symbol": "Hạt"
+      },
+      "reputation": {
+        "id": "reputation",
+        "name": "Điểm Sống Ảo",
+        "symbol": "★"
+      }
+    },
+    "formulas": {
+      "upgradeCost": "Math.round(baseCost * Math.pow(1.18, level - 1))",
+      "drinkPrice": "Math.round(basePrice * (1 + 0.15 * (level - 1)))",
+      "offlineEarnings": "incomePerSecond * Math.min(elapsedSeconds, maxCapSeconds) * 0.5",
+      "defaultOfflineCapSeconds": 14400
+    }
+  },
+  "stages": [
+    {
+      "id": 1,
+      "key": "via_he",
+      "name": "Quán Cóc Vỉa Hè",
+      "isMvp": true,
+      "unlockCondition": {
+        "gold": 0,
+        "reputation": 0
+      },
+      "nextStageRequirement": {
+        "gold": 500000,
+        "reputation": 20
+      },
+      "milestoneUpgrade": {
+        "id": "xe_day_luu_dong",
+        "name": "Xe Đẩy Lưu Động",
+        "cost": 250000,
+        "effect": "Tăng 25% tốc độ pha chế và mở khóa hũ tiền Offline cơ bản"
+      },
+      "maxSeats": 4,
+      "features": [
+        "manual_brew_asmr",
+        "event_rain",
+        "event_urban_order"
+      ]
+    },
+    {
+      "id": 2,
+      "key": "booth_takeaway",
+      "name": "Booth Take-Away (Kiosk)",
+      "isMvp": true,
+      "unlockCondition": {
+        "gold": 500000,
+        "reputation": 20
+      },
+      "nextStageRequirement": {
+        "gold": 3500000,
+        "reputation": 100
+      },
+      "maxSeats": 2,
+      "shipperQueueSlots": 4,
+      "features": [
+        "delivery_app",
+        "hire_staff",
+        "offline_income_cap_4h"
+      ]
+    },
+    {
+      "id": 3,
+      "key": "quan_nho",
+      "name": "Quán Nhỏ Trong Hẻm (Indie Cafe)",
+      "isMvp": true,
+      "unlockCondition": {
+        "gold": 3500000,
+        "reputation": 100
+      },
+      "nextStageRequirement": {
+        "gold": 25000000,
+        "reputation": 350
+      },
+      "maxSeats": 8,
+      "features": [
+        "decor_system",
+        "retail_shelf",
+        "kol_visits",
+        "polaroid_photo_mode"
+      ]
+    },
+    {
+      "id": 4,
+      "key": "flagship",
+      "name": "Quán Lớn (Flagship 2 Tầng)",
+      "isMvp": false,
+      "comingSoon": true,
+      "unlockCondition": {
+        "gold": 25000000,
+        "reputation": 350
+      }
+    },
+    {
+      "id": 5,
+      "key": "roastery",
+      "name": "Xưởng Rang Xay & Bếp Trung Tâm",
+      "isMvp": false,
+      "comingSoon": true
+    },
+    {
+      "id": 6,
+      "key": "franchise_global",
+      "name": "Chuỗi Toàn Quốc & Xuất Ngoại",
+      "isMvp": false,
+      "comingSoon": true
+    }
+  ],
+  "recipes": [
+    {
+      "id": "cf_den_da",
+      "name": "Cà Phê Phin Đen Đá",
+      "stage": 1,
+      "category": "drink",
+      "basePrice": 15000,
+      "brewTimeSec": 2.5,
+      "unlockCost": 0,
+      "reputationGain": 2,
+      "asmrSfx": "sfx_phin_drip",
+      "isHot": false,
+      "description": "Đậm đà chuẩn gu vỉa hè, uống một ngụm tỉnh tới sáng mai."
+    },
+    {
+      "id": "cf_sua_da",
+      "name": "Cà Phê Sữa Đá",
+      "stage": 1,
+      "category": "drink",
+      "basePrice": 15000,
+      "brewTimeSec": 2.5,
+      "unlockCost": 0,
+      "reputationGain": 2,
+      "asmrSfx": "sfx_stir_spoon",
+      "isHot": false,
+      "description": "Cà phê phin đậm đặc kết hợp sữa đặc Ông Thọ béo ngậy."
+    },
+    {
+      "id": "bac_xiu",
+      "name": "Bạc Xỉu Đá",
+      "stage": 1,
+      "category": "drink",
+      "basePrice": 20000,
+      "brewTimeSec": 3.0,
+      "unlockCost": 80000,
+      "reputationGain": 3,
+      "asmrSfx": "sfx_pour_milk",
+      "isHot": false,
+      "description": "Nhiều sữa ít cà phê, chân ái của hội sợ say nhưng vẫn muốn ra quán."
+    },
+    {
+      "id": "banh_mi_que",
+      "name": "Bánh Mì Que Pate",
+      "stage": 2,
+      "category": "food",
+      "basePrice": 18000,
+      "brewTimeSec": 2.0,
+      "unlockCost": 150000,
+      "reputationGain": 3,
+      "asmrSfx": "sfx_crunch",
+      "isHot": true,
+      "description": "Giòn rụm, thơm nức mùi pate gan và tương ớt cay tê."
+    },
+    {
+      "id": "tra_dao_cam_sa",
+      "name": "Trà Đào Cam Sả",
+      "stage": 2,
+      "category": "drink",
+      "basePrice": 28000,
+      "brewTimeSec": 3.5,
+      "unlockCost": 300000,
+      "reputationGain": 4,
+      "asmrSfx": "sfx_shaker",
+      "isHot": false,
+      "description": "Best-seller của mọi chiếc Booth, 3 miếng đào giòn rụm."
+    },
+    {
+      "id": "cf_muoi",
+      "name": "Cà Phê Muối Kem Béo",
+      "stage": 2,
+      "category": "drink",
+      "basePrice": 32000,
+      "brewTimeSec": 4.0,
+      "unlockCost": 550000,
+      "reputationGain": 5,
+      "asmrSfx": "sfx_espresso_machine",
+      "isHot": false,
+      "description": "Lớp kem muối mặn ngọt sánh mịn, shipper xếp hàng chỉ để mua món này."
+    },
+    {
+      "id": "banh_tiramisu",
+      "name": "Bánh Tiramisu / Croissant",
+      "stage": 3,
+      "category": "food",
+      "basePrice": 42000,
+      "brewTimeSec": 2.0,
+      "unlockCost": 1200000,
+      "reputationGain": 6,
+      "asmrSfx": "sfx_plate_clink",
+      "isHot": false,
+      "description": "Món cứu đói cho sinh viên chạy deadline 4 tiếng chưa đứng dậy."
+    },
+    {
+      "id": "matcha_latte",
+      "name": "Matcha Latte Nhật Bản",
+      "stage": 3,
+      "category": "drink",
+      "basePrice": 45000,
+      "brewTimeSec": 4.5,
+      "unlockCost": 1800000,
+      "reputationGain": 7,
+      "asmrSfx": "sfx_whisk",
+      "isHot": false,
+      "description": "Đánh tay bằng chổi chasen, lên ảnh sống ảo xanh mướt mắt."
+    },
+    {
+      "id": "cf_dong_chai",
+      "name": "Cà Phê Đóng Chai (Kệ Bán Lẻ)",
+      "stage": 3,
+      "category": "retail",
+      "basePrice": 55000,
+      "brewTimeSec": 0.0,
+      "unlockCost": 2500000,
+      "reputationGain": 8,
+      "asmrSfx": "sfx_cash_register",
+      "isHot": false,
+      "autoPickup": true,
+      "description": "Khách uống xong tiện tay xách thêm 1 chai mang về văn phòng."
+    }
+  ],
+  "customers": [
+    {
+      "id": "xe_om",
+      "name": "Chú Ba Xe Ôm",
+      "minStage": 1,
+      "patienceSec": 22,
+      "tipChance": 0.25,
+      "tipMultiplier": 0.15,
+      "orderQuantityRange": [
+        1,
+        1
+      ],
+      "favoriteRecipes": [
+        "cf_den_da",
+        "cf_sua_da"
+      ],
+      "dialogues": {
+        "order": [
+          "Cho chú ly đen đá ít đường nha con, sắp tới giờ nổ cuốc rồi!",
+          "Nắng quá trời nắng, làm gấp cho chú ly đen đá giải nhiệt đi.",
+          "Quán này pha đậm nè, cho chú ly cà phê sữa đá như cũ nha!"
+        ],
+        "waiting": [
+          "Nhanh tay xíu con ơi, khách gọi đón ngoài ngã tư rồi.",
+          "Nghe tiếng nhỏ giọt mà ghiền ghê."
+        ],
+        "happy": [
+          "Đã cái nư! Giữ tiền lẻ ăn kẹo nha chủ quán.",
+          "Uống ly này xong chạy tới tối không biết mệt luôn!"
+        ],
+        "angry": [
+          "Thôi chú đi chở khách đây, trễ cuốc mất rồi!",
+          "Đợi lâu quá chắc chú ngủ gục trên xe luôn quá."
+        ]
+      }
+    },
+    {
+      "id": "hang_xom",
+      "name": "Cô Bảy Hàng Xóm",
+      "minStage": 1,
+      "patienceSec": 35,
+      "tipChance": 0.15,
+      "tipMultiplier": 0.2,
+      "orderQuantityRange": [
+        1,
+        1
+      ],
+      "favoriteRecipes": [
+        "cf_sua_da",
+        "bac_xiu",
+        "tra_dao_cam_sa"
+      ],
+      "dialogues": {
+        "order": [
+          "Cho cô ly cà phê sữa ít đá nha, tiện thể kể cho nghe chuyện đầu hẻm mới xảy ra...",
+          "Ủa quán mới đổi bảng hiệu hả? Làm cô ly bạc xỉu thơm béo đi."
+        ],
+        "waiting": [
+          "Nghe nói ông Tám cuối hẻm mới trúng đất, sắp mua thêm 3 con mèo đó!",
+          "Nhớ dọn ghế gọn gọn nha con, hồi nãy cô mới thấy xe trật tự chạy ngoài đường lớn á."
+        ],
+        "happy": [
+          "Pha khéo ghê, đúng là tuổi trẻ tài cao!",
+          "Để cô giới thiệu mấy bà hội dưỡng sinh sáng mai ra ủng hộ."
+        ],
+        "angry": [
+          "Gớm, đông khách quá quên luôn hàng xóm láng giềng ha!"
+        ]
+      }
+    },
+    {
+      "id": "shipper",
+      "name": "Anh Shipper Công Nghệ",
+      "minStage": 2,
+      "patienceSec": 20,
+      "tipChance": 0.4,
+      "tipMultiplier": 0.25,
+      "orderQuantityRange": [
+        2,
+        5
+      ],
+      "favoriteRecipes": [
+        "cf_muoi",
+        "tra_dao_cam_sa",
+        "banh_mi_que",
+        "cf_sua_da"
+      ],
+      "isSpeedBonus": true,
+      "dialogues": {
+        "order": [
+          "Đơn app #4092 nha quán ơi! 3 ly cà phê muối ít đá, khách đang hối quá trời!",
+          "Cho mình lấy đơn combo văn phòng, làm nhanh giúp mình kẻo bị đánh giá 1 sao!",
+          "Quán lên top tìm kiếm rồi hay sao mà hôm nay đơn nổ liên tục vậy?"
+        ],
+        "waiting": [
+          "Sắp xong chưa quán ơi, mình còn 2 đơn ghép nữa!",
+          "Khách nhắn 'không lấy ống hút, cho nhiều kem muối' nha!"
+        ],
+        "happy": [
+          "Quá tốc độ! Chấm quán 5 sao uy tín luôn!",
+          "Đóng gói kỹ ghê, không sợ đổ dọc đường. Cảm ơn quán!"
+        ],
+        "angry": [
+          "Hủy đơn mất tiêu rồi quán ơi, lâu quá khách không đợi nổi!"
+        ]
+      }
+    },
+    {
+      "id": "sinh_vien",
+      "name": "Sinh Viên Chạy Deadline",
+      "minStage": 3,
+      "patienceSec": 40,
+      "tipChance": 0.3,
+      "tipMultiplier": 0.2,
+      "orderQuantityRange": [
+        1,
+        2
+      ],
+      "favoriteRecipes": [
+        "cf_den_da",
+        "matcha_latte",
+        "banh_tiramisu"
+      ],
+      "needsWifiAndSocket": true,
+      "dialogues": {
+        "order": [
+          "Cho em ly đen đá gấp đôi shot với cái bánh Tiramisu, tối nay em nộp đồ án rồi!",
+          "Quán có ổ cắm gần cửa sổ không ạ? Cho em 1 Matcha Latte ít ngọt nha.",
+          "Mật khẩu Wi-Fi quán mình là gì vậy ạ? Em ngồi tầm... tới lúc đóng cửa nha!"
+        ],
+        "waiting": [
+          "Mới gõ được tiêu đề mà buồn ngủ quá trời...",
+          "Nhạc Lo-fi quán này bật cuốn ghê, tự dưng có mood làm bài."
+        ],
+        "happy": [
+          "Cà phê cứu rỗi linh hồn! Kịp deadline rồi mọi người ơi!",
+          "Quán vừa mát vừa yên tĩnh, tuần sau em kéo nguyên nhóm tới họp."
+        ],
+        "angry": [
+          "Chờ nước lâu quá em hết luôn ý tưởng làm slide rồi..."
+        ]
+      }
+    },
+    {
+      "id": "kol",
+      "name": "Reviewer / TikToker Sống Ảo",
+      "minStage": 3,
+      "patienceSec": 30,
+      "tipChance": 0.6,
+      "tipMultiplier": 0.5,
+      "orderQuantityRange": [
+        2,
+        3
+      ],
+      "favoriteRecipes": [
+        "matcha_latte",
+        "cf_muoi",
+        "banh_tiramisu",
+        "cf_dong_chai"
+      ],
+      "triggersTrafficBoost": {
+        "multiplier": 2.0,
+        "durationSec": 60
+      },
+      "dialogues": {
+        "order": [
+          "Hello mọi người, hôm nay mình đi review một quán cà phê ẩn trong hẻm siêu xinh!",
+          "Cho mình gọi 2 món đẹp nhất quán để quay góc nghiêng thần thánh nha!"
+        ],
+        "waiting": [
+          "Ánh sáng góc này xuất sắc luôn, chụp 100 tấm kiểu gì cũng có ảnh đăng Threads.",
+          "Decor đậm chất Việt Nam mà nhìn ấm cúng ghê."
+        ],
+        "happy": [
+          "10 điểm không có nhưng! Mình đăng clip ngay đây, chuẩn bị đón bão khách nha quán!",
+          "Nước ngon mà góc nào cũng lên hình xịn, chắc chắn sẽ viral!"
+        ],
+        "angry": [
+          "Khâu phục vụ hơi chậm nha, chắc mình phải trừ điểm trong bài review mất."
+        ]
+      }
+    }
+  ],
+  "randomEvents": [
+    {
+      "id": "mua_rao",
+      "name": "Mưa Rào Bất Chợt",
+      "minStage": 1,
+      "maxStage": 1,
+      "warningSec": 0,
+      "reactionWindowSec": 5,
+      "buttonLabel": "CĂNG BẠT NGAY!",
+      "alertText": "Trời đổ mưa rào Sài Gòn! Bấm căng bạt giữ khách!",
+      "successEffect": "Giữ nguyên toàn bộ khách + Tăng 30% tip trong 30 giây",
+      "failPenalty": "Khách hiện tại chạy trú mưa hết (mất order đang chờ)"
+    },
+    {
+      "id": "trat_tu_do_thi",
+      "name": "Trật Tự Đô Thị Đi Ngang",
+      "minStage": 1,
+      "maxStage": 1,
+      "warningSec": 3,
+      "reactionWindowSec": 4,
+      "buttonLabel": "THU GHẾ NHANH!",
+      "alertText": "Tò te tí te... Xe trật tự sắp tới! Nhanh tay thu ghế nhựa vào trong!",
+      "successEffect": "An toàn vượt qua! Cộng thêm 10.000đ thưởng nhanh tay",
+      "failPenalty": "Bị nhắc nhở và trừ 50.000đ (hoặc tối đa 15% tiền hiện có)"
+    },
+    {
+      "id": "doan_khach_cong_ty",
+      "name": "Đoàn Khách Công Ty Đặt Lớn",
+      "minStage": 2,
+      "maxStage": 3,
+      "warningSec": 2,
+      "reactionWindowSec": 25,
+      "buttonLabel": "NHẬN ĐƠN 10 LY!",
+      "alertText": "Phòng Marketing đối diện đặt nóng 10 ly! Nhận đơn để x2 doanh thu?",
+      "successEffect": "Thưởng nóng 350.000đ + 10 Điểm Sống Ảo + 2 Hạt Cà Phê Vàng",
+      "failPenalty": "Không bị phạt, chỉ bỏ lỡ thưởng"
+    }
+  ],
+  "upgrades": [
+    {
+      "id": "phin_nhom_xin",
+      "name": "Bộ Phin Nhôm Xịn",
+      "stage": 1,
+      "baseCost": 45000,
+      "maxLevel": 10,
+      "effect": "Giảm 8% thời gian pha chế mỗi cấp"
+    },
+    {
+      "id": "ghe_nhua_them",
+      "name": "Mua Thêm Ghế Nhựa Xanh Đỏ",
+      "stage": 1,
+      "baseCost": 60000,
+      "maxLevel": 4,
+      "effect": "Tăng thêm 1 chỗ ngồi vỉa hè mỗi cấp"
+    },
+    {
+      "id": "staff_barista_1",
+      "name": "Thuê Bạn Sinh Viên Phụ Quán",
+      "stage": 2,
+      "baseCost": 400000,
+      "maxLevel": 5,
+      "effect": "Tự động pha chế đồ uống và tăng thu nhập Offline"
+    },
+    {
+      "id": "staff_cat_shipper",
+      "name": "Mèo Mướp Giao Đơn Shipper",
+      "stage": 2,
+      "baseCost": 0,
+      "hardCurrencyCost": 50,
+      "maxLevel": 1,
+      "effect": "Tự động đóng gói và giao đơn cho Shipper (cũng có trong Starter Pack 22k)"
+    },
+    {
+      "id": "may_lanh_wifi",
+      "name": "Máy Lạnh & Wi-Fi Tốc Độ Cao",
+      "stage": 3,
+      "baseCost": 1500000,
+      "maxLevel": 5,
+      "effect": "Tăng 20% độ kiên nhẫn cho khách và tăng Điểm Sống Ảo"
+    }
+  ],
+  "decor": [
+    {
+      "id": "bien_cho_du",
+      "name": "Biển 'Coi chừng chó dữ nhưng thực ra rất hiền'",
+      "stage": 1,
+      "costGold": 35000,
+      "reputationBonus": 5
+    },
+    {
+      "id": "den_long_hoi_an",
+      "name": "Dàn Đèn Lồng Ấm Áp",
+      "stage": 3,
+      "costGold": 850000,
+      "reputationBonus": 25
+    },
+    {
+      "id": "goc_song_ao_da_lat",
+      "name": "Bộ Góc Sống Ảo Đà Lạt Mộng Mơ",
+      "stage": 3,
+      "costGoldenBeans": 80,
+      "reputationBonus": 50
+    },
+    {
+      "id": "ke_ban_le_merch",
+      "name": "Kệ Cà Phê Đóng Chai & Ly Đổi Màu",
+      "stage": 3,
+      "costGold": 1800000,
+      "reputationBonus": 40
+    }
+  ],
+  "shopSkus": [
+    {
+      "sku": "reward_offline_x2",
+      "type": "rewarded_ad",
+      "title": "x2 Tiền Ngoại Tuyến",
+      "priceVnd": 0,
+      "reward": "Nhân đôi tiền trong hũ Idle"
+    },
+    {
+      "sku": "reward_vip_wave",
+      "type": "rewarded_ad",
+      "title": "Gọi Đoàn Khách VIP",
+      "priceVnd": 0,
+      "reward": "Tăng tốc độ khách vào x2 trong 2 phút"
+    },
+    {
+      "sku": "iap_starter_pack",
+      "type": "iap",
+      "title": "Gói Khởi Nghiệp 'Ly Trà Sữa'",
+      "priceVnd": 22000,
+      "reward": "Mèo Mướp Giao Đơn + 50 Hạt Vàng + 200.000đ Xu"
+    },
+    {
+      "sku": "iap_noads_week",
+      "type": "iap",
+      "title": "Vé Tuần Không Quảng Cáo",
+      "priceVnd": 19000,
+      "reward": "Bỏ qua mọi quảng cáo thưởng trong 7 ngày"
+    },
+    {
+      "sku": "iap_noads_month",
+      "type": "iap",
+      "title": "Vé Tháng Không Quảng Cáo",
+      "priceVnd": 49000,
+      "reward": "Bỏ qua mọi quảng cáo thưởng trong 30 ngày + 10 Hạt Vàng/ngày"
+    },
+    {
+      "sku": "iap_noads_forever",
+      "type": "iap",
+      "title": "Đặc Quyền Trọn Đời",
+      "priceVnd": 119000,
+      "reward": "Xóa toàn bộ quảng cáo thưởng vĩnh viễn"
+    }
+  ]
+}
