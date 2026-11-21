@@ -13,6 +13,8 @@ import { CoffeeBrewingModal } from './components/CoffeeBrewingModal';
 import { RenameShopModal } from './components/RenameShopModal';
 import { PolaroidPhotoMode } from './components/PolaroidPhotoMode';
 import { DailyQuestPanel } from './components/DailyQuestPanel';
+import { DecorPanel } from './components/DecorPanel';
+import { ShopPanel } from './components/ShopPanel';
 import { StageRoadmapModal } from './components/StageRoadmapModal';
 import { OfflineRewardModal } from './components/OfflineRewardModal';
 import { useGameStore, formatVND } from './store/useGameStore';
@@ -113,6 +115,10 @@ export function App() {
       } else if (e.code === 'Digit2') {
         setActiveTab(activeTab === 'upgrade' ? null : 'upgrade');
       } else if (e.code === 'Digit3') {
+        setActiveTab(activeTab === 'decor' ? null : 'decor');
+      } else if (e.code === 'Digit4') {
+        setActiveTab(activeTab === 'shop' ? null : 'shop');
+      } else if (e.code === 'Digit5') {
         setActiveTab(activeTab === 'quest' ? null : 'quest');
       } else if (e.code === 'KeyP') {
         setPhotoModeOpen(true);
@@ -297,6 +303,8 @@ export function App() {
               {/* Bottom Nav Tab Modals */}
               {activeTab === 'menu' && <MenuPanel />}
               {activeTab === 'upgrade' && <UpgradePanel />}
+              {activeTab === 'decor' && <DecorPanel />}
+              {activeTab === 'shop' && <ShopPanel />}
               {activeTab === 'quest' && <DailyQuestPanel />}
 
               {/* Daily Shift Modals */}

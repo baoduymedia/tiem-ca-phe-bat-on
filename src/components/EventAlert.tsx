@@ -73,32 +73,32 @@ export function EventAlert() {
     <>
       {/* Warning Toast */}
       {warningMsg && (
-        <div className="absolute top-20 left-4 right-4 z-40 flex justify-center animate-bounce select-none pointer-events-none">
-          <div className="bg-[#E04F4F] text-white text-xs font-bold px-4 py-2 rounded-xl shadow-2xl border-2 border-[#FFF3D6]/40 flex items-center gap-2">
-            <span>🚨</span>
-            <span>{warningMsg}</span>
+        <div className="absolute top-18 left-4 right-4 z-40 flex justify-center animate-bounce select-none pointer-events-none font-pixel">
+          <div className="bg-[#DC2626] text-white text-xs font-bold px-3 py-1.5 border-2 border-black shadow-[3px_3px_0px_#000] flex items-center gap-2">
+            <span className="text-sm">🚨</span>
+            <span className="tracking-wide uppercase">{warningMsg}</span>
           </div>
         </div>
       )}
 
       {/* Active Event Alert & Big Button */}
       {activeEvent && (
-        <div className="absolute inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center p-4 select-none">
-          <div className="bg-[#2D1B0E] border-3 border-[#FFD700] rounded-3xl p-5 text-center max-w-xs w-full shadow-2xl animate-pulse flex flex-col items-center">
-            <span className="text-4xl block mb-1">
+        <div className="absolute inset-0 z-50 bg-black/75 backdrop-blur-xs flex flex-col items-center justify-center p-4 select-none font-pixel animate-in zoom-in-95 duration-150">
+          <div className="bg-[#24140B] border-4 border-black shadow-[5px_5px_0px_#000] p-4 text-center max-w-[340px] w-full flex flex-col items-center">
+            <span className="text-4xl block mb-1 drop-shadow-[2px_2px_0px_#000]">
               {getEventIcon(activeEvent.id)}
             </span>
-            <h2 className="text-[#FFF3D6] font-black text-base mb-1 tracking-wide">
+            <h2 className="text-[#FFD700] font-black text-lg mb-1 tracking-wide uppercase drop-shadow-[1px_1px_0px_#000]">
               {activeEvent.name}
             </h2>
-            <p className="text-[#FFF3D6]/85 text-[11px] mb-3 leading-relaxed">
+            <p className="text-[#FFF8E7]/90 text-xs mb-3 leading-relaxed font-bold">
               {activeEvent.alertText}
             </p>
 
             {/* Timer bar */}
-            <div className="w-full bg-[#6F4E37] h-2.5 rounded-full overflow-hidden mb-4 border border-black/40">
+            <div className="w-full bg-[#1A0E05] h-3 border-2 border-black mb-3.5 overflow-hidden">
               <div
-                className="bg-[#FFD700] h-full transition-all duration-1000"
+                className="bg-[#EAB308] h-full transition-all duration-1000"
                 style={{
                   width: `${(timeLeft / activeEvent.durationSec) * 100}%`,
                 }}
@@ -108,16 +108,16 @@ export function EventAlert() {
             {/* Primary Action Button */}
             <button
               onClick={() => handleAction(false)}
-              className="w-full py-3 bg-gradient-to-b from-[#E04F4F] to-[#B82E2E] hover:brightness-110 active:scale-95 text-white font-black rounded-xl text-sm shadow-xl transition-all cursor-pointer border border-white/20 mb-2"
+              className="w-full py-2.5 pixel-btn pixel-btn-red text-sm font-black uppercase tracking-wider mb-2 cursor-pointer"
             >
-              {activeEvent.buttonLabel} ({timeLeft}s)
+              {activeEvent.buttonLabel} ({timeLeft}S)
             </button>
 
             {/* Solidarity Rescue Option from Cô Bảy (if trật tự đô thị) */}
             {activeEvent.id === 'trat_tu_do_thi' && (
               <button
                 onClick={() => handleAction(true)}
-                className="w-full py-2 bg-gradient-to-b from-[#27AE60] to-[#1E824C] hover:brightness-110 active:scale-95 text-white font-bold rounded-xl text-xs shadow-md border border-emerald-400 flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full py-2 pixel-btn pixel-btn-green text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <span>🏠</span> NÉP HIÊN NHÀ CÔ BẢY (CỨU VIỆN)
               </button>

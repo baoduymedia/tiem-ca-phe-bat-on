@@ -78,6 +78,23 @@ export interface RandomEventConfig {
   failPenalty: string;
 }
 
+export interface DecorConfig {
+  id: string;
+  name: string;
+  stage: number;
+  costGold?: number;
+  costGoldenBeans?: number;
+  reputationBonus: number;
+}
+
+export interface ShopSkuConfig {
+  sku: string;
+  type: string;
+  title: string;
+  priceVnd: number;
+  reward: string;
+}
+
 export const getStages = (): StageConfig[] => gameData.stages as unknown as StageConfig[];
 export const getRecipes = (): RecipeConfig[] => gameData.recipes as unknown as RecipeConfig[];
 export const getRecipesByStage = (stage: number): RecipeConfig[] =>
@@ -88,6 +105,8 @@ export const getUpgrades = (): UpgradeConfig[] =>
   gameData.upgrades as unknown as UpgradeConfig[];
 export const getRandomEvents = (): RandomEventConfig[] =>
   gameData.randomEvents as unknown as RandomEventConfig[];
+export const getDecor = (): DecorConfig[] => ((gameData as any).decor || []) as DecorConfig[];
+export const getShopSkus = (): ShopSkuConfig[] => ((gameData as any).shopSkus || []) as ShopSkuConfig[];
 export const getFormulas = () => gameData.meta.formulas;
 
 /** Tính giá bán theo level món: Math.round(BasePrice * (1 + 0.15 * (level - 1))) */

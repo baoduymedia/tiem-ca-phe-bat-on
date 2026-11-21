@@ -12,9 +12,9 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'menu', label: 'Thực đơn', icon: '☕', hotkey: '1' },
   { id: 'upgrade', label: 'Nâng cấp', icon: '⚡', hotkey: '2' },
-  { id: 'decor', label: 'Trang trí', icon: '🪴' },
-  { id: 'shop', label: 'Chợ phố', icon: '🏪' },
-  { id: 'quest', label: 'Nhiệm vụ', icon: '📜', hotkey: '3' },
+  { id: 'decor', label: 'Trang trí', icon: '🪴', hotkey: '3' },
+  { id: 'shop', label: 'Chợ phố', icon: '🏪', hotkey: '4' },
+  { id: 'quest', label: 'Nhiệm vụ', icon: '📜', hotkey: '5' },
 ];
 
 export function BottomNav() {

@@ -104,6 +104,8 @@ export interface GameActions {
   unlockRecipe: (recipeId: string, cost: number) => boolean;
   upgradeRecipe: (recipeId: string, cost: number) => boolean;
   buyUpgrade: (upgradeId: string, cost: number) => boolean;
+  buyDecor: (decorId: string, costGold?: number, costBeans?: number, repBonus?: number) => boolean;
+  toggleEquipDecor: (decorId: string) => void;
   // Real-life Community Solidarity Actions
   borrowFromUncleBa: (amount?: number) => void;
   repayUncleBa: () => boolean;
@@ -342,6 +344,32 @@ export const useGameStore = create<GameState & GameActions>()(
           },
         }));
         return true;
+      },
+
+      buyDecor: (decorId: string, costGold = 0, costBeans = 0, repBonus = 0) => {
+        const { gold, goldenBeans, ownedDecor, reputation } = get();
+        if (ownedDecor.includes(decorId)) return false;
+        if (costGold > 0 && gold < costGold) return false;
+        if (costBeans > 0 && goldenBeans < costBeans) return false;
+        set((s) => ({
+          gold: s.gold - costGold,
+          goldenBeans: s.goldenBeans - costBeans,
+          ownedDecor: [...s.ownedDecor, decorId],
+          equippedDecor: [...s.equippedDecor, decorId],
+          reputation: s.reputation + repBonus,
+        }));
+        return true;
+      },
+
+      toggleEquipDecor: (decorId: string) => {
+        set((s) => {
+          const isEquipped = s.equippedDecor.includes(decorId);
+          return {
+            equippedDecor: isEquipped
+              ? s.equippedDecor.filter((id) => id !== decorId)
+              : [...s.equippedDecor, decorId],
+          };
+        });
       },
 
       // Real-life Community Solidarity Actions
