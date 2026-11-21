@@ -91,9 +91,7 @@ export class Customer extends Phaser.GameObjects.Container {
       this.bodyGraphic.fillEllipse(0, 0, 36, 11);
 
       this.spriteImage = scene.add.image(0, -32, spriteKey);
-      if (config.id === 'xe_om') {
-        this.spriteImage.setDisplaySize(64, 74);
-      } else if (config.id === 'co_ve_so' || config.id === 'hang_xom') {
+      if (config.id === 'xe_om' || config.id === 'co_ve_so' || config.id === 'hang_xom') {
         this.spriteImage.setDisplaySize(42, 76);
       } else {
         this.spriteImage.setDisplaySize(38, 76);

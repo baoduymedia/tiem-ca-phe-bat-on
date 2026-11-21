@@ -33,4 +33,9 @@ export const SPRITES = {
     pet_meo_muop: '/assets/sprites/pet_meo_muop.png',
     pet_cun_vang: '/assets/sprites/pet_cun_vang.png',
   },
+  // Nhân vật chủ quán (Nam / Nữ)
+  owner: {
+    chu_quan_nam: '/assets/sprites/chu_quan_nam.png',
+    chu_quan_nu: '/assets/sprites/chu_quan_nu.png',
+  },
 } as const;

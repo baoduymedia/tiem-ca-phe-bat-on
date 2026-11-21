@@ -14,6 +14,8 @@ const SUGGESTIONS = [
 export const RenameShopModal: React.FC = () => {
   const shopName = useGameStore((s) => s.shopName);
   const setShopName = useGameStore((s) => s.setShopName);
+  const ownerGender = useGameStore((s) => s.ownerGender);
+  const setOwnerGender = useGameStore((s) => s.setOwnerGender);
   const isRenameModalOpen = useGameStore((s) => s.isRenameModalOpen);
   const setRenameModalOpen = useGameStore((s) => s.setRenameModalOpen);
 
@@ -67,7 +69,7 @@ export const RenameShopModal: React.FC = () => {
         </div>
 
         {/* Suggestions */}
-        <div className="w-full mb-3">
+        <div className="w-full mb-2.5">
           <span className="text-xs text-[#D4A373] block mb-1">
             💡 Gợi ý tên hài hước Sài Gòn:
           </span>
@@ -82,6 +84,42 @@ export const RenameShopModal: React.FC = () => {
                 {sug}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Owner Character Selection */}
+        <div className="w-full mb-3 pt-2 border-t border-black/40">
+          <label className="block text-xs font-bold text-amber-200 mb-1.5">
+            CHỌN CHỦ QUÁN ĐỨNG PHA CHẾ:
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setOwnerGender('MALE')}
+              className={`p-2 flex flex-col items-center justify-center border-2 border-black cursor-pointer transition-transform ${
+                ownerGender === 'MALE'
+                  ? 'bg-[#15803D] text-white shadow-[2px_2px_0px_#000] ring-2 ring-[#FFD700]'
+                  : 'bg-[#1A0E05] hover:bg-[#2D180C] text-[#FFF8E7]/70 shadow-[1px_1px_0px_#000]'
+              }`}
+            >
+              <img src="/assets/sprites/chu_quan_nam.png" alt="Anh Ba" className="w-10 h-16 object-contain mb-1" />
+              <span className="text-xs font-bold">👨 Anh Ba (Nam)</span>
+              <span className="text-[10px] text-amber-300">Khởi nghiệp nhiệt huyết</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setOwnerGender('FEMALE')}
+              className={`p-2 flex flex-col items-center justify-center border-2 border-black cursor-pointer transition-transform ${
+                ownerGender === 'FEMALE'
+                  ? 'bg-[#15803D] text-white shadow-[2px_2px_0px_#000] ring-2 ring-[#FFD700]'
+                  : 'bg-[#1A0E05] hover:bg-[#2D180C] text-[#FFF8E7]/70 shadow-[1px_1px_0px_#000]'
+              }`}
+            >
+              <img src="/assets/sprites/chu_quan_nu.png" alt="Chị Bảy" className="w-10 h-16 object-contain mb-1" />
+              <span className="text-xs font-bold">👩 Chị Bảy (Nữ)</span>
+              <span className="text-[10px] text-amber-300">Duyên dáng, khéo tay</span>
+            </button>
           </div>
         </div>
 

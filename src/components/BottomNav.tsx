@@ -30,7 +30,7 @@ export function BottomNav() {
   };
 
   return (
-    <div className="absolute bottom-2 md:bottom-3 left-2 right-2 z-45 pointer-events-none select-none max-w-[540px] mx-auto w-full font-pixel">
+    <div className="absolute bottom-2 md:bottom-3 left-2 right-2 z-30 pointer-events-none select-none max-w-[540px] mx-auto w-full font-pixel">
       {/* Outer Pixel Arcade Console Frame */}
       <div className="bg-[#2D180C] border-2 border-black shadow-[3px_3px_0px_#000] p-1 pointer-events-auto">
         <div className="grid grid-cols-5 gap-1">

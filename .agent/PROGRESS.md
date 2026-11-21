@@ -1,18 +1,13 @@
 # TIẾN ĐỘ DỰ ÁN - TIỆM CÀ PHÊ BẤT ỔN
 
-### 1. Đã hoàn thành:
-- **Thiết Kế Lại Toàn Bộ Modal Chuẩn Pixel Art:**
-  - `DailyPrepModal`, `DailySummaryModal`, `CoffeeBrewingModal`, `StageRoadmapModal`, `PolaroidPhotoMode` đều chuyển sang phong cách Pixel Art (font VT323, viền đen 3-4px, đổ bóng khối, nút bấm arcade nổi).
-- **Phân Hóa Cơ Chế & Bố Cục Mobile vs PC:**
-  - **Điện thoại:** Nút nổi ngón cái (FAB) `🧹 DỌN BÀN` ở góc dưới phải nhấp nháy khi có bàn dơ; chạm 1 chạm dọn ngay; tràn viền 100%.
-  - **PC:** Màn rộng 16:9 Studio, phím tắt `[Space]` phục vụ/dọn bàn, `[D]` dọn bàn, `[1-3]` tabs, `[P]` chụp ảnh, `[M]` âm thanh, `[W]` đổi màn.
-- **Nâng Cấp Cơ Chế Tự Động (Idle Automation):**
-  - Đã kích hoạt cơ chế Bạn sinh viên phụ quán (`staff_barista_1`) tự pha nước khi khách chờ và Mèo mướp (`staff_cat_shipper`) tự động dọn bàn dơ.
-- **Xóa Vĩnh Viễn Bảng Phấn & Khách Bảng:** Đã xóa bỏ hoàn toàn `bang_phan` và sprite `co_ve_so`.
-- **Pass Build 100%:** 0 lỗi TypeScript, 62 modules build thành công.
+### 1. Đã hoàn thành (Fix 3 lỗi nghiêm ngặt theo yêu cầu):
+- **Khắc phục Menu bị che khuất:** Chuyển `MenuPanel` và `UpgradePanel` thành Modal Pixel Art căn giữa màn hình (`z-50`, viền đen 4px, `max-h-[82vh]`), tách biệt hoàn toàn với thanh điều hướng `BottomNav` (`z-30`). 100% không còn bị hàng nút bấm che khuất.
+- **Sửa triệt để lỗi giao diện PC:** Loại bỏ chế độ Widescreen làm vỡ tỉ lệ Phaser canvas (trắng 65% góc phải); cố định bố cục Studio Cabinet 3 cột trên PC (Trái: Đài Radio ASMR & Kho; Giữa: Viewport quán cóc 9:16 chuẩn nét; Phải: Hàng xóm & Nhiệm vụ).
+- **Xóa vĩnh viễn "Cái bảng lon ton đi mua cà phê":** Tìm ra nguyên nhân gốc là file `khach_xe_om.png` bị gán nhầm sprite bảng phấn từ bảng cắt cũ. Đã trích xuất đúng hình Chú Ba Xe Ôm đội mũ bảo hiểm/áo khoác từ hàng 3 spritesheet gốc và xóa bỏ toàn bộ sprite bảng cũ.
+- **Pass Build 100%:** 0 lỗi TypeScript, Vite dev server sẵn sàng tại `http://localhost:5173/`.
 
 ### 2. Đang làm / Lỗi tồn đọng:
-- Không có lỗi tồn đọng.
+- Không còn lỗi tồn đọng.
 
 ### 3. Bước tiếp theo:
-- Mở rộng mini-game và sự kiện ngẫu nhiên cho Giai đoạn 2 (Xe Đẩy Lưu Động Ngã Tư).
+- Sẵn sàng trải nghiệm trên cả Mobile và PC mượt mà, chân thực.

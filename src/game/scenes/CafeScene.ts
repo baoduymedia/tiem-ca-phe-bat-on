@@ -55,6 +55,8 @@ export class CafeScene extends Phaser.Scene {
       { key: 'khach_shipper', path: '/assets/sprites/khach_shipper.png' },
       { key: 'khach_sinh_vien', path: '/assets/sprites/khach_sinh_vien.png' },
       { key: 'khach_kol', path: '/assets/sprites/khach_kol.png' },
+      { key: 'chu_quan_nam', path: '/assets/sprites/chu_quan_nam.png' },
+      { key: 'chu_quan_nu', path: '/assets/sprites/chu_quan_nu.png' },
     ];
 
     sprites.forEach((s) => {
@@ -575,11 +577,49 @@ export class CafeScene extends Phaser.Scene {
       );
     }
 
-    // Barista behind counter
-    if (this.textures.exists('anim_barista_pour')) {
-      this.barista = this.add.sprite(x, y - 48, 'anim_barista_pour', 0);
-      this.barista.setDisplaySize(44, 44);
-      this.barista.play('barista-idle');
+    // Animated Shop Owner (Chủ Quán Nam / Nữ) standing proudly behind counter
+    const store = useGameStore.getState();
+    const ownerKey = store.ownerGender === 'FEMALE' ? 'chu_quan_nu' : 'chu_quan_nam';
+    if (this.textures.exists(ownerKey)) {
+      this.barista = this.add.sprite(x, y - 56, ownerKey);
+      this.barista.setDisplaySize(44, 70);
+      this.barista.setInteractive();
+
+      // Tap on owner triggers a warm Saigon welcome dialogue and happy bounce
+      this.barista.on('pointerdown', () => {
+        SoundManager.playWaterPour();
+        const welcomeDialogues = [
+          'Dạ em chào quý khách! Cà phê phin nguyên chất thơm nồng nàn nha!',
+          'Hôm nay quán tụi em chuẩn bị mẻ Robusta thơm nức mũi luôn đó!',
+          'Cảm ơn anh chị đã ghé ủng hộ quán cóc nhỏ của em nghen!',
+        ];
+        const greeting = Phaser.Utils.Array.GetRandom(welcomeDialogues);
+        EventBus.emit('customer-speak', {
+          name: store.ownerGender === 'FEMALE' ? 'Chị Bảy Chủ Quán' : 'Anh Ba Chủ Quán',
+          dialogue: greeting,
+        });
+
+        if (this.barista) {
+          this.tweens.add({
+            targets: this.barista,
+            y: y - 62,
+            scaleY: this.barista.scaleY * 1.08,
+            duration: 120,
+            yoyo: true,
+          });
+        }
+      });
+
+      // Gentle continuous idle breathing
+      this.tweens.add({
+        targets: this.barista,
+        y: y - 54,
+        scaleY: this.barista.scaleY * 0.97,
+        duration: 1100,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
     }
 
     // Wooden counter front
@@ -836,6 +876,12 @@ export class CafeScene extends Phaser.Scene {
     EventBus.on('event-started', this._onEventStarted, this);
     EventBus.on('event-resolved', this._onEventResolved, this);
     EventBus.on('clean-all-tables', this._handleCleanAllTables, this);
+    EventBus.on('owner-gender-changed', (gender: 'MALE' | 'FEMALE') => {
+      const key = gender === 'FEMALE' ? 'chu_quan_nu' : 'chu_quan_nam';
+      if (this.barista && this.textures.exists(key)) {
+        this.barista.setTexture(key);
+      }
+    });
     EventBus.on('hotkey-space', () => {
       const waitingCust = this.customers.find((c) => c.status === 'WAITING_DRINK');
       if (waitingCust) {

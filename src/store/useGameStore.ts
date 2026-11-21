@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { StageId } from '../data/gameData';
+import { EventBus } from '../game/EventBus';
 
 export interface DailyQuestProgress {
   id: string;
@@ -48,6 +49,7 @@ export interface BrewingSession {
 
 export interface GameState {
   shopName: string;
+  ownerGender: 'MALE' | 'FEMALE';
   currentStage: StageId;
   gold: number;
   goldenBeans: number;
@@ -91,6 +93,7 @@ export interface GameState {
 
 export interface GameActions {
   setShopName: (name: string) => void;
+  setOwnerGender: (gender: 'MALE' | 'FEMALE') => void;
   completeSplash: () => void;
   addGold: (amount: number) => void;
   spendGold: (amount: number) => boolean;
@@ -209,6 +212,7 @@ export function generateDailyQuests(day: number): DailyQuestProgress[] {
 
 const initialState: GameState = {
   shopName: 'Tiệm Cà Phê Bất Ổn',
+  ownerGender: 'MALE',
   currentStage: 1,
   gold: 60000,
   goldenBeans: 5,
@@ -250,7 +254,7 @@ const initialState: GameState = {
   isRenameModalOpen: false,
   isPhotoModeOpen: false,
   isRoadmapModalOpen: false,
-  isWidescreenPC: typeof window !== 'undefined' ? window.innerWidth >= 1024 : true,
+  isWidescreenPC: false,
   isMuted: false,
   loanAmount: 0,
   marketNews: DAILY_MARKET_NEWS[3],
@@ -275,6 +279,10 @@ export const useGameStore = create<GameState & GameActions>()(
       ...initialState,
 
       setShopName: (name: string) => set({ shopName: name }),
+      setOwnerGender: (gender: 'MALE' | 'FEMALE') => {
+        set({ ownerGender: gender });
+        EventBus.emit('owner-gender-changed', gender);
+      },
 
       completeSplash: () => set({ hasCompletedSplash: true }),
 

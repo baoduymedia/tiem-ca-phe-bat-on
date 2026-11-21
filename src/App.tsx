@@ -65,18 +65,18 @@ export function App() {
     };
   }, [hasCompletedSplash]);
 
-  // Window resize & mode switch handler: keeps React and Phaser game canvas perfectly in sync
+  // Window resize handler: keeps React and Phaser game canvas perfectly in sync
   useEffect(() => {
     const handleResize = () => {
       if (gameRef.current && gameRef.current.scale) {
-        const { width, height } = getGameDimensions(isWidescreenPC);
+        const { width, height } = getGameDimensions();
         gameRef.current.scale.resize(width, height);
       }
     };
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isWidescreenPC]);
+  }, []);
 
   // Periodic offline progress sync
   useEffect(() => {
@@ -147,10 +147,10 @@ export function App() {
       <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-yellow-600/10 blur-3xl pointer-events-none" />
 
       {/* Main Dual-View Cockpit Container */}
-      <div className={`w-full h-full ${isWidescreenPC ? 'max-w-[1240px]' : 'max-w-[1380px]'} flex items-center justify-center gap-4 lg:gap-8 p-0 md:px-6 relative z-10 md:py-4 transition-all duration-300`}>
+      <div className="w-full h-full max-w-[1380px] flex items-center justify-center gap-4 lg:gap-8 p-0 md:px-6 relative z-10 md:py-4 transition-all duration-300">
         
         {/* ================= LEFT COCKPIT: VINTAGE RADIO & MARKET NEWS ================= */}
-        {!isWidescreenPC && hasCompletedSplash && (
+        {hasCompletedSplash && (
           <aside className="hidden md:flex flex-col gap-3 w-68 lg:w-78 shrink-0 text-xs font-pixel animate-in fade-in duration-200">
             {/* 1. Đài Radio Sài Gòn Xưa - Pixel Cassette Player Style */}
             <div className="bg-[#24140B] border-3 border-black shadow-[4px_4px_0px_#000] p-3 rounded-none">
@@ -269,13 +269,7 @@ export function App() {
 
         {/* ================= CENTER: MAIN GAMEPLAY VIEWPORT ================= */}
         <main
-          className={`relative w-full bg-[#FFF8E7] overflow-hidden flex flex-col shrink-0 transition-all duration-300
-            ${
-              isWidescreenPC
-                ? 'md:max-w-[1180px] md:h-[92dvh] md:max-h-[760px] md:border-4 md:border-black md:shadow-[6px_6px_0px_#000]'
-                : 'md:max-w-[420px] md:h-[96dvh] md:max-h-[890px] md:aspect-[9/16] md:border-4 md:border-black md:shadow-[6px_6px_0px_#000]'
-            }
-            h-full min-h-[100dvh] md:min-h-0 rounded-none border-0 shadow-none`}
+          className="relative w-full bg-[#FFF8E7] overflow-hidden flex flex-col shrink-0 md:max-w-[420px] md:h-[96dvh] md:max-h-[890px] md:aspect-[9/16] md:border-4 md:border-black md:shadow-[6px_6px_0px_#000] h-full min-h-[100dvh] md:min-h-0 rounded-none border-0 shadow-none"
         >
           {/* Corner Vintage Screw Accents (Desktop only) */}
           <div className="hidden md:block absolute top-2 left-2 w-2.5 h-2.5 rounded-full bg-[#FFD700]/70 border border-amber-950 pointer-events-none z-35 shadow-sm" />
@@ -333,7 +327,7 @@ export function App() {
         </main>
 
         {/* ================= RIGHT COCKPIT: SOLIDARITY NETWORK & DAILY QUESTS ================= */}
-        {!isWidescreenPC && hasCompletedSplash && (
+        {hasCompletedSplash && (
           <aside className="hidden md:flex flex-col gap-3 w-68 lg:w-78 shrink-0 text-xs font-pixel animate-in fade-in duration-200">
             {/* 1. Mạng Lưới Nghĩa Tình Hàng Xóm Sài Gòn */}
             <div className="bg-[#24140B] border-3 border-black shadow-[4px_4px_0px_#000] p-3 rounded-none">

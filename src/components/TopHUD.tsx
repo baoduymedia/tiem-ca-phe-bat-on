@@ -17,8 +17,6 @@ export function TopHUD() {
     setRenameModalOpen,
     setPhotoModeOpen,
     setRoadmapModalOpen,
-    isWidescreenPC,
-    toggleWidescreenPC,
   } = useGameStore();
 
   const handleToggleSound = () => {
@@ -27,7 +25,7 @@ export function TopHUD() {
   };
 
   return (
-    <div className={`absolute top-0 left-0 right-0 z-30 pointer-events-none select-none pt-1.5 px-2 md:px-4 ${isWidescreenPC ? 'md:max-w-[1140px]' : 'max-w-[420px]'} mx-auto w-full transition-all duration-300 font-pixel`}>
+    <div className="absolute top-0 left-0 right-0 z-30 pointer-events-none select-none pt-1.5 px-2 md:px-4 max-w-[420px] mx-auto w-full transition-all duration-300 font-pixel">
       {/* Outer Pixel Wooden HUD Frame with Solid Black Border and Hard Drop Shadow */}
       <div className="bg-[#2D180C] border-2 border-black shadow-[3px_3px_0px_#000] p-1.5 rounded-none">
         
@@ -75,15 +73,6 @@ export function TopHUD() {
 
           {/* Quick Retro Pixel Action Buttons */}
           <div className="flex items-center gap-1 shrink-0 pointer-events-auto">
-            {/* Desktop Screen Switcher Toggle (Visible on MD screens) */}
-            <button
-              onClick={() => toggleWidescreenPC()}
-              className="hidden md:flex px-2 h-7 bg-[#451A03] hover:bg-[#5A2508] border-2 border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none items-center justify-center text-xs font-bold text-[#FFD700] transition-transform cursor-pointer gap-1"
-              title={isWidescreenPC ? 'Chuyển sang khung điện thoại [W]' : 'Mở rộng màn ảnh rộng PC [W]'}
-            >
-              <span>{isWidescreenPC ? '📱 ĐT [W]' : '🖥️ PC [W]'}</span>
-            </button>
-
             <button
               onClick={() => setPhotoModeOpen(true)}
               className="w-7 md:w-auto md:px-2 h-7 bg-[#451A03] hover:bg-[#5A2508] border-2 border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center justify-center text-xs text-[#FFF8E7] transition-transform cursor-pointer gap-1"

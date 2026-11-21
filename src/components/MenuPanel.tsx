@@ -7,15 +7,15 @@ export function MenuPanel() {
   const recipes = getRecipesByStage(1);
 
   return (
-    <div className="absolute inset-0 z-40 bg-black/60 backdrop-blur-xs flex flex-col justify-end pointer-events-none select-none font-pixel">
+    <div className="absolute inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 select-none font-pixel animate-in fade-in duration-150">
       {/* Click backdrop to dismiss */}
       <div
-        className="absolute inset-0 pointer-events-auto cursor-pointer"
+        className="absolute inset-0 cursor-pointer"
         onClick={() => setActiveTab(null)}
       />
 
-      {/* Panel container docked right above BottomNav */}
-      <div className="relative z-10 bg-[#24140B] border-t-4 border-x-4 border-black shadow-[0_-4px_0px_#000] p-3 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom duration-150 mb-[58px] pointer-events-auto max-w-[620px] mx-auto w-full">
+      {/* Centered Pixel Panel container */}
+      <div className="relative z-10 bg-[#24140B] border-4 border-black shadow-[4px_4px_0px_#000] p-3 max-h-[82vh] flex flex-col max-w-[440px] w-full">
         {/* Header */}
         <div className="flex justify-between items-center pb-2 border-b-2 border-black mb-2.5">
           <div className="flex items-center gap-2">
@@ -39,7 +39,7 @@ export function MenuPanel() {
         </div>
 
         {/* Recipe list */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 overflow-y-auto pr-1 flex-1 pb-2">
+        <div className="flex flex-col gap-2 overflow-y-auto pr-1 flex-1 pb-2">
           {recipes.map((item) => {
             const isUnlocked = !!unlockedRecipes[item.id];
             const level = unlockedRecipes[item.id] || 0;

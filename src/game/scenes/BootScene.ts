@@ -30,9 +30,11 @@ export class BootScene extends Phaser.Scene {
     this.load.image('khach_sinh_vien', SPRITES.customers.khach_sinh_vien);
     this.load.image('khach_kol', SPRITES.customers.khach_kol);
 
-    // 4. Pets
+    // 4. Pets & Owner
     this.load.image('pet_meo_muop', SPRITES.pets.pet_meo_muop);
     this.load.image('pet_cun_vang', SPRITES.pets.pet_cun_vang);
+    this.load.image('chu_quan_nam', SPRITES.owner.chu_quan_nam);
+    this.load.image('chu_quan_nu', SPRITES.owner.chu_quan_nu);
 
     // 5. Frame Animation Sprite Sheets (2-4 frames)
     this.load.spritesheet('anim_barista_pour', '/assets/sprites/anim_barista_pour.png', {
