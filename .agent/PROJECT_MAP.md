@@ -35,8 +35,13 @@
 - `src/game/entities/Customer.ts`: Thực thể khách hàng (State Machine 5 bước, tween nhún chân bước đi, nhịp thở nhẹ, lắc sốt ruột, nhảy vui mừng + hiệu ứng sao/xu khi xong món, phản ứng chạm).
 - `src/game/entities/EventManager.ts`: Quản lý kích hoạt các sự kiện ngẫu nhiên Stage 1 (Mưa rào Sài Gòn & Trật tự đô thị).
 - `src/components/DailyPrepModal.tsx`: Modal phong cách giấy kraft chuẩn bị nguyên liệu buổi sáng trước giờ mở bán (bột cà phê, sữa đặc, đá bi, trà) kèm dự báo thời tiết.
-- `src/components/DailySummaryModal.tsx`: Modal hóa đơn giấy cổ điển chốt sổ doanh thu, tiền tip, chi phí vốn và lợi nhuận ròng cuối ngày.
-- `src/components/CoffeeBrewingModal.tsx`: Trạm pha chế thủ công ASMR chuẩn Cozy Storybook tương tác trực tiếp (châm phin, rót sữa Ông Thọ, xúc đá bi, khuấy bọt) nhận thưởng Chuẩn Vị Sài Gòn (+50% Tip).
+- `src/components/SubHudBar.tsx`: Thanh Sub-HUD hiển thị đồng hồ ngày (06:00-22:00) theo 4 thời điểm (Sáng, Trưa, Chiều, Tối), 3 thanh phần trăm kho nguyên liệu (Cà phê, Đá bi, Sữa) có cảnh báo nhấp nháy, nút gọi mối giao nạp kho và phím tắt chụp Polaroid.
+- `src/components/DailySummaryModal.tsx`: Sổ Thu Chi P&L cuối ngày (22:00) hạch toán chi tiết doanh thu đồ uống, tiền tip Chuẩn Gu, tiền nhập kho, chi phí mặt bằng & điện, phạt trật tự đô thị, lợi nhuận ròng, đánh giá sao khách hàng và trả nợ Chú Ba.
+- `src/components/CoffeeBrewingModal.tsx`: Trạm pha chế ASMR 3 bước chân thực (Cốt Phin, Sữa đặc, Đá bi, Đánh bọt), nhận diện ghi chú OrderModifier (ít đá, nhiều sữa, mang đi, không đường) và chấm điểm thưởng "Chuẩn Gu! ✨" (+20% Tip + 1 🫘 Đậu Vàng).
+- `src/components/VietnamMapModal.tsx`: Bản đồ 2D 5 tỉnh thành chiến lược (TP.HCM, Hà Nội, Đà Lạt, Huế/Đà Nẵng, Cần Thơ) với 4 vị trí mặt bằng (Đại học, Văn phòng, Hẻm, Du lịch), đặc sản vùng miền, phí thuê và lợi nhuận chi nhánh tự động.
+- `src/components/ProvincialLeagueModal.tsx`: Đấu Trường "Cúp Phin Vàng Toàn Quốc", bảng xếp hạng điểm tuần của 5 tỉnh thành, điểm đóng góp từ các đơn Chuẩn Gu và phần thưởng skin linh vật vùng miền.
+- `src/components/StaffPanel.tsx`: Quản trị nhân sự (Sinh viên, Cô Tư dọn dẹp, Bác thợ rang, Quản lý song ngữ) với thanh thể lực Stamina, tay nghề Lv.1-10 và nút "Khao cả team chầu trà sữa" hồi 100% Stamina + buff tốc độ +25%.
+- `src/components/RndAndRoasteryModal.tsx`: Xưởng Rang Xay (Robusta BMT / Arabica Cầu Đất, 3 mức rang giảm 35% giá vốn), Phòng R&D Sáng Tạo món Signature đặt tên riêng (Hệ số giá x1.6), Cây Công Nghệ F&B (QR Order, Espresso, ERP tự động, Cold Brew xuất khẩu) và Nhượng Quyền Toàn Cầu (Tokyo, Seoul, Paris, NY).
 - `src/components/RenameShopModal.tsx`: Modal đổi tên quán tùy chỉnh kết hợp chọn chủ quán (Anh Ba / Chị Bảy) và đồng bộ bảng hiệu Canvas.
 - `src/components/PolaroidPhotoMode.tsx`: Chế độ chụp ảnh Polaroid vintage viền trắng cổ điển, sticker và watermark chia sẻ Story khớp Mockup 8.
 - `src/components/DailyQuestPanel.tsx`: Bảng quản lý 3 nhiệm vụ ngày (linh vật mèo múp, cún cưng, shipper) thưởng Hạt Cà Phê Vàng 🫘 khớp Mockup 5.

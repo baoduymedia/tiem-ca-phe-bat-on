@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import type { CustomerConfig, RecipeConfig } from '../../data/gameData';
+import type { OrderModifier } from '../../types/game';
 import { EventBus } from '../EventBus';
 
 export type CustomerStatus =
@@ -21,6 +22,7 @@ export class Customer extends Phaser.GameObjects.Container {
   public seat: CustomerSeat;
   public status: CustomerStatus = 'ENTERING';
   public orderRecipe: RecipeConfig | null = null;
+  public orderModifier: OrderModifier = 'normal';
   public orderQuantity: number = 1;
   public patienceMax: number;
   public patienceCurrent: number;
@@ -69,6 +71,14 @@ export class Customer extends Phaser.GameObjects.Container {
       config.orderQuantityRange[0],
       config.orderQuantityRange[1]
     );
+
+    // Order Modifier (SPEC §1.1): normal 40%, less_ice 20%, more_milk 15%, take_away 15%, no_sugar 10%
+    const randMod = Math.random();
+    if (randMod < 0.40) this.orderModifier = 'normal';
+    else if (randMod < 0.60) this.orderModifier = 'less_ice';
+    else if (randMod < 0.75) this.orderModifier = 'more_milk';
+    else if (randMod < 0.90) this.orderModifier = 'take_away';
+    else this.orderModifier = 'no_sugar';
 
     // Graphic representation
     this.bodyGraphic = scene.add.graphics();
@@ -324,6 +334,32 @@ export class Customer extends Phaser.GameObjects.Container {
     tapText.setOrigin(0.5);
     elements.push(tapText);
 
+    // Smart Order Bubble Badge (SPEC §3.3): 🧊- ít đá, 🥛+ nhiều sữa, 🛍️ mang đi, 🚫 không đường
+    if (this.orderModifier !== 'normal') {
+      const modifierLabels: Record<OrderModifier, { text: string; bg: number; fg: string }> = {
+        normal: { text: '', bg: 0xffffff, fg: '#000000' },
+        less_ice: { text: '🧊- ÍT ĐÁ', bg: 0x38bdf8, fg: '#0c4a6e' },
+        more_milk: { text: '🥛+ NHIỀU SỮA', bg: 0xfacc15, fg: '#713f12' },
+        take_away: { text: '🛍️ MANG ĐI', bg: 0x4ade80, fg: '#14532d' },
+        no_sugar: { text: '🚫 KHÔNG ĐƯỜNG', bg: 0xf87171, fg: '#7f1d1d' },
+      };
+      const badgeData = modifierLabels[this.orderModifier];
+      const badgeG = this.scene.add.graphics();
+      badgeG.fillStyle(badgeData.bg, 1);
+      badgeG.fillRoundedRect(-40, -32, 80, 13, 3);
+      badgeG.lineStyle(1.2, 0x1a0e05, 1);
+      badgeG.strokeRoundedRect(-40, -32, 80, 13, 3);
+      elements.push(badgeG);
+
+      const badgeTxt = this.scene.add.text(0, -25.5, badgeData.text, {
+        fontFamily: 'VT323, monospace',
+        fontSize: '9px',
+        color: badgeData.fg,
+        fontStyle: 'bold',
+      }).setOrigin(0.5);
+      elements.push(badgeTxt);
+    }
+
     this.bubbleContainer.removeAll(true);
     this.bubbleContainer.add(elements);
 
@@ -379,6 +415,7 @@ export class Customer extends Phaser.GameObjects.Container {
       EventBus.emit('request-brew', {
         customer: this,
         recipe: this.orderRecipe,
+        orderModifier: this.orderModifier,
       });
     }
   }

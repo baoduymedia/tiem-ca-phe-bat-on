@@ -3,7 +3,7 @@ import { useGameStore, formatVND } from '../store/useGameStore';
 import { SoundManager } from '../game/audio/SoundManager';
 
 export function UpgradePanel() {
-  const { gold, upgrades, buyUpgrade, currentStage, unlockNextStage, setActiveTab } = useGameStore();
+  const { gold, upgrades, buyUpgrade, currentStage, unlockNextStage, setActiveTab, setStaffPanelOpen } = useGameStore();
   const stageUpgrades = getUpgrades().filter((u) => u.stage <= currentStage);
 
   // Milestone Xe Đẩy Lưu Động (Stage 1 milestone: 250.000đ)
@@ -49,6 +49,23 @@ export function UpgradePanel() {
             title="Đóng bảng"
           >
             ✕
+          </button>
+        </div>
+
+        {/* Staff Quick Management Bar */}
+        <div className="flex items-center justify-between bg-[#FAF0E1] border border-[#D8C7B5] rounded-xl px-2.5 py-1.5 mb-2.5 text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="text-base">👥</span>
+            <span className="font-bold text-[#4A3222] text-[11px]">Đội ngũ nhân sự & Thể lực</span>
+          </div>
+          <button
+            onClick={() => {
+              setActiveTab(null);
+              setStaffPanelOpen(true);
+            }}
+            className="py-1 px-2.5 bg-[#E08738] hover:bg-[#ED9445] text-white text-[10px] font-bold rounded-lg border border-[#4A3222] shadow-2xs cursor-pointer active:translate-y-0.5"
+          >
+            Quản lý ➔
           </button>
         </div>
 

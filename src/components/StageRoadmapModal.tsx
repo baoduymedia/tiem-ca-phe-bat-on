@@ -79,6 +79,10 @@ const STAGES: StageInfo[] = [
 export const StageRoadmapModal: React.FC = () => {
   const isRoadmapModalOpen = useGameStore((s) => s.isRoadmapModalOpen);
   const setRoadmapModalOpen = useGameStore((s) => s.setRoadmapModalOpen);
+  const setVietnamMapOpen = useGameStore((s) => s.setVietnamMapOpen);
+  const setProvincialLeagueOpen = useGameStore((s) => s.setProvincialLeagueOpen);
+  const setStaffPanelOpen = useGameStore((s) => s.setStaffPanelOpen);
+  const setRndModalOpen = useGameStore((s) => s.setRndModalOpen);
   const currentStage = useGameStore((s) => s.currentStage);
   const gold = useGameStore((s) => s.gold);
   const reputation = useGameStore((s) => s.reputation);
@@ -175,6 +179,45 @@ export const StageRoadmapModal: React.FC = () => {
                     <span className={reputation >= stg.repReq ? 'text-[#D97706] font-bold' : 'text-[#8C6E54]'}>
                       ⭐ {stg.repReq} Sao
                     </span>
+                  </div>
+                )}
+
+                {/* Stage 4 Features */}
+                {isUnlocked && stg.stage === 4 && (
+                  <div className="flex gap-1.5 mt-2 pt-2 border-t border-[#D8C7B5]">
+                    <button
+                      onClick={() => {
+                        setRoadmapModalOpen(false);
+                        setVietnamMapOpen(true);
+                      }}
+                      className="flex-1 py-1.5 px-2 rounded-xl bg-[#E08738] hover:bg-[#ED9445] text-white text-[11px] font-bold border border-[#4A3222] shadow-2xs cursor-pointer active:translate-y-0.5"
+                    >
+                      🗺️ Bản Đồ Đa Tỉnh
+                    </button>
+                    <button
+                      onClick={() => {
+                        setRoadmapModalOpen(false);
+                        setProvincialLeagueOpen(true);
+                      }}
+                      className="flex-1 py-1.5 px-2 rounded-xl bg-[#F4C447] hover:bg-[#FCD34D] text-[#3E2415] text-[11px] font-bold border border-[#4A3222] shadow-2xs cursor-pointer active:translate-y-0.5"
+                    >
+                      🏆 Cúp Phin Vàng
+                    </button>
+                  </div>
+                )}
+
+                {/* Stage 5 & 6 Features */}
+                {isUnlocked && stg.stage >= 5 && (
+                  <div className="flex gap-1.5 mt-2 pt-2 border-t border-[#D8C7B5]">
+                    <button
+                      onClick={() => {
+                        setRoadmapModalOpen(false);
+                        setRndModalOpen(true);
+                      }}
+                      className="w-full py-1.5 px-2 rounded-xl bg-[#5C9E54] hover:bg-[#4E8B46] text-white text-[11px] font-bold border border-[#4A3222] shadow-2xs cursor-pointer active:translate-y-0.5"
+                    >
+                      🔬 Xưởng Rang & R&D Lab Toàn Cầu
+                    </button>
                   </div>
                 )}
               </div>

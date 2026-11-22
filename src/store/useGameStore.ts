@@ -100,6 +100,10 @@ export interface GameState {
   isRenameModalOpen: boolean;
   isPhotoModeOpen: boolean;
   isRoadmapModalOpen: boolean;
+  isVietnamMapOpen: boolean;
+  isProvincialLeagueOpen: boolean;
+  isStaffPanelOpen: boolean;
+  isRndModalOpen: boolean;
   isWidescreenPC: boolean;
   isMuted: boolean;
   // Real-life solidarity & adversity
@@ -147,6 +151,10 @@ export interface GameActions {
   setRenameModalOpen: (open: boolean) => void;
   setPhotoModeOpen: (open: boolean) => void;
   setRoadmapModalOpen: (open: boolean) => void;
+  setVietnamMapOpen: (open: boolean) => void;
+  setProvincialLeagueOpen: (open: boolean) => void;
+  setStaffPanelOpen: (open: boolean) => void;
+  setRndModalOpen: (open: boolean) => void;
   setWidescreenPC: (wide: boolean) => void;
   toggleWidescreenPC: () => void;
   toggleMute: () => void;
@@ -315,6 +323,10 @@ const initialState: GameState = {
   isRenameModalOpen: false,
   isPhotoModeOpen: false,
   isRoadmapModalOpen: false,
+  isVietnamMapOpen: false,
+  isProvincialLeagueOpen: false,
+  isStaffPanelOpen: false,
+  isRndModalOpen: false,
   isWidescreenPC: false,
   isMuted: false,
   loanAmount: 0,
@@ -503,6 +515,10 @@ export const useGameStore = create<GameState & GameActions>()(
       setRenameModalOpen: (open: boolean) => set({ isRenameModalOpen: open }),
       setPhotoModeOpen: (open: boolean) => set({ isPhotoModeOpen: open }),
       setRoadmapModalOpen: (open: boolean) => set({ isRoadmapModalOpen: open }),
+      setVietnamMapOpen: (open: boolean) => set({ isVietnamMapOpen: open }),
+      setProvincialLeagueOpen: (open: boolean) => set({ isProvincialLeagueOpen: open }),
+      setStaffPanelOpen: (open: boolean) => set({ isStaffPanelOpen: open }),
+      setRndModalOpen: (open: boolean) => set({ isRndModalOpen: open }),
       setWidescreenPC: (wide: boolean) => set({ isWidescreenPC: wide }),
       toggleWidescreenPC: () => set((s) => ({ isWidescreenPC: !s.isWidescreenPC })),
       toggleMute: () => set((s) => ({ isMuted: !s.isMuted })),
@@ -817,6 +833,9 @@ export const useGameStore = create<GameState & GameActions>()(
       tickDayTimer: (deltaSec: number) => {
         const { dayTimeRemainingSec, dayPhase, timeOfDay } = get();
         if (dayPhase !== 'OPEN') return false;
+
+        // SPEC §1.3: iceStock melts -1% / 15s during NOON
+        get().tickIceMelting(deltaSec);
 
         const nextTime = Math.max(0, dayTimeRemainingSec - deltaSec);
         const nextTimeOfDay = calculateTimeOfDay(nextTime, DEFAULT_DAY_DURATION_SEC);

@@ -30,6 +30,7 @@ export class CafeScene extends Phaser.Scene {
   private barista?: Phaser.GameObjects.Sprite;
   private steamParticles: Phaser.GameObjects.Graphics[] = [];
   private lastFriendHelpCheck: number = 0;
+  private dirtyTableVisuals: Map<number, Phaser.GameObjects.Container> = new Map();
 
   constructor() {
     super({ key: 'CafeScene' });
@@ -633,6 +634,23 @@ export class CafeScene extends Phaser.Scene {
   private _handleCleanTable(tableIndex: number) {
     const store = useGameStore.getState();
     const tip = store.cleanTable(tableIndex);
+
+    // Clean visual trash
+    const trash = this.dirtyTableVisuals.get(tableIndex);
+    if (trash) {
+      this.tweens.add({
+        targets: trash,
+        alpha: 0,
+        scaleX: 0.5,
+        scaleY: 0.5,
+        duration: 200,
+        onComplete: () => {
+          trash.destroy();
+          this.dirtyTableVisuals.delete(tableIndex);
+        },
+      });
+    }
+
     if (tip > 0) {
       const { width, height } = this.scale;
       const groundY = height * 0.46;
@@ -640,6 +658,64 @@ export class CafeScene extends Phaser.Scene {
       this._spawnFloatingCoin(tx, groundY, tip, true);
       this._spawnBannerNotice(`✨ Đã dọn bàn! Nhận thêm ${formatVND(tip)} Tip!`);
     }
+  }
+
+  private _renderDirtyTableTrash(tableIndex: number) {
+    if (this.dirtyTableVisuals.has(tableIndex)) return;
+
+    const { width, height } = this.scale;
+    const groundY = height * 0.46;
+    const tx = tableIndex === 0 ? width * 0.26 : width * 0.74;
+    const ty = groundY + 16;
+
+    const trashContainer = this.add.container(tx, ty);
+
+    // Empty dirty cup
+    const glass = this.add.graphics();
+    glass.fillStyle(0xffffff, 0.45);
+    glass.fillRoundedRect(-10, -12, 8, 11, 1);
+    glass.lineStyle(1, 0x3e2415, 0.8);
+    glass.strokeRoundedRect(-10, -12, 8, 11, 1);
+
+    // Crumpled paper napkin
+    const napkin = this.add.graphics();
+    napkin.fillStyle(0xfef3c7, 0.9);
+    napkin.fillCircle(3, -3, 3.5);
+
+    // Sunflower seeds
+    const seeds = this.add.graphics();
+    seeds.fillStyle(0x451a03, 0.9);
+    seeds.fillEllipse(-2, -2, 3.5, 1.8);
+    seeds.fillEllipse(7, -5, 3.5, 1.8);
+
+    // Small floating "🧹" icon
+    const broomText = this.add.text(0, -20, '🧹 DỌN', {
+      fontFamily: 'sans-serif',
+      fontSize: '8px',
+      color: '#FFFDF9',
+      backgroundColor: '#E04F4F',
+      padding: { x: 3, y: 1 },
+      fontStyle: 'bold',
+    }).setOrigin(0.5);
+
+    this.tweens.add({
+      targets: broomText,
+      y: broomText.y - 3,
+      duration: 600,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+
+    trashContainer.add([glass, napkin, seeds, broomText]);
+    trashContainer.setSize(36, 26);
+    trashContainer.setInteractive(new Phaser.Geom.Rectangle(-18, -13, 36, 26), Phaser.Geom.Rectangle.Contains);
+    trashContainer.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      pointer.event.stopPropagation();
+      this._handleCleanTable(tableIndex);
+    });
+
+    this.dirtyTableVisuals.set(tableIndex, trashContainer);
   }
 
   private _drawCoffeeStand() {
@@ -1372,7 +1448,7 @@ export class CafeScene extends Phaser.Scene {
     });
   }
 
-  private _handleRequestBrew(data: { customer: Customer; recipe: RecipeConfig }) {
+  private _handleRequestBrew(data: { customer: Customer; recipe: RecipeConfig; orderModifier?: import('../../types/game').OrderModifier }) {
     if (this.isBrewing) return;
 
     const store = useGameStore.getState();
@@ -1387,6 +1463,7 @@ export class CafeScene extends Phaser.Scene {
 
     // Deduct ingredients immediately
     store.consumeIngredientsForDrink(data.recipe.id);
+    store.consumeInventoryStock(data.recipe.id, data.orderModifier || data.customer.orderModifier);
 
     // Open Interactive Hands-on Coffee Bar Station Modal
     store.startManualBrewing({
@@ -1395,6 +1472,7 @@ export class CafeScene extends Phaser.Scene {
       recipeId: data.recipe.id,
       recipeName: data.recipe.name,
       price: data.recipe.basePrice,
+      orderModifier: data.orderModifier || data.customer.orderModifier || 'normal',
     });
   }
 
@@ -1441,9 +1519,22 @@ export class CafeScene extends Phaser.Scene {
   private _handleCustomerFinished(data: { seatIndex: number }) {
     const tableIndex = data.seatIndex <= 1 ? 0 : 1;
     useGameStore.getState().addDirtyTable(tableIndex);
+    this._renderDirtyTableTrash(tableIndex);
   }
 
   private _handleCleanAllTables() {
+    this.dirtyTableVisuals.forEach((trash) => {
+      this.tweens.add({
+        targets: trash,
+        alpha: 0,
+        scaleX: 0.5,
+        scaleY: 0.5,
+        duration: 200,
+        onComplete: () => trash.destroy(),
+      });
+    });
+    this.dirtyTableVisuals.clear();
+
     const totalTip = useGameStore.getState().cleanAllDirtyTables();
     if (totalTip > 0) {
       const { width, height } = this.scale;
