@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import { getRandomEvents } from '../../data/gameData';
 import type { RandomEventConfig } from '../../data/gameData';
 import { EventBus } from '../EventBus';
+import { SoundManager } from '../audio/SoundManager';
+import { useGameStore } from '../../store/useGameStore';
 
 const EXTRA_EVENTS: RandomEventConfig[] = [
   {
@@ -59,8 +61,14 @@ export class EventManager {
   private _triggerRandomEvent() {
     if (this.eventState !== 'IDLE') return;
 
-    const baseEvents = getRandomEvents().filter((e) => e.minStage <= 1 && e.maxStage >= 1);
-    const allEvents = [...baseEvents, ...EXTRA_EVENTS];
+    const currentStage = useGameStore.getState().currentStage || 1;
+    const baseEvents = getRandomEvents().filter(
+      (e) => e.minStage <= currentStage && (e.maxStage ? e.maxStage >= currentStage : true)
+    );
+    const stageExtra = EXTRA_EVENTS.filter(
+      (e) => e.minStage <= currentStage && (e.maxStage ? e.maxStage >= currentStage : true)
+    );
+    const allEvents = [...baseEvents, ...stageExtra];
     if (allEvents.length === 0) return;
 
     const selected = Phaser.Utils.Array.GetRandom(allEvents);
@@ -68,10 +76,14 @@ export class EventManager {
 
     if (selected.warningSec > 0) {
       this.eventState = 'WARNING';
+      if (selected.id === 'trat_tu_do_thi') {
+        SoundManager.playSirenAlert();
+      }
+
       const warningTxt =
         selected.id === 'thanh_tra_vsattp'
           ? '📋 Cán bộ phường đang đi kiểm tra tuyến phố...'
-          : '🚨 Còi xe trật tự hú từ xa... Chuẩn bị!';
+          : '🚨 Còi xe trật tự hú từ xa... Chuẩn bị thu ghế!';
 
       EventBus.emit('event-warning', {
         id: selected.id,

@@ -1,10 +1,12 @@
-import { getRecipesByStage, calcDrinkPrice, calcUpgradeCost } from '../data/gameData';
+import { getRecipesByStage, getStages, calcDrinkPrice, calcUpgradeCost } from '../data/gameData';
 import { useGameStore, formatVND } from '../store/useGameStore';
 
 export function MenuPanel() {
-  const { gold, unlockedRecipes, unlockRecipe, upgradeRecipe, setActiveTab } =
+  const { gold, unlockedRecipes, unlockRecipe, upgradeRecipe, setActiveTab, currentStage } =
     useGameStore();
-  const recipes = getRecipesByStage(1);
+  const stage = currentStage || 1;
+  const stageInfo = getStages().find((s) => s.id === stage);
+  const recipes = getRecipesByStage(stage);
 
   return (
     <div className="absolute inset-0 z-50 cozy-modal-backdrop flex items-center justify-center p-3 select-none font-sans animate-in zoom-in-95 duration-150">
@@ -24,7 +26,7 @@ export function MenuPanel() {
             </span>
             <div>
               <h2 className="text-[#3E2415] font-serif font-black text-base tracking-wide leading-none">
-                Thực đơn quán cóc (GĐ 1)
+                Thực đơn {stageInfo ? stageInfo.name : `GĐ ${stage}`}
               </h2>
               <p className="text-[11px] text-[#8C6E54] font-semibold mt-0.5 leading-none">
                 Nâng cấp công thức để tăng vĩnh viễn giá bán

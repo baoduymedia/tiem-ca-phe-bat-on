@@ -98,7 +98,7 @@ export function DailySummaryModal() {
         </div>
 
         {/* Uncle Ba Loan Repayment Card */}
-        {loanAmount > 0 && (
+        {(loanAmount > 0 || hasRepaid) && (
           <div className="mb-2.5 cozy-card-inner p-2.5 flex flex-col gap-1.5 text-xs bg-[#FAF0E1]">
             <div className="flex items-center justify-between">
               <span className="font-bold text-[#8C6E54] flex items-center gap-1">

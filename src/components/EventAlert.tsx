@@ -83,7 +83,7 @@ export function EventAlert() {
 
       {/* Active Event Alert & Big Button */}
       {activeEvent && (
-        <div className="cozy-modal-backdrop">
+        <div className="absolute inset-0 z-50 cozy-modal-backdrop flex items-center justify-center p-3 select-none font-sans animate-in zoom-in-95 duration-150">
           <div className="cozy-card p-5 text-center max-w-[340px] w-full flex flex-col items-center animate-in zoom-in-95 duration-150 text-[#5D4037]">
             <span className="text-4xl block mb-2 filter drop-shadow">
               {getEventIcon(activeEvent.id)}

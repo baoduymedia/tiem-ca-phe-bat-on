@@ -133,7 +133,7 @@ export const CoffeeBrewingModal: React.FC = () => {
   const foamHeightPx = Math.min(16, (stirCount / 5) * 16);
 
   return (
-    <div className="cozy-modal-backdrop">
+    <div className="absolute inset-0 z-50 cozy-modal-backdrop flex items-center justify-center p-3 select-none font-sans animate-in fade-in duration-200">
       <div className="cozy-card w-full max-w-[400px] p-4 flex flex-col items-center text-[#5D4037]">
         {/* Ribbon Header */}
         <div className="cozy-ribbon mb-2 text-center w-full relative py-1.5 px-4 shadow-sm">

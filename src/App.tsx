@@ -21,6 +21,11 @@ import { useGameStore, formatVND } from './store/useGameStore';
 import { EventBus } from './game/EventBus';
 import { SoundManager } from './game/audio/SoundManager';
 
+if (typeof window !== 'undefined') {
+  (window as unknown as { EventBus: typeof EventBus; SoundManager: typeof SoundManager }).EventBus = EventBus;
+  (window as unknown as { EventBus: typeof EventBus; SoundManager: typeof SoundManager }).SoundManager = SoundManager;
+}
+
 export function App() {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameRef = useRef<Phaser.Game | null>(null);
@@ -106,7 +111,7 @@ export function App() {
       }
 
       if (e.code === 'KeyD') {
-        EventBus.emit('clean-all-tables');
+        handleCleanTables();
       } else if (e.code === 'Space') {
         e.preventDefault();
         EventBus.emit('hotkey-space');
@@ -140,6 +145,11 @@ export function App() {
   const handleMuteSound = () => {
     toggleMute();
     SoundManager.setMuted(!isMuted);
+  };
+
+  const handleCleanTables = () => {
+    useGameStore.getState().cleanAllDirtyTables();
+    EventBus.emit('clean-all-tables');
   };
 
   return (
@@ -244,7 +254,7 @@ export function App() {
                 </div>
                 {dirtyTables.length > 0 && (
                   <button
-                    onClick={() => EventBus.emit('clean-all-tables')}
+                    onClick={handleCleanTables}
                     className="px-2 py-0.5 bg-[#DC2626] hover:bg-[#EF4444] text-white font-bold text-xs border-2 border-black shadow-[2px_2px_0px_#000] cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-transform"
                   >
                     🧹 DỌN {dirtyTables.length} BÀN [D]
@@ -320,7 +330,7 @@ export function App() {
               {/* Mobile-Exclusive Thumb Quick-Action Button (FAB) for Cleaning Tables */}
               {dirtyTables.length > 0 && (
                 <button
-                  onClick={() => EventBus.emit('clean-all-tables')}
+                  onClick={handleCleanTables}
                   className="md:hidden absolute bottom-16 right-3 z-40 bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-black shadow-[3px_3px_0px_#000] px-3 py-2 flex items-center gap-1.5 font-pixel text-xs font-bold active:translate-x-0.5 active:translate-y-0.5 pointer-events-auto animate-bounce cursor-pointer"
                   title="Chạm dọn bàn nhanh ngón cái"
                 >

@@ -317,6 +317,237 @@ class SoundEngine {
     osc.start();
     osc.stop(ctx.currentTime + 0.2);
   }
+
+  // ==========================================
+  // 4. ASMR PHASE 2 / GD2 PROCEDURAL SYNTHESIS
+  // ==========================================
+
+  /**
+   * Cocktail / Tea Shaker Shaking ASMR (Trà chanh giã tay & trà đào)
+   * Procedural rhythmic pulses of ice tumbling inside metal shaker
+   */
+  public playShakerShake() {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    // 4 quick rhythmic shake strokes
+    const strokeOffsets = [0, 0.08, 0.16, 0.25];
+    strokeOffsets.forEach((offset, idx) => {
+      const startTime = ctx.currentTime + offset;
+      const duration = 0.07;
+      const bufferSize = Math.floor(ctx.sampleRate * duration);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * 0.8;
+      }
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      // Bandpass filter for crisp ice against stainless steel
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(idx % 2 === 0 ? 1800 : 2200, startTime);
+      filter.Q.setValueAtTime(3.5, startTime);
+
+      // Metal container resonant clank
+      const clankOsc = ctx.createOscillator();
+      clankOsc.type = 'triangle';
+      clankOsc.frequency.setValueAtTime(idx % 2 === 0 ? 620 : 740, startTime);
+      clankOsc.frequency.exponentialRampToValueAtTime(280, startTime + duration);
+
+      const clankGain = ctx.createGain();
+      clankGain.gain.setValueAtTime(0.08, startTime);
+      clankGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+      clankOsc.connect(clankGain);
+      clankGain.connect(ctx.destination);
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.12, startTime);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+
+      noise.start(startTime);
+      clankOsc.start(startTime);
+      clankOsc.stop(startTime + duration);
+    });
+  }
+
+  /**
+   * Automatic Cup Sealing Machine ASMR (Máy dập màng ép ly)
+   * Mechanical motor down-press, hot film sealing sizzle, and release click
+   */
+  public playCupSealer() {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+
+    // 1. Mechanical motor press downward clunk
+    const motorOsc = ctx.createOscillator();
+    const motorGain = ctx.createGain();
+    motorOsc.type = 'sawtooth';
+    motorOsc.frequency.setValueAtTime(280, t);
+    motorOsc.frequency.exponentialRampToValueAtTime(110, t + 0.18);
+
+    motorGain.gain.setValueAtTime(0.14, t);
+    motorGain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+
+    motorOsc.connect(motorGain);
+    motorGain.connect(ctx.destination);
+    motorOsc.start(t);
+    motorOsc.stop(t + 0.22);
+
+    // 2. Hot heating film sealing sizzle (filtered noise burst)
+    const sizzleDuration = 0.28;
+    const bufferSize = Math.floor(ctx.sampleRate * sizzleDuration);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * 0.7;
+    }
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const sizzleFilter = ctx.createBiquadFilter();
+    sizzleFilter.type = 'bandpass';
+    sizzleFilter.frequency.setValueAtTime(3200, t + 0.12);
+    sizzleFilter.Q.setValueAtTime(4.0, t + 0.12);
+
+    const sizzleGain = ctx.createGain();
+    sizzleGain.gain.setValueAtTime(0.001, t + 0.12);
+    sizzleGain.gain.linearRampToValueAtTime(0.15, t + 0.18);
+    sizzleGain.gain.exponentialRampToValueAtTime(0.001, t + 0.12 + sizzleDuration);
+
+    noise.connect(sizzleFilter);
+    sizzleFilter.connect(sizzleGain);
+    sizzleGain.connect(ctx.destination);
+    noise.start(t + 0.12);
+
+    // 3. Release lever snap click
+    const clickOsc = ctx.createOscillator();
+    const clickGain = ctx.createGain();
+    clickOsc.type = 'square';
+    clickOsc.frequency.setValueAtTime(1400, t + 0.38);
+    clickOsc.frequency.setValueAtTime(320, t + 0.42);
+
+    clickGain.gain.setValueAtTime(0.12, t + 0.38);
+    clickGain.gain.exponentialRampToValueAtTime(0.001, t + 0.46);
+
+    clickOsc.connect(clickGain);
+    clickGain.connect(ctx.destination);
+    clickOsc.start(t + 0.38);
+    clickOsc.stop(t + 0.48);
+  }
+
+  /**
+   * Electric Cream Whisk / Frother ASMR (Đánh bông kem muối béo)
+   * Rapid soft swooshes & bubbling emulsion sound
+   */
+  public playCreamWhisk() {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+    const duration = 0.55;
+
+    // 1. Motor hum
+    const motorOsc = ctx.createOscillator();
+    const motorGain = ctx.createGain();
+    motorOsc.type = 'triangle';
+    motorOsc.frequency.setValueAtTime(160, t);
+    motorOsc.frequency.linearRampToValueAtTime(220, t + 0.15);
+    motorOsc.frequency.linearRampToValueAtTime(180, t + duration);
+
+    motorGain.gain.setValueAtTime(0.05, t);
+    motorGain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+
+    motorOsc.connect(motorGain);
+    motorGain.connect(ctx.destination);
+    motorOsc.start(t);
+    motorOsc.stop(t + duration);
+
+    // 2. Thick emulsion swirling noise with rapid modulation
+    const bufferSize = Math.floor(ctx.sampleRate * duration);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * 0.6;
+    }
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const lowpass = ctx.createBiquadFilter();
+    lowpass.type = 'lowpass';
+    lowpass.frequency.setValueAtTime(850, t);
+    lowpass.Q.setValueAtTime(3.0, t);
+
+    // Tremolo LFO for swirling whirring bubbles
+    const lfo = ctx.createOscillator();
+    lfo.frequency.setValueAtTime(14, t);
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.12, t);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+
+    lfo.connect(noiseGain.gain);
+    noise.connect(lowpass);
+    lowpass.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+
+    noise.start(t);
+    lfo.start(t);
+    lfo.stop(t + duration);
+  }
+
+  /**
+   * Urban Order / Police Patrol Siren Alert (Còi xe trật tự đô thị)
+   * Alternating two-tone pitch sweep warning
+   */
+  public playSirenAlert() {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.type = 'sawtooth';
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(2200, t);
+
+    // Sweeping siren frequencies
+    osc.frequency.setValueAtTime(650, t);
+    osc.frequency.linearRampToValueAtTime(960, t + 0.3);
+    osc.frequency.linearRampToValueAtTime(650, t + 0.6);
+    osc.frequency.linearRampToValueAtTime(960, t + 0.9);
+    osc.frequency.linearRampToValueAtTime(650, t + 1.2);
+    osc.frequency.linearRampToValueAtTime(960, t + 1.5);
+    osc.frequency.linearRampToValueAtTime(500, t + 1.8);
+
+    gain.gain.setValueAtTime(0.001, t);
+    gain.gain.linearRampToValueAtTime(0.14, t + 0.1);
+    gain.gain.setValueAtTime(0.14, t + 1.5);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 1.85);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(t);
+    osc.stop(t + 1.9);
+  }
 }
 
 export const SoundManager = new SoundEngine();

@@ -502,24 +502,110 @@ export class CafeScene extends Phaser.Scene {
   private _initSeats() {
     const { width, height } = this.scale;
     const groundY = height * 0.46;
+    const store = useGameStore.getState();
 
-    // Perfectly balanced 4 seats flanking 2 tables on sidewalk:
-    // Left Table at 0.26 (seats: 0.17 and 0.35)
-    // Right Table at 0.74 (seats: 0.65 and 0.83)
-    // Counter stays centered at 0.50
-    this.seats = [
-      { index: 0, x: width * 0.17, y: groundY + 22, occupied: false },
-      { index: 1, x: width * 0.35, y: groundY + 22, occupied: false },
-      { index: 2, x: width * 0.65, y: groundY + 22, occupied: false },
-      { index: 3, x: width * 0.83, y: groundY + 22, occupied: false },
-    ];
+    if (store.currentStage >= 2) {
+      // Stage 2: 2 customer chairs/stools flanking the inox cart
+      this.seats = [
+        { index: 0, x: width * 0.24, y: groundY + 22, occupied: false },
+        { index: 1, x: width * 0.36, y: groundY + 22, occupied: false },
+      ];
+    } else {
+      // Perfectly balanced 4 seats flanking 2 tables on sidewalk:
+      // Left Table at 0.26 (seats: 0.17 and 0.35)
+      // Right Table at 0.74 (seats: 0.65 and 0.83)
+      // Counter stays centered at 0.50
+      this.seats = [
+        { index: 0, x: width * 0.17, y: groundY + 22, occupied: false },
+        { index: 1, x: width * 0.35, y: groundY + 22, occupied: false },
+        { index: 2, x: width * 0.65, y: groundY + 22, occupied: false },
+        { index: 3, x: width * 0.83, y: groundY + 22, occupied: false },
+      ];
+    }
   }
 
   private _drawFurniture() {
     const { width, height } = this.scale;
     const groundY = height * 0.46;
+    const store = useGameStore.getState();
 
-    // Draw plastic chairs for each seat
+    if (store.currentStage >= 2) {
+      // ==========================================
+      // STAGE 2: 2 CUSTOMER CHAIRS & 4 SHIPPER SLOTS
+      // ==========================================
+
+      // 1. Draw 2 Customer Chairs/Bar Stools on sidewalk
+      this.seats.forEach((seat, i) => {
+        const stoolG = this.add.graphics();
+        stoolG.lineStyle(2, 0xd0d5dd, 1);
+        stoolG.lineBetween(seat.x - 7, seat.y + 12, seat.x - 3, seat.y - 2);
+        stoolG.lineBetween(seat.x + 7, seat.y + 12, seat.x + 3, seat.y - 2);
+        stoolG.strokeEllipse(seat.x, seat.y + 6, 12, 3);
+        stoolG.fillStyle(0x8d6e63, 1);
+        stoolG.fillEllipse(seat.x, seat.y - 4, 20, 7);
+        stoolG.fillStyle(0xa1887f, 1);
+        stoolG.fillEllipse(seat.x, seat.y - 5, 16, 4);
+
+        const stoolZone = this.add.zone(seat.x, seat.y, 24, 28).setInteractive();
+        stoolZone.on('pointerdown', () => this._handleCleanTable(i));
+      });
+
+      // Small round side table for the 2 stools
+      const tX = (this.seats[0].x + this.seats[1].x) / 2;
+      const tY = groundY + 20;
+      const tableG = this.add.graphics();
+      tableG.lineStyle(2, 0xd0d5dd, 1);
+      tableG.lineBetween(tX, tY + 8, tX, tY - 6);
+      tableG.fillStyle(0x5d4037, 1);
+      tableG.fillEllipse(tX, tY - 6, 26, 8);
+      tableG.fillStyle(0x795548, 1);
+      tableG.fillEllipse(tX, tY - 7, 22, 5);
+
+      const tableZone = this.add.zone(tX, tY, 30, 20).setInteractive();
+      tableZone.on('pointerdown', () => this._handleCleanTable(0));
+
+      // 2. 4 Shipper Queue Slots Marking on the Right Sidewalk
+      const shipperSlots = [
+        { id: 1, x: width * 0.62 },
+        { id: 2, x: width * 0.71 },
+        { id: 3, x: width * 0.80 },
+        { id: 4, x: width * 0.89 },
+      ];
+
+      shipperSlots.forEach((slot) => {
+        const sg = this.add.graphics();
+        sg.lineStyle(1.2, 0xf97316, 0.9);
+        sg.strokeRoundedRect(slot.x - 14, groundY + 8, 28, 22, 3);
+        sg.fillStyle(0xf97316, 0.08);
+        sg.fillRoundedRect(slot.x - 14, groundY + 8, 28, 22, 3);
+
+        const txt = this.add.text(slot.x, groundY + 12, `🛵 #${slot.id}`, {
+          fontSize: '7px',
+          color: '#F97316',
+          fontStyle: 'bold',
+        }).setOrigin(0.5);
+
+        const icon = this.add.text(slot.x, groundY + 21, '🛍️', {
+          fontSize: '8px',
+        }).setOrigin(0.5);
+
+        const zone = this.add.zone(slot.x, groundY + 18, 30, 24).setInteractive();
+        zone.on('pointerdown', () => {
+          SoundManager.playHonk();
+          this._spawnBannerNotice(`🛵 Ô chờ giao hàng #${slot.id}: Shipper ShopeeFood/Grab chuẩn bị nhận đơn!`);
+          this.tweens.add({
+            targets: [txt, icon],
+            y: '-=4',
+            duration: 90,
+            yoyo: true,
+          });
+        });
+      });
+
+      return;
+    }
+
+    // Default Stage 1: Draw plastic chairs for each seat
     this.seats.forEach((seat, i) => {
       const isRed = i % 2 === 0;
       const spriteKey = isRed ? 'ghe_nhua_do' : 'ghe_nhua_xanh';
@@ -557,6 +643,16 @@ export class CafeScene extends Phaser.Scene {
   }
 
   private _drawCoffeeStand() {
+    const store = useGameStore.getState();
+    const isStage2OrCartUpgraded =
+      store.currentStage >= 2 ||
+      (store.upgrades && (store.upgrades['xe_day_luu_dong'] || 0) > 0);
+
+    if (isStage2OrCartUpgraded) {
+      this._drawInoxCart();
+      return;
+    }
+
     const x = this.counterX;
     const y = this.counterY;
     const g = this.add.graphics();
@@ -578,7 +674,6 @@ export class CafeScene extends Phaser.Scene {
     }
 
     // Animated Shop Owner (Chủ Quán Nam / Nữ) standing proudly behind counter
-    const store = useGameStore.getState();
     const ownerKey = store.ownerGender === 'FEMALE' ? 'chu_quan_nu' : 'chu_quan_nam';
     if (this.textures.exists(ownerKey)) {
       this.barista = this.add.sprite(x, y - 56, ownerKey);
@@ -686,6 +781,376 @@ export class CafeScene extends Phaser.Scene {
       callback: () => {
         this._spawnSteamPuff(x - 34, y - 62);
         this._spawnSteamPuff(x, y - 68);
+      },
+    });
+  }
+
+  /**
+   * Stage 2: Stainless Steel Inox Mobile Cart ("Xe Đẩy Lưu Động Inox")
+   * Metallic frame & luster sheen, LED menu board, barista automation,
+   * ASMR interactive equipment (cup sealer, shaker, cream whisk).
+   */
+  private _drawInoxCart() {
+    const x = this.counterX;
+    const y = this.counterY;
+    const store = useGameStore.getState();
+    const g = this.add.graphics();
+
+    // ==========================================
+    // 1. MOBILE WHEELS AT BASE
+    // ==========================================
+    // Left wheel & Right wheel with rubber tire & chrome axle
+    [-52, 52].forEach((wheelOffset) => {
+      // Bracket
+      g.fillStyle(0x475467, 1);
+      g.fillRect(x + wheelOffset - 4, y + 16, 8, 10);
+      // Rubber tire
+      g.fillStyle(0x1d2939, 1);
+      g.fillCircle(x + wheelOffset, y + 26, 9);
+      // Metallic chrome rim
+      g.fillStyle(0xd0d5dd, 1);
+      g.fillCircle(x + wheelOffset, y + 26, 5);
+      // Center bolt
+      g.fillStyle(0x344054, 1);
+      g.fillCircle(x + wheelOffset, y + 26, 2);
+    });
+
+    // ==========================================
+    // 2. STAINLESS STEEL INOX CART MAIN BODY
+    // ==========================================
+    // Outer shadow
+    g.fillStyle(0x000000, 0.25);
+    g.fillRoundedRect(x - 68, y - 36, 136, 56, 6);
+
+    // Inox Base Panel (High-grade stainless steel)
+    g.fillStyle(0xd0d5dd, 1);
+    g.fillRoundedRect(x - 66, y - 38, 132, 54, 5);
+
+    // Metallic Gradient & Brushed Metal Texture Highlights
+    g.fillStyle(0xe4e7ec, 0.95);
+    g.fillRect(x - 64, y - 36, 128, 22);
+
+    g.fillStyle(0x98a2b3, 0.85);
+    g.fillRect(x - 64, y - 14, 128, 28);
+
+    // Stainless Steel Vertical Sheen Bars (Metallic luster reflection)
+    const sheen1 = this.add.graphics();
+    sheen1.fillStyle(0xffffff, 0.45);
+    sheen1.beginPath();
+    sheen1.moveTo(x - 25, y - 36);
+    sheen1.lineTo(x - 10, y - 36);
+    sheen1.lineTo(x - 22, y + 14);
+    sheen1.lineTo(x - 37, y + 14);
+    sheen1.closePath();
+    sheen1.fillPath();
+
+    const sheen2 = this.add.graphics();
+    sheen2.fillStyle(0xffffff, 0.25);
+    sheen2.beginPath();
+    sheen2.moveTo(x + 18, y - 36);
+    sheen2.lineTo(x + 28, y - 36);
+    sheen2.lineTo(x + 18, y + 14);
+    sheen2.lineTo(x + 8, y + 14);
+    sheen2.closePath();
+    sheen2.fillPath();
+
+    // 3 Cabinet Compartment divisions (Vertical seams)
+    g.lineStyle(1.5, 0x667085, 0.8);
+    g.lineBetween(x - 22, y - 34, x - 22, y + 12);
+    g.lineBetween(x + 22, y - 34, x + 22, y + 12);
+
+    // Stainless Steel Tubular Door Handles
+    [-44, 0, 44].forEach((hx) => {
+      g.fillStyle(0x344054, 1);
+      g.fillRoundedRect(x + hx - 8, y - 10, 16, 4, 2);
+      g.fillStyle(0xffffff, 0.8);
+      g.fillRect(x + hx - 6, y - 10, 12, 1);
+    });
+
+    // Rivets / Bolts along base
+    g.fillStyle(0x475467, 1);
+    for (let r = -60; r <= 60; r += 20) {
+      g.fillCircle(x + r, y + 11, 1.5);
+    }
+
+    // ==========================================
+    // 3. COUNTERTOP WORK SURFACE (Polished Chrome)
+    // ==========================================
+    g.fillStyle(0xf2f4f7, 1);
+    g.fillRoundedRect(x - 72, y - 44, 144, 8, 3);
+    g.fillStyle(0xffffff, 0.9);
+    g.fillRect(x - 70, y - 44, 140, 2);
+    g.fillStyle(0x667085, 0.7);
+    g.fillRect(x - 70, y - 37, 140, 1);
+
+    // ==========================================
+    // 4. VERTICAL STAINLESS STEEL SUPPORT PILLARS
+    // ==========================================
+    // Left & Right Chrome Tubular Poles holding up roof
+    [-64, 64].forEach((px) => {
+      g.fillStyle(0x98a2b3, 1);
+      g.fillRect(x + px - 3, y - 96, 6, 54);
+      g.fillStyle(0xffffff, 0.85);
+      g.fillRect(x + px - 1, y - 96, 2, 54);
+      // Connection brackets
+      g.fillStyle(0x344054, 1);
+      g.fillRect(x + px - 4, y - 46, 8, 4);
+      g.fillRect(x + px - 4, y - 94, 8, 4);
+    });
+
+    // ==========================================
+    // 5. AERODYNAMIC INOX CANOPY / ROOF
+    // ==========================================
+    // Curved metallic canopy
+    g.fillStyle(0x98a2b3, 1);
+    g.fillRoundedRect(x - 76, y - 102, 152, 16, 6);
+    g.fillStyle(0xe4e7ec, 1);
+    g.fillRoundedRect(x - 74, y - 100, 148, 11, 4);
+    g.fillStyle(0xffffff, 0.95);
+    g.fillRect(x - 72, y - 99, 144, 3);
+
+    // ==========================================
+    // 6. LED ELECTRONIC MENU BOARD
+    // ==========================================
+    // Dark LED housing
+    const ledBg = this.add.graphics();
+    ledBg.fillStyle(0x0a0f1d, 1);
+    ledBg.fillRoundedRect(x - 62, y - 82, 124, 26, 4);
+    ledBg.lineStyle(1.5, 0x00f2fe, 1);
+    ledBg.strokeRoundedRect(x - 62, y - 82, 124, 26, 4);
+
+    // Glowing LED Text
+    const ledTitle = this.add
+      .text(x, y - 75, '⚡ XE ĐẨY LƯU ĐỘNG • BẤT ỔN ⚡', {
+        fontSize: '7.5px',
+        color: '#00F2FE',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    const ledItems = this.add
+      .text(x, y - 63, '☕ CF MUỐI 32K  •  🍋 TRÀ CHANH 22K', {
+        fontSize: '8px',
+        color: '#FFD700',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    // Subtle neon LED blinking / pulsing effect
+    this.tweens.add({
+      targets: [ledTitle, ledItems],
+      alpha: { from: 1, to: 0.78 },
+      duration: 850,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+
+    // Tap on LED board plays chime & flashes
+    this.add
+      .zone(x, y - 70, 124, 26)
+      .setInteractive()
+      .on('pointerdown', () => {
+        SoundManager.playStreetChime();
+        this._spawnBannerNotice('💡 Bảng LED Menu: Cà phê muối & Trà chanh giã tay cháy hàng!');
+        this.tweens.add({
+          targets: [ledTitle, ledItems],
+          scaleX: 1.15,
+          scaleY: 1.15,
+          duration: 100,
+          yoyo: true,
+        });
+      });
+
+    // ==========================================
+    // 7. BARISTA OWNER & AUTOMATION ASSISTANT
+    // ==========================================
+    const ownerKey = store.ownerGender === 'FEMALE' ? 'chu_quan_nu' : 'chu_quan_nam';
+    if (this.textures.exists(ownerKey)) {
+      this.barista = this.add.sprite(x + 10, y - 56, ownerKey);
+      this.barista.setDisplaySize(44, 70);
+      this.barista.setInteractive().on('pointerdown', () => {
+        SoundManager.playWaterPour();
+        const welcomeDialogues = [
+          'Dạ em chào anh chị! Xe đẩy inox mới tinh đón khách nè!',
+          'Hôm nay quán có Cà Phê Muối kem béo ngậy và Trà Chanh giã tay mát rượi nha!',
+          'Đơn Shipper nổ ầm ầm, quán cảm ơn quý khách nhiều nghen!',
+        ];
+        const greeting = Phaser.Utils.Array.GetRandom(welcomeDialogues);
+        EventBus.emit('customer-speak', {
+          name: store.ownerGender === 'FEMALE' ? 'Chị Bảy Chủ Quán' : 'Anh Ba Chủ Quán',
+          dialogue: greeting,
+        });
+      });
+
+      this.tweens.add({
+        targets: this.barista,
+        y: y - 54,
+        scaleY: this.barista.scaleY * 0.97,
+        duration: 1100,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
+    }
+
+    // Barista Assistant (Staff) if unlocked
+    const isBaristaUnlocked =
+      (Array.isArray((store as any).unlockedStaff) && (store as any).unlockedStaff.includes('staff_barista_1')) ||
+      ((store.upgrades?.['staff_barista_1'] || 0) > 0);
+
+    if (isBaristaUnlocked) {
+      // Draw Barista Helper standing beside owner
+      const assistantKey = store.ownerGender === 'FEMALE' ? 'chu_quan_nam' : 'chu_quan_nu';
+      if (this.textures.exists(assistantKey)) {
+        const assistant = this.add.sprite(x - 24, y - 54, assistantKey);
+        assistant.setDisplaySize(38, 64);
+        assistant.setTint(0xffeedd); // warm apron tint
+        assistant.setInteractive().on('pointerdown', () => {
+          SoundManager.playSpoonStir();
+          const assistantDialogues = [
+            'Dạ em là Barista phụ quán! Việc pha chế cứ để em lo!',
+            'Cà Phê Muối em đánh kem chuẩn mịn, khách uống là mê ngay!',
+            'Trà Chanh em giã tay bằng chanh tươi, vừa thơm vừa thanh mát ạ!',
+          ];
+          EventBus.emit('customer-speak', {
+            name: 'Bạn Phụ Quán (Barista)',
+            dialogue: Phaser.Utils.Array.GetRandom(assistantDialogues),
+          });
+          this.tweens.add({
+            targets: assistant,
+            y: y - 60,
+            duration: 120,
+            yoyo: true,
+          });
+        });
+
+        this.tweens.add({
+          targets: assistant,
+          y: y - 52,
+          scaleY: assistant.scaleY * 0.97,
+          duration: 1250,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut',
+        });
+      }
+
+      // Little "BARISTA" badge above assistant
+      this.add.text(x - 24, y - 88, '☕ BARISTA', {
+        fontSize: '7px',
+        color: '#FFFFFF',
+        backgroundColor: '#795548',
+        padding: { x: 3, y: 1 },
+        fontStyle: 'bold',
+      }).setOrigin(0.5);
+    }
+
+    // ==========================================
+    // 8. ASMR INTERACTIVE COUNTERTOP STATIONS
+    // ==========================================
+
+    // A. Electric Salt Cream Whisk (Cối Đánh Kem Muối) on Left
+    const creamBeaker = this.add.graphics();
+    creamBeaker.fillStyle(0xd0d5dd, 0.7);
+    creamBeaker.fillRect(x - 52, y - 54, 14, 16);
+    creamBeaker.fillStyle(0xffffff, 0.98);
+    creamBeaker.fillRoundedRect(x - 53, y - 56, 16, 9, 3);
+    creamBeaker.lineStyle(1.5, 0x475467, 1);
+    creamBeaker.lineBetween(x - 45, y - 64, x - 45, y - 52);
+
+    const creamZone = this.add.zone(x - 45, y - 52, 22, 26).setInteractive();
+    creamZone.on('pointerdown', () => {
+      SoundManager.playCreamWhisk();
+      this._spawnBannerNotice('🧂 Đánh bông kem muối béo mịn ASMR!');
+      this.tweens.add({
+        targets: creamBeaker,
+        scaleY: 1.25,
+        duration: 90,
+        yoyo: true,
+      });
+    });
+
+    // B. Professional Stainless Steel Shaker (Bình Lắc Trà Chanh)
+    const shakerG = this.add.graphics();
+    shakerG.fillStyle(0xe4e7ec, 1);
+    shakerG.fillRoundedRect(x - 28, y - 54, 14, 18, 2);
+    shakerG.fillStyle(0xd0d5dd, 1);
+    shakerG.fillRect(x - 26, y - 58, 10, 5);
+    shakerG.fillStyle(0xffffff, 0.9);
+    shakerG.fillRect(x - 27, y - 53, 3, 16);
+
+    const shakerZone = this.add.zone(x - 21, y - 52, 20, 26).setInteractive();
+    shakerZone.on('pointerdown', () => {
+      SoundManager.playShakerShake();
+      this._spawnBannerNotice('🍋 Lắc bình shaker: Trà chanh giã tay mát rượi!');
+      this.tweens.add({
+        targets: shakerG,
+        angle: { from: -14, to: 14 },
+        duration: 80,
+        yoyo: true,
+        repeat: 3,
+      });
+    });
+
+    // C. Traditional Phin Coffee Dripper
+    if (this.textures.exists('phin_ca_phe')) {
+      const phin = this.add.image(x, y - 54, 'phin_ca_phe').setDisplaySize(28, 42);
+      phin.setInteractive().on('pointerdown', () => {
+        SoundManager.playCoffeeDrip();
+        this._spawnBannerNotice('☕ Cà phê phin giọt đậm đà, thơm nức mũi.');
+      });
+      const drip = this.add.circle(x, y - 41, 1.8, 0x3e2723, 0.95);
+      this.tweens.add({
+        targets: drip,
+        y: y - 31,
+        alpha: { from: 1, to: 0.2 },
+        duration: 850,
+        repeat: -1,
+        ease: 'Quad.easeIn',
+      });
+    }
+
+    // D. Automatic Cup Sealing Machine (Máy Ép Màng Nắp Ly) on Right
+    const sealerG = this.add.graphics();
+    sealerG.fillStyle(0x344054, 1);
+    sealerG.fillRoundedRect(x + 28, y - 58, 20, 22, 3);
+    sealerG.fillStyle(0x22c55e, 1);
+    sealerG.fillCircle(x + 38, y - 53, 2.5);
+    sealerG.lineStyle(2, 0xd92d20, 1);
+    sealerG.lineBetween(x + 44, y - 55, x + 50, y - 65);
+    sealerG.fillStyle(0x1d2939, 1);
+    sealerG.fillRect(x + 31, y - 44, 14, 8);
+
+    const sealerZone = this.add.zone(x + 38, y - 52, 26, 26).setInteractive();
+    sealerZone.on('pointerdown', () => {
+      SoundManager.playCupSealer();
+      this._spawnBannerNotice('🥤 Máy dập nắp ly kêu rộp roạt! Ly take-away hoàn tất.');
+      this.tweens.add({
+        targets: sealerG,
+        scaleY: 0.9,
+        duration: 110,
+        yoyo: true,
+      });
+    });
+
+    // E. 4 Takeaway Prepared Cups Rack on Front Counter
+    for (let c = 0; c < 4; c++) {
+      const cx = x + 10 + c * 7;
+      g.fillStyle(0xffffff, 0.9);
+      g.fillRect(cx, y - 42, 5, 8);
+      g.fillStyle(0xe08738, 1);
+      g.fillRect(cx, y - 39, 5, 4);
+      g.fillStyle(0x10b981, 1);
+      g.fillRect(cx + 2, y - 45, 1.5, 3);
+    }
+
+    // Ambient Steam from Boiler
+    this.time.addEvent({
+      delay: 1600,
+      loop: true,
+      callback: () => {
+        this._spawnSteamPuff(x - 4, y - 64);
       },
     });
   }
@@ -804,8 +1269,11 @@ export class CafeScene extends Phaser.Scene {
         if (store.dayPhase !== 'OPEN') return;
 
         // 1. Barista Apprentice Auto-Brew
-        const baristaLvl = store.upgrades['staff_barista_1'] || 0;
-        if (baristaLvl > 0 && !this.isBrewing) {
+        const isBaristaUnlocked =
+          (Array.isArray((store as any).unlockedStaff) && (store as any).unlockedStaff.includes('staff_barista_1')) ||
+          ((store.upgrades?.['staff_barista_1'] || 0) > 0);
+
+        if (isBaristaUnlocked && !this.isBrewing) {
           const waitingCust = this.customers.find((c) => c.status === 'WAITING_DRINK');
           if (waitingCust && waitingCust.orderRecipe) {
             const recipeId = waitingCust.orderRecipe.id;
@@ -819,7 +1287,15 @@ export class CafeScene extends Phaser.Scene {
               store.addGold(totalEarned);
               store.addReputation(repEarned);
               store.recordDrinkSale(basePrice, bonusTip, repEarned);
-              SoundManager.playCoinTing();
+
+              // Authentic ASMR sound based on drink
+              if (recipeId === 'cf_muoi') {
+                SoundManager.playCreamWhisk();
+              } else if (recipeId === 'tra_chanh' || recipeId === 'tra_dao_cam_sa') {
+                SoundManager.playShakerShake();
+              } else {
+                SoundManager.playCoinTing();
+              }
 
               this._handleManualBrewCompleted({
                 seatIndex: waitingCust.seat.index,
@@ -827,7 +1303,7 @@ export class CafeScene extends Phaser.Scene {
                 isPerfect: true,
                 totalEarned,
               });
-              this._spawnBannerNotice(`☕ Bạn phụ quán vừa auto pha 1 ly ${waitingCust.orderRecipe.name}!`);
+              this._spawnBannerNotice(`☕ Barista phụ quán vừa tự động pha 1 ly ${waitingCust.orderRecipe.name}!`);
             }
           }
         }
@@ -873,8 +1349,12 @@ export class CafeScene extends Phaser.Scene {
     EventBus.on('request-brew', this._handleRequestBrew, this);
     EventBus.on('manual-brew-completed', this._handleManualBrewCompleted, this);
     EventBus.on('customer-finished-drinking', this._handleCustomerFinished, this);
+    EventBus.on('event-warning', this._onEventWarning, this);
     EventBus.on('event-started', this._onEventStarted, this);
     EventBus.on('event-resolved', this._onEventResolved, this);
+    EventBus.on('stage-changed', () => {
+      this.scene.restart();
+    });
     EventBus.on('clean-all-tables', this._handleCleanAllTables, this);
     EventBus.on('owner-gender-changed', (gender: 'MALE' | 'FEMALE') => {
       const key = gender === 'FEMALE' ? 'chu_quan_nu' : 'chu_quan_nam';
@@ -994,6 +1474,12 @@ export class CafeScene extends Phaser.Scene {
     });
   }
 
+  private _onEventWarning(data: { id: string }) {
+    if (data.id === 'trat_tu_do_thi') {
+      SoundManager.playSirenAlert();
+    }
+  }
+
   private _onEventStarted(event: { id: string }) {
     if (event.id === 'mua_rao') {
       this.isRaining = true;
@@ -1029,14 +1515,30 @@ export class CafeScene extends Phaser.Scene {
       }
     } else if (result.id === 'trat_tu_do_thi') {
       if (result.viaNeighbor) {
-        this._spawnBannerNotice('🏠 Cô Bảy cho nép hiên nhà! Thoát phạt 100%!');
+        store.setRainTipBoost(45);
+        this._spawnBannerNotice('🏠 Cô Bảy cho nép hiên nhà! Thoát phạt 100% & +10% Tip!');
       } else if (result.success) {
-        store.addGold(10000);
-        this._spawnBannerNotice('👮 Thu ghế kịp thời! Thưởng trật tự +10.000đ');
+        // Success: avoid penalty, +10% tip bonus
+        store.setRainTipBoost(60);
+        const tipBonus = Math.max(5000, Math.round(store.gold * 0.1));
+        store.addGold(tipBonus);
+        SoundManager.playCoinTing();
+        this._spawnBannerNotice(`👮 Thu ghế kịp thời! Né biên bản & nhận thưởng +10% Tip (${formatVND(tipBonus)})!`);
       } else {
-        const fine = Math.min(50000, Math.round(store.gold * 0.15));
+        // Failure: 20k fine recorded in store dailyReport.penalties (and deducted from gold)
+        const fine = 20000;
         store.spendGold(fine);
-        this._spawnBannerNotice(`⚠️ Bị phạt ${formatVND(fine)} do lấn chiếm!`);
+        const curReport = store.dailyReport;
+        const newPenalties = (curReport.penalties || 0) + fine;
+        const totalExpenses = (curReport.supplyCost || 0) + newPenalties + (curReport.rentCost || 0);
+        useGameStore.setState({
+          dailyReport: {
+            ...curReport,
+            penalties: newPenalties,
+            netProfit: (curReport.revenue + curReport.tips) - totalExpenses,
+          },
+        });
+        this._spawnBannerNotice(`🚨 Bị trật tự đô thị lập biên bản xử phạt ${formatVND(fine)}!`);
       }
     } else if (result.id === 'cup_dien') {
       if (result.success) {
@@ -1172,6 +1674,7 @@ export class CafeScene extends Phaser.Scene {
     EventBus.off('request-brew', this._handleRequestBrew, this);
     EventBus.off('manual-brew-completed', this._handleManualBrewCompleted, this);
     EventBus.off('customer-finished-drinking', this._handleCustomerFinished, this);
+    EventBus.off('event-warning', this._onEventWarning, this);
     EventBus.off('event-started', this._onEventStarted, this);
     EventBus.off('event-resolved', this._onEventResolved, this);
     EventBus.off('clean-all-tables', this._handleCleanAllTables, this);

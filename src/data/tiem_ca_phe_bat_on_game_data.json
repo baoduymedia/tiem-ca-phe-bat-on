@@ -190,16 +190,40 @@
     },
     {
       "id": "cf_muoi",
-      "name": "Cà Phê Muối Kem Béo",
+      "name": "Cà Phê Muối",
       "stage": 2,
       "category": "drink",
       "basePrice": 32000,
-      "brewTimeSec": 4.0,
-      "unlockCost": 550000,
+      "brewTimeSec": 3.5,
+      "prepTimeSec": 3.5,
+      "unlockCost": 150000,
       "reputationGain": 5,
-      "asmrSfx": "sfx_espresso_machine",
+      "asmrSfx": "sfx_cream_whisk",
       "isHot": false,
-      "description": "Lớp kem muối mặn ngọt sánh mịn, shipper xếp hàng chỉ để mua món này."
+      "ingredients": [
+        "coffee",
+        "salt_cream"
+      ],
+      "description": "Lớp kem muối mặn béo sánh mịn phủ trên nền cà phê phin đậm đà, hot trend gây bão giới trẻ."
+    },
+    {
+      "id": "tra_chanh",
+      "name": "Trà Chanh Giã Tay",
+      "stage": 2,
+      "category": "drink",
+      "basePrice": 22000,
+      "brewTimeSec": 2.5,
+      "prepTimeSec": 2.5,
+      "unlockCost": 80000,
+      "reputationGain": 4,
+      "asmrSfx": "sfx_shaker",
+      "isHot": false,
+      "ingredients": [
+        "tea",
+        "lemon",
+        "sugar"
+      ],
+      "description": "Chanh tươi thơm nức mũi giã tay cùng đá bi, kết hợp cốt trà lài thanh mát giải nhiệt tức thì."
     },
     {
       "id": "banh_tiramisu",
@@ -325,6 +349,7 @@
       ],
       "favoriteRecipes": [
         "cf_muoi",
+        "tra_chanh",
         "tra_dao_cam_sa",
         "banh_mi_que",
         "cf_sua_da"
@@ -442,13 +467,13 @@
       "id": "trat_tu_do_thi",
       "name": "Trật Tự Đô Thị Đi Ngang",
       "minStage": 1,
-      "maxStage": 1,
-      "warningSec": 3,
-      "reactionWindowSec": 4,
+      "maxStage": 3,
+      "warningSec": 4,
+      "reactionWindowSec": 5,
       "buttonLabel": "THU GHẾ NHANH!",
-      "alertText": "Tò te tí te... Xe trật tự sắp tới! Nhanh tay thu ghế nhựa vào trong!",
-      "successEffect": "An toàn vượt qua! Cộng thêm 10.000đ thưởng nhanh tay",
-      "failPenalty": "Bị nhắc nhở và trừ 50.000đ (hoặc tối đa 15% tiền hiện có)"
+      "alertText": "🚨 Còi xe trật tự hú từ xa! Nhanh tay bấm THU GHẾ né biên bản!",
+      "successEffect": "An toàn vượt qua! Tránh bị phạt, khách khen nhanh nhẹn +10% Tip!",
+      "failPenalty": "Bị lập biên bản xử phạt 20.000đ vi phạm lấn chiếm vỉa hè!"
     },
     {
       "id": "doan_khach_cong_ty",

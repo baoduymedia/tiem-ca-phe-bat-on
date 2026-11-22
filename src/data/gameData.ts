@@ -1,4 +1,4 @@
-import rawData from './tiem_ca_phe_bat_on_game_data.json';
+import rawData from './tiem_ca_phe_bat_on_game_data.json' with { type: 'json' };
 
 // Re-export typed game data
 export const gameData = rawData;
@@ -31,12 +31,14 @@ export interface RecipeConfig {
   category: string;
   basePrice: number;
   brewTimeSec: number;
+  prepTimeSec?: number;
   unlockCost: number;
   reputationGain: number;
   asmrSfx: string;
   isHot: boolean;
   description: string;
   autoPickup?: boolean;
+  ingredients?: string[];
 }
 
 export interface CustomerConfig {

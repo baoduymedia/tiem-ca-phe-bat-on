@@ -2,6 +2,32 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { StageId } from '../data/gameData';
 import { EventBus } from '../game/EventBus';
+import type {
+  OrderModifier,
+  TimeOfDay,
+  RoastLevel,
+  ProvinceId,
+  SpotType,
+  TableStatus,
+  SeatState,
+  InventoryStock,
+  BranchLocationState,
+  ProvincialLeagueState,
+  SignatureRecipe,
+  TechTreeState,
+  RoasteryState,
+  StaffState,
+  DailyReport,
+} from '../types/game';
+import {
+  calculateTimeOfDay,
+  DEFAULT_DAY_DURATION_SEC,
+  RESTOCK_BASE_COSTS,
+  TECH_NODE_COSTS,
+} from '../types/game';
+
+// Re-export all game types so downstream consumers can import either from types or store
+export * from '../types/game';
 
 export interface DailyQuestProgress {
   id: string;
@@ -17,14 +43,6 @@ export interface Inventory {
   milk: number;
   ice: number;
   tea: number;
-}
-
-export interface DailyReport {
-  revenue: number;
-  tips: number;
-  ingredientCost: number;
-  cupsSold: number;
-  reputationEarned: number;
 }
 
 export interface WeatherForecast {
@@ -45,6 +63,7 @@ export interface BrewingSession {
   recipeId: string;
   recipeName: string;
   price: number;
+  orderModifier?: OrderModifier;
 }
 
 export interface GameState {
@@ -89,6 +108,20 @@ export interface GameState {
   friendHelperActiveUntil: number;
   // Temporary buffs
   rainTipBoostUntil: number;
+
+  // --- Realism Add-on Batch A & B State ---
+  timeOfDay: TimeOfDay;
+  selectedProvince: ProvinceId;
+  selectedLocationType: SpotType;
+  seatStates: SeatState[];
+  inventoryStock: InventoryStock;
+  branchLocations: BranchLocationState[];
+  provincialLeague: ProvincialLeagueState;
+  signatureRecipes: SignatureRecipe[];
+  techTree: TechTreeState;
+  roastery: RoasteryState;
+  staffState: StaffState;
+  staffStamina: number;
 }
 
 export interface GameActions {
@@ -140,6 +173,24 @@ export interface GameActions {
   setRainTipBoost: (durationSec: number) => void;
   updateLastActive: () => void;
   resetGame: () => void;
+
+  // --- Realism Add-on Batch A & B Actions ---
+  restockInventory: (type?: 'all' | 'coffee' | 'ice' | 'milk') => boolean;
+  setSeatState: (index: number, status: TableStatus, customerId?: string | null, dirtyDroppedVnd?: number) => void;
+  updateSeatStatus: (index: number, status: TableStatus, customerId?: string | null, dirtyDroppedVnd?: number) => void;
+  consumeInventoryStock: (recipeId: string, modifier?: OrderModifier) => boolean;
+  tickIceMelting: (deltaSec: number) => void;
+  setProvince: (id: ProvinceId) => void;
+  setLocationType: (type: SpotType) => void;
+  recordOrderResult: (isPerfect: boolean, tip: number, revenue: number) => void;
+  treatStaffMilkTea: () => boolean;
+  updateStaffStamina: (delta: number) => void;
+  drainStaffStamina: (amount: number) => void;
+  addSignatureRecipe: (recipe: Omit<SignatureRecipe, 'id'>) => SignatureRecipe;
+  unlockTechNode: (nodeId: string) => boolean;
+  addResearchPoints: (amount: number) => void;
+  updateRoasterySettings: (beans: 'robusta' | 'arabica', roast: RoastLevel) => void;
+  addBranchLocation: (branch: BranchLocationState) => void;
 }
 
 const WEATHERS: WeatherForecast[] = [
@@ -234,7 +285,7 @@ const initialState: GameState = {
   // Day cycle default
   currentDay: 1,
   dayPhase: 'PREP',
-  dayTimeRemainingSec: 75,
+  dayTimeRemainingSec: DEFAULT_DAY_DURATION_SEC,
   inventory: {
     coffee: 16,
     milk: 12,
@@ -242,11 +293,19 @@ const initialState: GameState = {
     tea: 25,
   },
   dailyReport: {
+    dayNumber: 1,
     revenue: 0,
     tips: 0,
+    supplyCost: 0,
     ingredientCost: 0,
+    penalties: 0,
+    rentCost: 0,
+    netProfit: 0,
     cupsSold: 0,
+    perfectOrdersCount: 0,
     reputationEarned: 0,
+    reviewStars: 5,
+    reviewComment: 'Quán bắt đầu ngày mới rộn ràng!',
   },
   weatherForecast: WEATHERS[0],
   hasCompletedSplash: false,
@@ -262,6 +321,50 @@ const initialState: GameState = {
   marketNews: DAILY_MARKET_NEWS[3],
   friendHelperActiveUntil: 0,
   rainTipBoostUntil: 0,
+
+  // --- Realism Add-on Batch A & B State ---
+  timeOfDay: 'MORNING',
+  selectedProvince: 'hcm',
+  selectedLocationType: 'alley',
+  seatStates: [
+    { id: 0, index: 0, status: 'EMPTY', customerId: null },
+    { id: 1, index: 1, status: 'EMPTY', customerId: null },
+    { id: 2, index: 2, status: 'EMPTY', customerId: null },
+    { id: 3, index: 3, status: 'EMPTY', customerId: null },
+  ],
+  inventoryStock: {
+    coffeeStock: 100,
+    iceStock: 100,
+    milkStock: 100,
+  },
+  branchLocations: [],
+  provincialLeague: {
+    homeProvinceId: 'hcm',
+    weeklyContributionScore: 0,
+    currentRankInProvince: 1,
+    provinceTotalScore: 1250,
+    claimedWeekendReward: false,
+  },
+  signatureRecipes: [],
+  techTree: {
+    researchPoints: 0,
+    unlockedNodes: [],
+  },
+  roastery: {
+    beanType: 'robusta',
+    beansType: 'robusta',
+    roastLevel: 'MEDIUM',
+    supplyDiscountPercent: 0,
+    autoRoast: false,
+  },
+  staffState: {
+    stamina: 100,
+    maxStamina: 100,
+    isExhausted: false,
+    speedMultiplier: 1.0,
+    milkTeaBuffUntil: 0,
+  },
+  staffStamina: 100,
 };
 
 /** Format VNĐ: 15.000đ, 1.5M, 2.3B */
@@ -276,7 +379,7 @@ export function formatVND(amount: number): string {
 }
 
 export const useGameStore = create<GameState & GameActions>()(
-  persist(
+  persist<GameState & GameActions>(
     (set, get) => ({
       ...initialState,
 
@@ -461,36 +564,134 @@ export const useGameStore = create<GameState & GameActions>()(
 
       cancelBrewing: () => set({ activeBrewing: null }),
 
-      addDirtyTable: (tableIndex: number) =>
-        set((s) => ({
-          dirtyTables: s.dirtyTables.includes(tableIndex)
+      addDirtyTable: (index: number) => {
+        set((s) => {
+          const tableIdx = index <= 1 ? index : Math.floor(index / 2);
+          const newDirtyTables = s.dirtyTables.includes(tableIdx)
             ? s.dirtyTables
-            : [...s.dirtyTables, tableIndex],
-        })),
+            : [...s.dirtyTables, tableIdx];
 
-      cleanTable: (tableIndex: number) => {
-        const { dirtyTables } = get();
-        if (!dirtyTables.includes(tableIndex)) return 0;
-        const tip = Math.floor(Math.random() * 3000) + 2000;
-        set((s) => ({
-          dirtyTables: s.dirtyTables.filter((t) => t !== tableIndex),
-          gold: s.gold + tip,
-        }));
+          const updatedSeats = s.seatStates.map((seat) => {
+            const seatTableIdx = Math.floor(seat.index / 2);
+            const shouldDirty = (index <= 1 && seatTableIdx === index) || seat.index === index;
+            if (shouldDirty) {
+              return {
+                ...seat,
+                status: 'DIRTY' as TableStatus,
+                dirtyDroppedVnd: seat.dirtyDroppedVnd ?? (Math.floor(Math.random() * 1001) + 1000),
+                dirtySince: seat.dirtySince ?? Date.now(),
+              };
+            }
+            return seat;
+          });
+
+          return { dirtyTables: newDirtyTables, seatStates: updatedSeats };
+        });
+      },
+
+      cleanTable: (idOrIndex: number) => {
+        const { dirtyTables, seatStates, gold } = get();
+
+        const isTableMatch = dirtyTables.includes(idOrIndex);
+        const isSeatMatch = idOrIndex >= 0 && idOrIndex < seatStates.length && seatStates[idOrIndex].status === 'DIRTY';
+
+        if (!isTableMatch && !isSeatMatch) return 0;
+
+        const tip = Math.floor(Math.random() * 1001) + 1000; // 1.000đ - 2.000đ
+        let cleanedSeats = [...seatStates];
+
+        if (idOrIndex <= 1 && isTableMatch) {
+          // Clean all seats associated with this table
+          cleanedSeats = cleanedSeats.map((seat) =>
+            Math.floor(seat.index / 2) === idOrIndex
+              ? { ...seat, status: 'EMPTY' as TableStatus, customerId: null, dirtyDroppedVnd: undefined, dirtySince: undefined }
+              : seat
+          );
+        } else if (isSeatMatch) {
+          // Clean specific seat
+          cleanedSeats = cleanedSeats.map((seat) =>
+            seat.index === idOrIndex
+              ? { ...seat, status: 'EMPTY' as TableStatus, customerId: null, dirtyDroppedVnd: undefined, dirtySince: undefined }
+              : seat
+          );
+        }
+
+        // Recalculate remaining dirty tables from seatStates
+        const isTable0Dirty = cleanedSeats[0]?.status === 'DIRTY' || cleanedSeats[1]?.status === 'DIRTY';
+        const isTable1Dirty = cleanedSeats[2]?.status === 'DIRTY' || cleanedSeats[3]?.status === 'DIRTY';
+        const nextDirtyTables: number[] = [];
+        if (isTable0Dirty) nextDirtyTables.push(0);
+        if (isTable1Dirty) nextDirtyTables.push(1);
+
+        set({
+          dirtyTables: nextDirtyTables,
+          seatStates: cleanedSeats,
+          gold: gold + tip,
+        });
+
         get().incrementQuestProgress('clean', 1);
+        EventBus.emit('table-cleaned', { index: idOrIndex, tip });
         return tip;
       },
 
       cleanAllDirtyTables: () => {
-        const { dirtyTables } = get();
-        if (dirtyTables.length === 0) return 0;
-        const count = dirtyTables.length;
-        const totalTip = count * 3000;
-        set((s) => ({
-          dirtyTables: [],
-          gold: s.gold + totalTip,
+        const { dirtyTables, seatStates, gold } = get();
+        const dirtySeatsCount = seatStates.filter((s) => s.status === 'DIRTY').length;
+        const totalUnits = Math.max(dirtyTables.length, dirtySeatsCount);
+
+        if (totalUnits === 0) return 0;
+
+        let totalTip = 0;
+        for (let i = 0; i < totalUnits; i++) {
+          totalTip += Math.floor(Math.random() * 1001) + 1000; // 1.000đ - 2.000đ each
+        }
+
+        const clearedSeats = seatStates.map((seat) => ({
+          ...seat,
+          status: 'EMPTY' as TableStatus,
+          customerId: null,
+          dirtyDroppedVnd: undefined,
+          dirtySince: undefined,
         }));
-        get().incrementQuestProgress('clean', count);
+
+        set({
+          dirtyTables: [],
+          seatStates: clearedSeats,
+          gold: gold + totalTip,
+        });
+
+        get().incrementQuestProgress('clean', totalUnits);
+        EventBus.emit('all-tables-cleaned', { count: totalUnits, totalTip });
         return totalTip;
+      },
+
+      updateSeatStatus: (index: number, status: TableStatus, customerId: string | null = null, dirtyDroppedVnd?: number) => {
+        set((s) => {
+          const updatedSeats = s.seatStates.map((seat) =>
+            seat.index === index
+              ? {
+                  ...seat,
+                  status,
+                  customerId,
+                  dirtyDroppedVnd: status === 'DIRTY' ? (dirtyDroppedVnd ?? (Math.floor(Math.random() * 1001) + 1000)) : undefined,
+                  dirtySince: status === 'DIRTY' ? (seat.dirtySince ?? Date.now()) : undefined,
+                }
+              : seat
+          );
+
+          const isTable0Dirty = updatedSeats[0]?.status === 'DIRTY' || updatedSeats[1]?.status === 'DIRTY';
+          const isTable1Dirty = updatedSeats[2]?.status === 'DIRTY' || updatedSeats[3]?.status === 'DIRTY';
+
+          const newDirtyTables: number[] = [];
+          if (isTable0Dirty) newDirtyTables.push(0);
+          if (isTable1Dirty) newDirtyTables.push(1);
+
+          return { seatStates: updatedSeats, dirtyTables: newDirtyTables };
+        });
+      },
+
+      setSeatState: (index: number, status: TableStatus, customerId: string | null = null, dirtyDroppedVnd?: number) => {
+        get().updateSeatStatus(index, status, customerId, dirtyDroppedVnd);
       },
 
       buyIngredient: (type: keyof Inventory, amount: number, cost: number) => {
@@ -504,6 +705,7 @@ export const useGameStore = create<GameState & GameActions>()(
           },
           dailyReport: {
             ...dailyReport,
+            supplyCost: (dailyReport.supplyCost || 0) + cost,
             ingredientCost: dailyReport.ingredientCost + cost,
           },
         });
@@ -551,13 +753,18 @@ export const useGameStore = create<GameState & GameActions>()(
 
       recordDrinkSale: (basePrice: number, tipAmount: number, repGain: number) => {
         const { dailyReport } = get();
+        const newRevenue = dailyReport.revenue + basePrice;
+        const newTips = dailyReport.tips + tipAmount;
+        const totalExpenses = (dailyReport.supplyCost || 0) + (dailyReport.penalties || 0) + (dailyReport.rentCost || 0);
+
         set({
           dailyReport: {
             ...dailyReport,
-            revenue: dailyReport.revenue + basePrice,
-            tips: dailyReport.tips + tipAmount,
+            revenue: newRevenue,
+            tips: newTips,
             cupsSold: dailyReport.cupsSold + 1,
             reputationEarned: dailyReport.reputationEarned + repGain,
+            netProfit: (newRevenue + newTips) - totalExpenses,
           },
         });
         get().incrementQuestProgress('brew', 1);
@@ -567,13 +774,22 @@ export const useGameStore = create<GameState & GameActions>()(
       startDay: () => {
         set({
           dayPhase: 'OPEN',
-          dayTimeRemainingSec: 75,
+          dayTimeRemainingSec: DEFAULT_DAY_DURATION_SEC,
+          timeOfDay: 'MORNING',
           dailyReport: {
+            dayNumber: get().currentDay,
             revenue: 0,
             tips: 0,
+            supplyCost: 0,
             ingredientCost: 0,
+            penalties: 0,
+            rentCost: 0,
+            netProfit: 0,
             cupsSold: 0,
+            perfectOrdersCount: 0,
             reputationEarned: 0,
+            reviewStars: 5,
+            reviewComment: 'Quán mở cửa ngày mới tràn đầy năng lượng!',
           },
         });
       },
@@ -590,7 +806,8 @@ export const useGameStore = create<GameState & GameActions>()(
         set({
           currentDay: nextDayNum,
           dayPhase: 'PREP',
-          dayTimeRemainingSec: 75,
+          dayTimeRemainingSec: DEFAULT_DAY_DURATION_SEC,
+          timeOfDay: 'MORNING',
           weatherForecast: nextWeather,
           marketNews: nextMarketNews,
           dailyQuests: generateDailyQuests(nextDayNum),
@@ -598,15 +815,28 @@ export const useGameStore = create<GameState & GameActions>()(
       },
 
       tickDayTimer: (deltaSec: number) => {
-        const { dayTimeRemainingSec, dayPhase } = get();
+        const { dayTimeRemainingSec, dayPhase, timeOfDay } = get();
         if (dayPhase !== 'OPEN') return false;
 
         const nextTime = Math.max(0, dayTimeRemainingSec - deltaSec);
+        const nextTimeOfDay = calculateTimeOfDay(nextTime, DEFAULT_DAY_DURATION_SEC);
+
         if (nextTime <= 0) {
-          set({ dayTimeRemainingSec: 0, dayPhase: 'SUMMARY' });
-          return true; // Day ended
+          set({
+            dayTimeRemainingSec: 0,
+            dayPhase: 'SUMMARY',
+            timeOfDay: 'EVENING',
+          });
+          EventBus.emit('day-ended');
+          return true; // Crucial boolean return value for CafeScene.ts:1159
         }
-        set({ dayTimeRemainingSec: nextTime });
+
+        if (nextTimeOfDay !== timeOfDay) {
+          set({ dayTimeRemainingSec: nextTime, timeOfDay: nextTimeOfDay });
+          EventBus.emit('time-of-day-changed', nextTimeOfDay);
+        } else {
+          set({ dayTimeRemainingSec: nextTime });
+        }
         return false;
       },
 
@@ -617,9 +847,438 @@ export const useGameStore = create<GameState & GameActions>()(
 
       resetGame: () =>
         set({ ...initialState, lastActiveTimestamp: Date.now() }),
+
+      // --- Realism Add-on Batch A & B Actions ---
+
+      restockInventory: (type = 'all') => {
+        const { gold, inventoryStock, roastery, dailyReport, inventory } = get();
+        const discount = (roastery?.supplyDiscountPercent || 0) / 100;
+
+        let costToCharge = 0;
+        const newStock = { ...inventoryStock };
+        const newInv = { ...inventory };
+
+        const categories: Array<'coffee' | 'ice' | 'milk'> =
+          type === 'all' ? ['coffee', 'ice', 'milk'] : [type];
+
+        let anyItemRestocked = false;
+
+        categories.forEach((cat) => {
+          const stockKey = `${cat}Stock` as keyof InventoryStock;
+          if (newStock[stockKey] < 100) {
+            anyItemRestocked = true;
+            const baseCost = RESTOCK_BASE_COSTS[cat];
+            const effectiveCost = Math.round(baseCost * (1 - discount));
+            costToCharge += effectiveCost;
+            newStock[stockKey] = 100;
+
+            // Sync legacy discrete inventory units
+            if (cat === 'coffee') newInv.coffee = Math.max(newInv.coffee, 30);
+            if (cat === 'ice') newInv.ice = Math.max(newInv.ice, 50);
+            if (cat === 'milk') newInv.milk = Math.max(newInv.milk, 30);
+          }
+        });
+
+        if (!anyItemRestocked || gold < costToCharge) return false;
+
+        set({
+          gold: gold - costToCharge,
+          inventoryStock: newStock,
+          inventory: newInv,
+          dailyReport: {
+            ...dailyReport,
+            supplyCost: (dailyReport.supplyCost || 0) + costToCharge,
+            ingredientCost: dailyReport.ingredientCost + costToCharge,
+          },
+        });
+
+        EventBus.emit('inventory-restocked', { type, cost: costToCharge });
+        return true;
+      },
+
+      consumeInventoryStock: (recipeId: string, modifier?: OrderModifier) => {
+        const { inventoryStock } = get();
+        const nextStock = { ...inventoryStock };
+
+        // Coffee / Tea depletion: -4%
+        nextStock.coffeeStock = Math.max(0, nextStock.coffeeStock - 4);
+
+        // Ice depletion: -5% (adjusted by modifier)
+        if (modifier !== 'no_sugar') {
+          const iceDeduction = modifier === 'less_ice' ? 2.5 : 5;
+          nextStock.iceStock = Math.max(0, nextStock.iceStock - iceDeduction);
+        }
+
+        // Milk depletion: -4% (adjusted by modifier)
+        if (modifier === 'more_milk') {
+          nextStock.milkStock = Math.max(0, nextStock.milkStock - 6);
+        } else if (recipeId.includes('sua') || recipeId.includes('bac_xiu')) {
+          nextStock.milkStock = Math.max(0, nextStock.milkStock - 4);
+        }
+
+        set({ inventoryStock: nextStock });
+        return true;
+      },
+
+      tickIceMelting: (deltaSec: number) => {
+        const { inventoryStock, dayPhase, timeOfDay } = get();
+        if (dayPhase !== 'OPEN' || timeOfDay !== 'NOON' || inventoryStock.iceStock <= 0) return;
+
+        // Melts 1% every 15s during NOON
+        const meltAmount = deltaSec / 15;
+        const currentIce = inventoryStock.iceStock;
+        const newIce = Math.max(0, parseFloat((currentIce - meltAmount).toFixed(2)));
+
+        set({
+          inventoryStock: {
+            ...inventoryStock,
+            iceStock: newIce,
+          },
+        });
+
+        if (newIce < 20 && currentIce >= 20) {
+          EventBus.emit('stock-low', { type: 'ice', stock: newIce });
+        }
+        if (newIce === 0 && currentIce > 0) {
+          EventBus.emit('stock-depleted', { type: 'ice' });
+        }
+      },
+
+      setProvince: (id: ProvinceId) => {
+        set((s) => ({
+          selectedProvince: id,
+          provincialLeague: {
+            ...s.provincialLeague,
+            homeProvinceId: s.provincialLeague?.homeProvinceId || id,
+          },
+        }));
+        EventBus.emit('province-changed', id);
+      },
+
+      setLocationType: (type: SpotType) => {
+        set({ selectedLocationType: type });
+        EventBus.emit('location-type-changed', type);
+      },
+
+      addBranchLocation: (branch: BranchLocationState) => {
+        set((s) => ({
+          branchLocations: [...(s.branchLocations || []), branch],
+        }));
+      },
+
+      recordOrderResult: (isPerfect: boolean, tip: number, revenue: number) => {
+        const { dailyReport, reputation, provincialLeague, gold } = get();
+        const repGain = isPerfect ? 2 : 1;
+        const totalVnd = revenue + tip;
+
+        const newRevenue = dailyReport.revenue + revenue;
+        const newTips = dailyReport.tips + tip;
+        const totalExpenses = (dailyReport.supplyCost || 0) + (dailyReport.penalties || 0) + (dailyReport.rentCost || 0);
+
+        set({
+          gold: gold + totalVnd,
+          reputation: reputation + repGain,
+          dailyReport: {
+            ...dailyReport,
+            revenue: newRevenue,
+            tips: newTips,
+            cupsSold: (dailyReport.cupsSold || 0) + 1,
+            perfectOrdersCount: (dailyReport.perfectOrdersCount || 0) + (isPerfect ? 1 : 0),
+            reputationEarned: (dailyReport.reputationEarned || 0) + repGain,
+            netProfit: (newRevenue + newTips) - totalExpenses,
+          },
+          provincialLeague: {
+            ...provincialLeague,
+            weeklyContributionScore:
+              (provincialLeague?.weeklyContributionScore || 0) +
+              (isPerfect ? 10 : 5) +
+              Math.floor(totalVnd / 1000),
+          },
+        });
+
+        get().incrementQuestProgress('brew', 1);
+        get().incrementQuestProgress('revenue', totalVnd);
+        EventBus.emit('order-result-recorded', { isPerfect, tip, revenue });
+      },
+
+      treatStaffMilkTea: () => {
+        const { gold, staffState } = get();
+        const cost = 15000;
+        if (gold < cost) return false;
+
+        const buffUntil = Date.now() + 60 * 1000; // 60 seconds speed boost
+        const restoredStamina = staffState.maxStamina || 100;
+        set({
+          gold: gold - cost,
+          staffStamina: restoredStamina,
+          staffState: {
+            ...staffState,
+            stamina: restoredStamina,
+            isExhausted: false,
+            speedMultiplier: 1.25, // +25% speed buff
+            milkTeaBuffUntil: buffUntil,
+          },
+        });
+
+        EventBus.emit('staff-treated', { stamina: restoredStamina, buffUntil });
+        return true;
+      },
+
+      updateStaffStamina: (delta: number) => {
+        set((s) => {
+          const current = s.staffState.stamina;
+          const max = s.staffState.maxStamina || 100;
+          const next = Math.max(0, Math.min(max, current + delta));
+          const isExhausted = next <= 0;
+          const isBuffActive = s.staffState.milkTeaBuffUntil && Date.now() < s.staffState.milkTeaBuffUntil;
+          let speedMultiplier = s.staffState.speedMultiplier;
+          if (isBuffActive) {
+            speedMultiplier = 1.25;
+          } else if (isExhausted) {
+            speedMultiplier = 0.6;
+          } else {
+            speedMultiplier = 1.0;
+          }
+          return {
+            staffStamina: next,
+            staffState: {
+              ...s.staffState,
+              stamina: next,
+              isExhausted,
+              speedMultiplier,
+            },
+          };
+        });
+      },
+
+      drainStaffStamina: (amount: number) => {
+        const { staffState } = get();
+        if (staffState.milkTeaBuffUntil && Date.now() < staffState.milkTeaBuffUntil) {
+          return;
+        }
+        get().updateStaffStamina(-amount);
+      },
+
+      updateRoasterySettings: (beans: 'robusta' | 'arabica', roast: RoastLevel) => {
+        const baseDiscount = beans === 'robusta' ? 20 : 15;
+        const roastBonus = roast === 'MEDIUM' ? 10 : 5;
+        const discount = Math.min(30, baseDiscount + roastBonus);
+
+        set((s) => ({
+          roastery: {
+            ...s.roastery,
+            beanType: beans,
+            beansType: beans,
+            roastLevel: roast,
+            supplyDiscountPercent: discount,
+          },
+        }));
+
+        EventBus.emit('roastery-settings-updated', { beans, roast, discount });
+      },
+
+      addSignatureRecipe: (recipe: Omit<SignatureRecipe, 'id'>) => {
+        const id = `sig_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+        const newRecipe: SignatureRecipe = {
+          id,
+          customName: recipe.customName || 'Món Độc Quyền',
+          baseIngredient: recipe.baseIngredient,
+          toppingIngredient: recipe.toppingIngredient,
+          technique: recipe.technique,
+          priceMultiplier: recipe.priceMultiplier ?? 1.35,
+          isTrending: recipe.isTrending ?? false,
+        };
+
+        set((s) => ({
+          signatureRecipes: [...(s.signatureRecipes || []), newRecipe],
+        }));
+
+        EventBus.emit('signature-recipe-added', newRecipe);
+        return newRecipe;
+      },
+
+      unlockTechNode: (nodeId: string) => {
+        const { techTree } = get();
+        if (techTree.unlockedNodes.includes(nodeId)) return false;
+
+        const cost = TECH_NODE_COSTS[nodeId] ?? 15;
+        if (techTree.researchPoints < cost) return false;
+
+        set({
+          techTree: {
+            ...techTree,
+            researchPoints: techTree.researchPoints - cost,
+            unlockedNodes: [...techTree.unlockedNodes, nodeId],
+          },
+        });
+
+        EventBus.emit('tech-node-unlocked', { nodeId, cost });
+        return true;
+      },
+
+      addResearchPoints: (amount: number) => {
+        set((s) => ({
+          techTree: {
+            ...s.techTree,
+            researchPoints: s.techTree.researchPoints + amount,
+          },
+        }));
+      },
     }),
     {
       name: 'tiem-ca-phe-bat-on-save',
+      version: 1,
+      migrate: (persistedState: unknown, version: number) => {
+        const state = (persistedState as Partial<GameState>) || {};
+        if (version === 0 || typeof version !== 'number') {
+          // 1. Sync seatStates from existing dirtyTables
+          const dirty = Array.isArray(state.dirtyTables) ? state.dirtyTables : [];
+          const migratedSeats: SeatState[] = [0, 1, 2, 3].map((idx) => {
+            const tableIdx = Math.floor(idx / 2);
+            const isDirty = dirty.includes(tableIdx);
+            return {
+              id: idx,
+              index: idx,
+              status: isDirty ? ('DIRTY' as TableStatus) : ('EMPTY' as TableStatus),
+              customerId: null,
+              dirtyDroppedVnd: isDirty ? 1500 : undefined,
+              dirtySince: isDirty ? Date.now() : undefined,
+            };
+          });
+
+          // 2. Backfill dailyReport without data loss
+          const oldReport = (state.dailyReport as any) || {};
+          const revenue = Number(oldReport.revenue) || 0;
+          const tips = Number(oldReport.tips) || 0;
+          const cost = Number(oldReport.ingredientCost ?? oldReport.supplyCost) || 0;
+          const penalties = Number(oldReport.penalties) || 0;
+          const rentCost = Number(oldReport.rentCost) || 0;
+          const cupsSold = Number(oldReport.cupsSold) || 0;
+          const repEarned = Number(oldReport.reputationEarned) || 0;
+          const perfOrders = Number(oldReport.perfectOrdersCount) || 0;
+          const stars = Number(oldReport.reviewStars) || 5;
+
+          const migratedReport: DailyReport = {
+            dayNumber: Number(state.currentDay) || 1,
+            revenue,
+            tips,
+            supplyCost: cost,
+            ingredientCost: cost,
+            penalties,
+            rentCost,
+            netProfit: Number(oldReport.netProfit ?? (revenue + tips - (cost + penalties + rentCost))),
+            cupsSold,
+            reputationEarned: repEarned,
+            perfectOrdersCount: perfOrders,
+            reviewStars: stars,
+            reviewComment: oldReport.reviewComment || 'Quán bắt đầu ngày mới rộn ràng!',
+          };
+
+          return {
+            ...state,
+            timeOfDay: 'MORNING' as TimeOfDay,
+            selectedProvince: 'hcm' as ProvinceId,
+            selectedLocationType: 'alley' as SpotType,
+            seatStates: migratedSeats,
+            inventoryStock: state.inventoryStock || {
+              coffeeStock: 100,
+              iceStock: 100,
+              milkStock: 100,
+            },
+            branchLocations: state.branchLocations || [],
+            provincialLeague: state.provincialLeague || {
+              homeProvinceId: 'hcm' as ProvinceId,
+              weeklyContributionScore: 0,
+              currentRankInProvince: 1,
+              provinceTotalScore: 1250,
+              claimedWeekendReward: false,
+            },
+            signatureRecipes: state.signatureRecipes || [],
+            techTree: state.techTree || {
+              researchPoints: 0,
+              unlockedNodes: [],
+            },
+            roastery: state.roastery || {
+              beanType: 'robusta',
+              beansType: 'robusta',
+              roastLevel: 'MEDIUM' as RoastLevel,
+              supplyDiscountPercent: 0,
+              autoRoast: false,
+            },
+            staffState: state.staffState || {
+              stamina: 100,
+              maxStamina: 100,
+              isExhausted: false,
+              speedMultiplier: 1.0,
+              milkTeaBuffUntil: 0,
+            },
+            staffStamina: 100,
+            dailyReport: migratedReport,
+          };
+        }
+        return state as any;
+      },
+      merge: (persistedState: unknown, currentState: GameState & GameActions): GameState & GameActions => {
+        const p = (persistedState as Partial<GameState>) || {};
+        return {
+          ...currentState,
+          ...p,
+          // Deep-merge nested critical objects to guarantee all properties exist
+          inventory: {
+            ...currentState.inventory,
+            ...(p.inventory || {}),
+          },
+          inventoryStock: {
+            ...currentState.inventoryStock,
+            ...(p.inventoryStock || {}),
+          },
+          seatStates: Array.isArray(p.seatStates) && p.seatStates.length > 0
+            ? p.seatStates
+            : currentState.seatStates,
+          dailyReport: {
+            ...currentState.dailyReport,
+            ...(p.dailyReport || {}),
+          },
+          provincialLeague: {
+            ...currentState.provincialLeague,
+            ...(p.provincialLeague || {}),
+          },
+          techTree: {
+            ...currentState.techTree,
+            ...(p.techTree || {}),
+            unlockedNodes: Array.isArray(p.techTree?.unlockedNodes)
+              ? p.techTree.unlockedNodes
+              : currentState.techTree.unlockedNodes,
+          },
+          roastery: {
+            ...currentState.roastery,
+            ...(p.roastery || {}),
+          },
+          staffState: {
+            ...currentState.staffState,
+            ...(p.staffState || {}),
+          },
+          settings: {
+            ...currentState.settings,
+            ...(p.settings || {}),
+          },
+          weatherForecast: p.weatherForecast || currentState.weatherForecast,
+          marketNews: p.marketNews || currentState.marketNews,
+          staffStamina: typeof p.staffStamina === 'number'
+            ? p.staffStamina
+            : (p.staffState?.stamina ?? currentState.staffStamina),
+          // Sanitize transient UI state on rehydration
+          activeBrewing: null as BrewingSession | null,
+          activeTab: null as GameState['activeTab'],
+          isRenameModalOpen: false,
+          isPhotoModeOpen: false,
+          isRoadmapModalOpen: false,
+        };
+      },
     }
   )
 );
+
+if (typeof window !== 'undefined') {
+  (window as unknown as { useGameStore: typeof useGameStore }).useGameStore = useGameStore;
+}

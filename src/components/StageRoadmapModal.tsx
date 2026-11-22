@@ -98,7 +98,7 @@ export const StageRoadmapModal: React.FC = () => {
   };
 
   return (
-    <div className="cozy-modal-backdrop">
+    <div className="cozy-modal-backdrop z-50">
       <div className="cozy-card w-full max-w-[390px] p-4 flex flex-col max-h-[88vh] text-[#5D4037]">
         {/* Ribbon Header */}
         <div className="cozy-ribbon mb-2 text-center relative py-1.5 px-4 shadow-sm">
