@@ -65,13 +65,13 @@ export const SubHudBar: React.FC = () => {
   };
 
   return (
-    <div className="absolute top-[72px] left-0 right-0 z-20 pointer-events-none select-none px-2.5 md:px-4 max-w-[420px] mx-auto w-full transition-all duration-300 font-sans">
-      <div className="bg-[#FFF8ED]/95 backdrop-blur-xs border-2 border-[#4A3222] shadow-[0_3px_0_#4A3222] px-2.5 py-1.5 rounded-xl pointer-events-auto flex items-center justify-between gap-1.5 text-xs">
+    <div className="absolute top-[76px] left-0 right-0 z-20 pointer-events-none select-none px-2.5 md:px-4 max-w-[420px] mx-auto w-full transition-all duration-300">
+      <div className="bg-[#FFF3D6] border-2 border-[#4A3222] shadow-[0_3px_0_#4A3222] px-2.5 py-1.5 rounded-xl pointer-events-auto flex items-center justify-between gap-1.5 text-xs font-nunito">
         
         {/* 1. Virtual Clock & Phase Indicator */}
-        <div className="flex items-center gap-1 shrink-0 bg-[#FAF0E1] border border-[#D8C7B5] px-1.5 py-0.5 rounded-lg shadow-2xs">
+        <div className="flex items-center gap-1 shrink-0 bg-[#FFFDF9] border-2 border-[#4A3222] px-1.5 py-0.5 rounded-lg shadow-[0_1px_0_#4A3222]">
           <span className="text-sm">{currentPhaseInfo.icon}</span>
-          <span className="font-mono font-black text-[#4A3222] text-[11px] tracking-tight">
+          <span className="font-nunito font-extrabold text-[#4A3222] text-[11px] tracking-tight">
             {timeFormatted}
           </span>
           {timeOfDay === 'NOON' && (
@@ -85,10 +85,10 @@ export const SubHudBar: React.FC = () => {
         <div className="flex items-center gap-1.5 flex-1 justify-center min-w-0">
           {/* Coffee Stock */}
           <div
-            className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border text-[10px] font-bold transition-colors ${
+            className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border-2 text-[10px] font-extrabold transition-colors cursor-pointer ${
               coffee < 20
-                ? 'bg-red-100 text-red-700 border-red-400 animate-pulse'
-                : 'bg-[#FAF0E1] text-[#4A3222] border-[#D8C7B5]'
+                ? 'bg-red-100 text-red-700 border-red-500 animate-pulse'
+                : 'bg-[#FFFDF9] text-[#4A3222] border-[#4A3222]'
             }`}
             title={`Cà phê bột: ${coffee}% (Click để nạp đầy - ${formatVND(RESTOCK_BASE_COSTS.coffee)})`}
             onClick={() => coffee < 50 && handleRestock('coffee')}
@@ -99,10 +99,10 @@ export const SubHudBar: React.FC = () => {
 
           {/* Ice Stock */}
           <div
-            className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border text-[10px] font-bold transition-colors ${
+            className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border-2 text-[10px] font-extrabold transition-colors cursor-pointer ${
               ice < 20
-                ? 'bg-red-100 text-red-700 border-red-400 animate-pulse'
-                : 'bg-[#FAF0E1] text-sky-800 border-[#D8C7B5]'
+                ? 'bg-red-100 text-red-700 border-red-500 animate-pulse'
+                : 'bg-[#FFFDF9] text-sky-800 border-[#4A3222]'
             }`}
             title={`Đá bi: ${ice}% (Click để nạp đầy - ${formatVND(RESTOCK_BASE_COSTS.ice)})`}
             onClick={() => ice < 50 && handleRestock('ice')}
@@ -113,10 +113,10 @@ export const SubHudBar: React.FC = () => {
 
           {/* Milk Stock */}
           <div
-            className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border text-[10px] font-bold transition-colors ${
+            className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border-2 text-[10px] font-extrabold transition-colors cursor-pointer ${
               milk < 20
-                ? 'bg-red-100 text-red-700 border-red-400 animate-pulse'
-                : 'bg-[#FAF0E1] text-amber-800 border-[#D8C7B5]'
+                ? 'bg-red-100 text-red-700 border-red-500 animate-pulse'
+                : 'bg-[#FFFDF9] text-amber-800 border-[#4A3222]'
             }`}
             title={`Sữa đặc: ${milk}% (Click để nạp đầy - ${formatVND(RESTOCK_BASE_COSTS.milk)})`}
             onClick={() => milk < 50 && handleRestock('milk')}
@@ -126,23 +126,23 @@ export const SubHudBar: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Action Buttons: Restock All & Polaroid Photo */}
+        {/* 3. Action Buttons: Restock All */}
         <div className="flex items-center gap-1 shrink-0">
           {isLowStock ? (
             <button
               onClick={() => handleRestock('all')}
-              className="px-2 py-0.5 bg-[#E04F4F] hover:bg-[#C93B3B] text-white text-[10px] font-black rounded-lg border border-[#4A3222] shadow-[0_1.5px_0_#4A3222] active:translate-y-0.5 active:shadow-none cursor-pointer animate-bounce"
+              className="game-btn game-btn-red px-2 py-0.5 text-[10px] rounded-lg animate-bounce"
               title="Gọi mối giao hàng nạp đầy cả 3 kho"
             >
               🚚 Nhập kho!
             </button>
           ) : (
             <button
-              onClick={() => setPhotoModeOpen(true)}
-              className="w-7 h-7 rounded-lg bg-[#FAF0E1] hover:bg-[#F2ECE1] text-[#4A3222] border border-[#4A3222] shadow-[0_1.5px_0_#4A3222] flex items-center justify-center text-xs cursor-pointer active:translate-y-0.5 active:shadow-none transition-transform"
-              title="Chụp ảnh Polaroid góc quán"
+              onClick={() => handleRestock('all')}
+              className="game-btn game-btn-cream px-2 py-0.5 text-[10px] rounded-lg"
+              title="Gọi mối giao hàng trước khi hết nguyên liệu"
             >
-              📸
+              🚚 Nhập thêm
             </button>
           )}
         </div>

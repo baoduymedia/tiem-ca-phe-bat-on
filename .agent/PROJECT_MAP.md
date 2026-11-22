@@ -10,6 +10,7 @@
 - `index.html`: Entry point HTML chuẩn mobile-first dọc 9:16, gắn thẻ mount #root.
 - `.agent/rules/game-rules.md`: Bộ quy tắc cốt lõi của dự án (tech stack, tỷ lệ dọc 9:16, cozy palette, tách biệt data).
 - `.agent/skills/verify-build/SKILL.md`: Quy trình kiểm thử bắt buộc (npm run build 0 lỗi TS & kiểm tra console).
+- `.agent/skills/cozy-game-ui/SKILL.md`: Bộ quy chuẩn CSS Game Mobile 2D bắt buộc (viền mực #4A3222, bóng cứng 3D, font Mali/Nunito, cấm style web phẳng).
 - `.agent/skills/project-map/SKILL.md`: Hướng dẫn đọc và duy trì bản đồ mã nguồn PROJECT_MAP.md.
 - `.agent/skills/session-handoff/SKILL.md`: Quy trình tóm tắt bàn giao phiên làm việc vào PROGRESS.md khi kết thúc Milestone.
 - `.agent/skills/lean-coding/SKILL.md`: Quy tắc tối ưu token (không đọc file rác, sửa cục bộ, phản hồi ngắn gọn).
@@ -49,6 +50,7 @@
 - `src/components/OfflineRewardModal.tsx`: Modal Hũ Tiền Ngoại Tuyến (hũ gốm đất nung cổ truyền, nhận x1 hoặc xem clip nhận x2) khớp 100% Mockup 1.
 - `src/components/SplashScreen.tsx`: Màn hình mở đầu game với bảng hiệu gỗ treo dây thừng, mèo cún ngủ trưa và nhập tên quán tùy chỉnh khớp Mockup 2.
 - `src/components/TopHUD.tsx`: Thanh trạng thái ribbon mềm mại hiển thị tên quán, tiền xu (🪙), hạt vàng (🫘) và điểm sống ảo (⭐).
+- `src/components/BrewMiniPanel.tsx`: Thanh tiến độ pha cà phê phin ASMR mini nổi kèm nút Boost xúc giác 3D.
 - `src/components/BottomNav.tsx`: Thanh menu dưới đáy gồm 5 nút vòm tròn bo góc mềm mại tích hợp Barista Brew Bar mini phía trên khớp Mockup.
 - `src/components/MenuPanel.tsx`: Modal xem danh sách, mở khóa và nâng cấp đồ uống Stage 1 bố cục 2 cột thẻ Cozy khớp Mockup 4.
 - `src/components/UpgradePanel.tsx`: Modal nâng cấp thiết bị và cột mốc Giai đoạn 2 dạng thẻ bo góc Cozy khớp Mockup 4.

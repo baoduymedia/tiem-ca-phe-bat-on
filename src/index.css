@@ -76,13 +76,120 @@ html, body, #root {
 }
 
 /* Custom Display Typography */
+.font-mali {
+  font-family: 'Mali', cursive, sans-serif;
+}
+
+.font-nunito {
+  font-family: 'Nunito', sans-serif;
+}
+
 .font-display {
-  font-family: 'Comfortaa', 'Nunito', cursive, sans-serif;
+  font-family: 'Mali', cursive, sans-serif;
 }
 
 .font-pixel {
   font-family: 'VT323', monospace;
   letter-spacing: 0.5px;
+}
+
+/* ================= COZY GAME UI SYSTEM (cozy-game-ui) ================= */
+.game-panel {
+  background-color: #FFF3D6;
+  border: 3px solid #4A3222;
+  box-shadow: 0 5px 0 #4A3222;
+  border-radius: 1.25rem;
+}
+
+.game-card {
+  background-color: #FFFDF9;
+  border: 2px solid #4A3222;
+  box-shadow: 0 3px 0 #4A3222;
+  border-radius: 1rem;
+}
+
+.game-ribbon {
+  background-color: #F6E5C0;
+  border: 2.5px solid #4A3222;
+  box-shadow: 0 3px 0 #4A3222;
+  border-radius: 0.875rem;
+  font-family: 'Mali', cursive, sans-serif;
+  font-weight: 700;
+  color: #4A3222;
+}
+
+.game-btn {
+  border: 2.5px solid #4A3222;
+  box-shadow: 0 4px 0 #4A3222;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  transition: all 0.08s ease;
+  user-select: none;
+  cursor: pointer;
+}
+
+.game-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #4A3222;
+}
+
+.game-btn-green {
+  background-color: #5C9E54;
+  color: #FFFFFF;
+}
+.game-btn-green:hover {
+  background-color: #4E8B46;
+}
+
+.game-btn-gold {
+  background-color: #F4A236;
+  color: #4A3222;
+}
+.game-btn-gold:hover {
+  background-color: #E59225;
+}
+
+.game-btn-red {
+  background-color: #E04F4F;
+  color: #FFFFFF;
+}
+.game-btn-red:hover {
+  background-color: #C93B3B;
+}
+
+.game-btn-cream {
+  background-color: #FAF0E1;
+  color: #4A3222;
+}
+.game-btn-cream:hover {
+  background-color: #F2ECE1;
+}
+
+.game-bar-track {
+  background-color: #5C3D28;
+  border: 2px solid #4A3222;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.game-bar-fill {
+  background: linear-gradient(180deg, #FDE68A 0%, #F4A236 45%, #D97706 100%);
+  border-radius: 9999px;
+  height: 100%;
+  position: relative;
+  transition: width 0.3s ease;
+}
+
+.game-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  right: 2px;
+  height: 35%;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 9999px;
 }
 
 /* ================= RETRO PIXEL ART UI SYSTEM ================= */
