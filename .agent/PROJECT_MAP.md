@@ -34,21 +34,23 @@
 - `src/game/scenes/CafeScene.ts`: Scene chính Giai đoạn 1 quán cóc vỉa hè, quản lý chỗ ngồi, pha phin ASMR, hiệu ứng thời tiết, animation linh vật (cún thở + bong bóng 💤, mèo mướp) và tương tác chạm squish.
 - `src/game/entities/Customer.ts`: Thực thể khách hàng (State Machine 5 bước, tween nhún chân bước đi, nhịp thở nhẹ, lắc sốt ruột, nhảy vui mừng + hiệu ứng sao/xu khi xong món, phản ứng chạm).
 - `src/game/entities/EventManager.ts`: Quản lý kích hoạt các sự kiện ngẫu nhiên Stage 1 (Mưa rào Sài Gòn & Trật tự đô thị).
-- `src/components/DailyPrepModal.tsx`: Modal chuẩn bị nguyên liệu buổi sáng trước giờ mở bán (bột cà phê, sữa đặc, đá bi, trà) kèm dự báo thời tiết.
-- `src/components/DailySummaryModal.tsx`: Modal hóa đơn giấy kraft chốt sổ doanh thu, tiền tip, chi phí vốn và lợi nhuận ròng cuối ngày.
-- `src/components/CoffeeBrewingModal.tsx`: Trạm pha chế thủ công ASMR tương tác trực tiếp (châm phin, rót sữa Ông Thọ, xúc đá bi, khuấy bọt) nhận thưởng Chuẩn Vị Sài Gòn (+50% Tip).
-- `src/components/RenameShopModal.tsx`: Modal đổi tên quán tùy chỉnh kèm gợi ý tên hài hước và đồng bộ bảng hiệu Canvas.
-- `src/components/PolaroidPhotoMode.tsx`: Chế độ chụp ảnh Polaroid vintage ẩn UI, đóng khung ảnh kèm tên quán và watermark chia sẻ Story.
-- `src/components/DailyQuestPanel.tsx`: Bảng quản lý 3 nhiệm vụ ngày (pha chế, dọn bàn, doanh thu) thưởng Hạt Cà Phê Vàng 🫘.
-- `src/components/StageRoadmapModal.tsx`: Modal bản đồ lộ trình 6 giai đoạn tiến hóa và cốt truyện khởi nghiệp từng chương.
-- `src/components/OfflineRewardModal.tsx`: Modal hũ tiền doanh thu ngoại tuyến (tích lũy tối đa 4 giờ vắng mặt, nhận x1 hoặc xem clip nhận x2).
-- `src/components/SplashScreen.tsx`: Màn hình mở đầu game với hiệu ứng giới thiệu và nhập tên quán tùy chỉnh.
-- `src/components/TopHUD.tsx`: Thanh trạng thái hiển thị tên quán, tiền xu (🪙), hạt vàng (🫘) và điểm sống ảo (⭐).
-- `src/components/BottomNav.tsx`: Thanh menu dưới đáy gồm 5 nút điều hướng (Thực đơn, Nâng cấp, Decor, Cửa hàng, Nhiệm vụ).
-- `src/components/MenuPanel.tsx`: Modal xem danh sách, mở khóa và nâng cấp đồ uống Stage 1 theo công thức chuẩn GDD.
-- `src/components/UpgradePanel.tsx`: Modal nâng cấp phin nhôm xịn, mua thêm ghế nhựa và cột mốc Xe Đẩy Lưu Động 250k.
-- `src/components/EventAlert.tsx`: Banner thông báo sự kiện đếm ngược và nút hành động nhanh (CĂNG BẠT / THU GHẾ).
-- `src/components/CustomerDialogueToast.tsx`: Toast hiển thị các câu thoại hài hước đặc trưng của khách hàng khi tương tác.
+- `src/components/DailyPrepModal.tsx`: Modal phong cách giấy kraft chuẩn bị nguyên liệu buổi sáng trước giờ mở bán (bột cà phê, sữa đặc, đá bi, trà) kèm dự báo thời tiết.
+- `src/components/DailySummaryModal.tsx`: Modal hóa đơn giấy cổ điển chốt sổ doanh thu, tiền tip, chi phí vốn và lợi nhuận ròng cuối ngày.
+- `src/components/CoffeeBrewingModal.tsx`: Trạm pha chế thủ công ASMR chuẩn Cozy Storybook tương tác trực tiếp (châm phin, rót sữa Ông Thọ, xúc đá bi, khuấy bọt) nhận thưởng Chuẩn Vị Sài Gòn (+50% Tip).
+- `src/components/RenameShopModal.tsx`: Modal đổi tên quán tùy chỉnh kết hợp chọn chủ quán (Anh Ba / Chị Bảy) và đồng bộ bảng hiệu Canvas.
+- `src/components/PolaroidPhotoMode.tsx`: Chế độ chụp ảnh Polaroid vintage viền trắng cổ điển, sticker và watermark chia sẻ Story khớp Mockup 8.
+- `src/components/DailyQuestPanel.tsx`: Bảng quản lý 3 nhiệm vụ ngày (linh vật mèo múp, cún cưng, shipper) thưởng Hạt Cà Phê Vàng 🫘 khớp Mockup 5.
+- `src/components/StageRoadmapModal.tsx`: Modal bản đồ lộ trình 6 giai đoạn tiến hóa và cốt truyện khởi nghiệp từng chương với theme thẻ bài Cozy.
+- `src/components/OfflineRewardModal.tsx`: Modal Hũ Tiền Ngoại Tuyến (hũ gốm đất nung cổ truyền, nhận x1 hoặc xem clip nhận x2) khớp 100% Mockup 1.
+- `src/components/SplashScreen.tsx`: Màn hình mở đầu game với bảng hiệu gỗ treo dây thừng, mèo cún ngủ trưa và nhập tên quán tùy chỉnh khớp Mockup 2.
+- `src/components/TopHUD.tsx`: Thanh trạng thái ribbon mềm mại hiển thị tên quán, tiền xu (🪙), hạt vàng (🫘) và điểm sống ảo (⭐).
+- `src/components/BottomNav.tsx`: Thanh menu dưới đáy gồm 5 nút vòm tròn bo góc mềm mại tích hợp Barista Brew Bar mini phía trên khớp Mockup.
+- `src/components/MenuPanel.tsx`: Modal xem danh sách, mở khóa và nâng cấp đồ uống Stage 1 bố cục 2 cột thẻ Cozy khớp Mockup 4.
+- `src/components/UpgradePanel.tsx`: Modal nâng cấp thiết bị và cột mốc Giai đoạn 2 dạng thẻ bo góc Cozy khớp Mockup 4.
+- `src/components/DecorPanel.tsx`: Bảng Decor trang trí vỉa hè 4 tab phân loại dạng lưới 3 cột thẻ Cozy khớp Mockup 9.
+- `src/components/ShopPanel.tsx`: Cửa hàng Gói Ưu Đãi, Hạt Cà Phê và QC Miễn Phí dạng thẻ Cozy khớp Mockup 7.
+- `src/components/EventAlert.tsx`: Banner thông báo sự kiện đếm ngược và nút hành động nhanh bo tròn ấm áp (CĂNG BẠT / THU GHẾ).
+- `src/components/CustomerDialogueToast.tsx`: Toast hiển thị các câu thoại bóng thoại bo góc mềm mại kèm icon chat.
 
 ## 2. State cốt lõi (useGameStore)
 

@@ -95,56 +95,75 @@ export const PolaroidPhotoMode: React.FC = () => {
   };
 
   return (
-    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/85 backdrop-blur-xs p-4 animate-in fade-in duration-200 select-none font-pixel">
-      {/* Polaroid Card */}
-      <div
-        ref={cardRef}
-        className="relative w-full max-w-[340px] pixel-box bg-[#FAF7F2] p-3 pb-5 text-[#2D1B0E] flex flex-col items-center"
-      >
-        {/* Photo Canvas Frame */}
-        <div className="w-full aspect-[9/11] bg-black/20 border-2 border-black overflow-hidden relative shadow-inner">
-          {snapshotUrl ? (
-            <img src={snapshotUrl} alt="Polaroid View" className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-sm text-stone-600 font-bold">
-              Đang chụp ảnh...
-            </div>
-          )}
+    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center cozy-modal-backdrop p-3 animate-in fade-in duration-200 select-none font-sans">
+      <div className="relative w-full max-w-[340px] cozy-card p-4 text-[#3E2415] flex flex-col items-center">
+        {/* Header Ribbon (matching Mockup 8) */}
+        <div className="w-full flex items-center justify-between pb-2 border-b-2 border-[#D8C7B5] mb-3">
+          <h3 className="font-serif font-black text-base text-[#3E2415] tracking-wide">
+            Polaroid Snapshot
+          </h3>
+          <button
+            onClick={() => setPhotoModeOpen(false)}
+            className="w-8 h-8 rounded-full bg-[#FAF0E1] hover:bg-[#EADDC9] text-[#5D4037] text-sm font-black border border-[#DECBB9] flex items-center justify-center cursor-pointer transition-colors"
+          >
+            ✕
+          </button>
         </div>
 
-        {/* Handwritten Bottom Area */}
-        <div className="w-full mt-3 px-1 flex items-end justify-between">
-          <div>
-            <h4 className="font-black text-base text-[#3E2723] uppercase tracking-wide">{shopName}</h4>
-            <p className="text-xs font-bold text-[#6F4E37]">
+        {/* Polaroid Card */}
+        <div
+          ref={cardRef}
+          className="relative w-full bg-[#FFFDF9] border-2 border-[#D8C7B5] rounded-2xl p-3 pb-4 text-[#2D1B0E] flex flex-col items-center shadow-md"
+        >
+          {/* Photo Canvas Frame */}
+          <div className="w-full aspect-[4/3] bg-black/10 border border-[#D8C7B5] rounded-xl overflow-hidden relative shadow-inner">
+            {snapshotUrl ? (
+              <img src={snapshotUrl} alt="Polaroid View" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-xs text-stone-500 font-bold">
+                Đang chụp ảnh...
+              </div>
+            )}
+          </div>
+
+          {/* Handwritten Caption (matching Mockup 8) */}
+          <div className="w-full mt-2.5 text-center px-1">
+            <h4 className="font-serif font-bold text-sm text-[#3E2415]">
+              {shopName} – Một Buổi Chiều An Yên
+            </h4>
+            <p className="text-[10px] text-[#8C6E54] font-semibold mt-0.5">
               Ngày {currentDay} • {stageLabels[currentStage]}
             </p>
           </div>
-
-          {/* Red Vintage Stamp */}
-          <div className="border-2 border-red-700 bg-red-50 px-2 py-0.5 text-center rotate-3">
-            <span className="block text-[10px] font-black text-red-700 uppercase tracking-wider">
-              ☕ SÀI GÒN
-            </span>
-            <span className="block text-[8px] font-bold text-red-800">TIỆM BẤT ỔN</span>
-          </div>
         </div>
-      </div>
 
-      {/* Control Buttons */}
-      <div className="w-full max-w-[340px] flex gap-3 mt-4">
-        <button
-          onClick={() => setPhotoModeOpen(false)}
-          className="flex-1 pixel-btn pixel-btn-wood py-2 text-xs uppercase"
-        >
-          ✕ Đóng Camera
-        </button>
-        <button
-          onClick={handleDownload}
-          className="flex-1 pixel-btn pixel-btn-gold py-2 text-xs uppercase flex items-center justify-center gap-1.5"
-        >
-          <span>💾</span> TẢI ẢNH
-        </button>
+        {/* Control Buttons (matching Mockup 8) */}
+        <div className="w-full grid grid-cols-2 gap-2 mt-3.5">
+          <button
+            onClick={handleDownload}
+            className="py-2.5 px-2 cozy-btn-orange text-xs flex items-center justify-center gap-1.5"
+          >
+            <span>📥</span>
+            <span>Lưu về máy</span>
+          </button>
+          <button
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: shopName,
+                  text: `Ghé quán cà phê vỉa hè ${shopName} ngày ${currentDay}!`,
+                  url: window.location.href,
+                }).catch(() => {});
+              } else {
+                handleDownload();
+              }
+            }}
+            className="py-2.5 px-2 cozy-btn-gold text-xs flex items-center justify-center gap-1.5"
+          >
+            <span>🔗</span>
+            <span>Chia sẻ Story</span>
+          </button>
+        </div>
       </div>
     </div>
   );

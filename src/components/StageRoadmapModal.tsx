@@ -98,25 +98,20 @@ export const StageRoadmapModal: React.FC = () => {
   };
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-xs p-3 animate-in fade-in duration-200 select-none font-pixel">
-      <div className="w-full max-w-[390px] pixel-box-wood text-[#FFE8C2] p-4 flex flex-col max-h-[88vh]">
-        {/* Header */}
-        <div className="w-full flex items-center justify-between border-b-2 border-black/40 pb-2 mb-2.5">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl drop-shadow-[2px_2px_0px_#000]">🗺️</span>
-            <div>
-              <h3 className="font-black text-sm text-[#FFD700] uppercase tracking-wide drop-shadow-[1px_1px_0px_#000]">
-                Lộ Trình Khởi Nghiệp 6 Giai Đoạn
-              </h3>
-              <p className="text-xs text-[#FFE8C2]/70">Từ Vỉa Hè Đến Chuỗi Đế Chế Toàn Cầu</p>
-            </div>
+    <div className="cozy-modal-backdrop">
+      <div className="cozy-card w-full max-w-[390px] p-4 flex flex-col max-h-[88vh] text-[#5D4037]">
+        {/* Ribbon Header */}
+        <div className="cozy-ribbon mb-2 text-center relative py-1.5 px-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-lg">🗺️</span>
+            <span className="font-bold text-sm tracking-wide">LỘ TRÌNH 6 GIAI ĐOẠN</span>
+            <button
+              onClick={() => setRoadmapModalOpen(false)}
+              className="w-6 h-6 rounded-full bg-[#EFE3D3] hover:bg-[#E5D4C0] text-[#5D4037] font-bold flex items-center justify-center text-xs border border-[#D8C7B5] cursor-pointer"
+            >
+              ✕
+            </button>
           </div>
-          <button
-            onClick={() => setRoadmapModalOpen(false)}
-            className="pixel-btn pixel-btn-red w-7 h-7 flex items-center justify-center text-xs"
-          >
-            ✕
-          </button>
         </div>
 
         {/* Timeline List */}
@@ -128,56 +123,56 @@ export const StageRoadmapModal: React.FC = () => {
             return (
               <div
                 key={stg.stage}
-                className={`pixel-box p-3 transition-all relative ${
+                className={`cozy-card-inner p-3 transition-all relative ${
                   isCurrent
-                    ? 'bg-[#3D2314] border-[#FFD700]'
+                    ? 'border-2 border-[#E08738] bg-[#FFF8EB]'
                     : isUnlocked
-                    ? 'bg-[#1F2D18] border-[#437A22]'
-                    : 'bg-[#1D130C] border-stone-800 opacity-60'
+                    ? 'border border-[#739E7A] bg-[#F4F9F4]'
+                    : 'border border-[#D8C7B5]/60 bg-[#F2EDE4]/60 opacity-60'
                 }`}
               >
                 {/* Stage Header */}
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xl shrink-0 p-1 bg-black/40 border border-black">
+                    <span className="text-xl shrink-0 p-1.5 bg-[#FFF9EF] rounded-xl border border-[#D8C7B5]">
                       {stg.icon}
                     </span>
                     <div>
-                      <h4 className="text-xs font-black text-[#FFE8C2] uppercase">
-                        Giai đoạn {stg.stage}: {stg.name}
+                      <h4 className="text-xs font-bold text-[#3E2415] uppercase">
+                        GĐ {stg.stage}: {stg.name}
                       </h4>
-                      <span className="text-[10px] font-bold text-[#FFD700] block">
+                      <span className="text-[10px] font-semibold text-[#8C6E54] block">
                         {stg.chapter}
                       </span>
                     </div>
                   </div>
                   {isCurrent ? (
-                    <span className="pixel-badge bg-[#E8C547] text-[#2D1B0E]">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#F4C447] text-[#3E2415] border border-[#DEAC2B]">
                       ĐANG Ở ĐÂY
                     </span>
                   ) : isUnlocked ? (
-                    <span className="pixel-badge bg-[#5C9E54] text-white">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#739E7A] text-white">
                       ✓ ĐÃ MỞ
                     </span>
                   ) : (
-                    <span className="pixel-badge bg-stone-700 text-stone-300">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#D8C7B5] text-[#5D4037]">
                       🔒 KHÓA
                     </span>
                   )}
                 </div>
 
-                <p className="text-[11px] text-[#FFE8C2]/80 leading-relaxed mb-2">
+                <p className="text-[11px] text-[#5D4037]/90 leading-relaxed mb-2 font-medium">
                   {stg.desc}
                 </p>
 
                 {/* Requirements (for locked stages) */}
                 {!isUnlocked && (
-                  <div className="flex items-center justify-between text-xs bg-black/40 p-1.5 border border-black/60">
-                    <span className="text-[#FFE8C2]/60 font-bold uppercase">Yêu cầu:</span>
-                    <span className={gold >= stg.goldReq ? 'text-[#5C9E54] font-black' : 'text-[#FFE8C2]/50'}>
+                  <div className="flex items-center justify-between text-xs bg-[#FAF5ED] p-2 rounded-xl border border-[#DECBB9]">
+                    <span className="text-[#8C6E54] font-bold text-[10px] uppercase">Yêu cầu:</span>
+                    <span className={gold >= stg.goldReq ? 'text-[#3E7B45] font-bold' : 'text-[#8C6E54]'}>
                       🪙 {formatVND(stg.goldReq)}
                     </span>
-                    <span className={reputation >= stg.repReq ? 'text-[#FFD700] font-black' : 'text-[#FFE8C2]/50'}>
+                    <span className={reputation >= stg.repReq ? 'text-[#D97706] font-bold' : 'text-[#8C6E54]'}>
                       ⭐ {stg.repReq} Sao
                     </span>
                   </div>
@@ -189,14 +184,14 @@ export const StageRoadmapModal: React.FC = () => {
 
         {/* Level Up Button (if next stage reachable) */}
         {nextStageInfo && (
-          <div className="pt-2.5 mt-2 border-t-2 border-black/40">
+          <div className="pt-2.5 mt-2 border-t border-[#D8C7B5]">
             <button
               onClick={handleLevelUp}
               disabled={!canLevelUp}
-              className={`w-full pixel-btn py-2.5 text-xs uppercase tracking-wide flex items-center justify-center gap-2 ${
+              className={`w-full py-2.5 text-xs uppercase tracking-wide flex items-center justify-center gap-2 rounded-2xl font-bold cursor-pointer transition-all ${
                 canLevelUp
-                  ? 'pixel-btn-green animate-pulse text-white'
-                  : 'bg-stone-800 text-stone-500 border-stone-900 cursor-not-allowed opacity-50'
+                  ? 'cozy-btn-green animate-pulse'
+                  : 'bg-[#D8C7B5] text-[#8C6E54] cursor-not-allowed opacity-60'
               }`}
             >
               <span>🚀</span>

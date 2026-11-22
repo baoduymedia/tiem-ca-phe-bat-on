@@ -19,39 +19,41 @@ export function UpgradePanel() {
   };
 
   return (
-    <div className="absolute inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 select-none font-pixel animate-in fade-in duration-150">
+    <div className="absolute inset-0 z-50 cozy-modal-backdrop flex items-center justify-center p-3 select-none font-sans animate-in zoom-in-95 duration-150">
       {/* Click backdrop to dismiss */}
       <div
         className="absolute inset-0 cursor-pointer"
         onClick={() => setActiveTab(null)}
       />
 
-      {/* Centered Pixel Panel container */}
-      <div className="relative z-10 bg-[#24140B] border-4 border-black shadow-[4px_4px_0px_#000] p-3 max-h-[82vh] flex flex-col max-w-[440px] w-full">
-        {/* Header */}
-        <div className="flex justify-between items-center pb-2 border-b-2 border-black mb-2.5">
+      {/* Centered Cozy Card container (matching Mockup 4) */}
+      <div className="relative z-10 w-full max-w-[420px] cozy-card p-4 max-h-[85vh] flex flex-col">
+        {/* Header Ribbon */}
+        <div className="flex justify-between items-center pb-2.5 border-b-2 border-[#D8C7B5] mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-xl">⚡</span>
+            <span className="w-9 h-9 rounded-2xl bg-[#FAF0E1] border border-[#D8C7B5] flex items-center justify-center text-lg">
+              ⚡
+            </span>
             <div>
-              <h2 className="text-[#FFD700] font-bold text-base tracking-wide uppercase leading-none">
-                NÂNG CẤP QUÁN (GIAI ĐOẠN {currentStage})
+              <h2 className="text-[#3E2415] font-serif font-black text-base tracking-wide leading-none">
+                Nâng cấp quán (GĐ {currentStage})
               </h2>
-              <p className="text-xs text-[#D4A373] mt-0.5 leading-none">
-                Tăng tốc độ pha, tuyển nhân sự tự động & mở rộng doanh thu
+              <p className="text-[11px] text-[#8C6E54] font-semibold mt-0.5 leading-none">
+                Tuyển nhân sự, nâng cấp dụng cụ & chỗ ngồi
               </p>
             </div>
           </div>
           <button
             onClick={() => setActiveTab(null)}
-            className="w-7 h-7 flex items-center justify-center bg-[#DC2626] hover:bg-[#EF4444] text-white text-xs font-bold border-2 border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer transition-transform"
+            className="w-8 h-8 rounded-full bg-[#FAF0E1] hover:bg-[#EADDC9] text-[#5D4037] text-sm font-black border border-[#DECBB9] flex items-center justify-center cursor-pointer transition-colors"
             title="Đóng bảng"
           >
             ✕
           </button>
         </div>
 
-        {/* Upgrade list */}
-        <div className="flex flex-col gap-2 overflow-y-auto pr-1 flex-1 pb-2">
+        {/* 2-Column Grid of Upgrades (matching Mockup 4) */}
+        <div className="grid grid-cols-2 gap-2.5 overflow-y-auto pr-1 flex-1 pb-1">
           {stageUpgrades.map((item) => {
             const currentLevel = upgrades[item.id] || 0;
             const isMax = currentLevel >= item.maxLevel;
@@ -61,96 +63,96 @@ export function UpgradePanel() {
             return (
               <div
                 key={item.id}
-                className="bg-[#2D180C] border-2 border-black shadow-[2px_2px_0px_#000] p-2 flex items-center justify-between gap-2"
+                className="cozy-card-inner p-2.5 flex flex-col justify-between items-center text-center gap-1.5"
               >
-                <div className="flex-1 flex items-center gap-2 min-w-0">
-                  <div className="w-10 h-10 bg-[#1A0E05] flex items-center justify-center p-1 border border-black shrink-0">
-                    <img
-                      src={
-                        item.id === 'phin_nhom_xin'
-                          ? '/assets/sprites/phin_ca_phe.png'
-                          : item.id === 'staff_barista_1'
-                          ? '/assets/sprites/khach_sinh_vien.png'
-                          : item.id === 'staff_cat_shipper'
-                          ? '/assets/sprites/pet_meo_muop.png'
-                          : '/assets/sprites/ghe_nhua_do.png'
-                      }
-                      alt={item.name}
-                      className="w-full h-full object-contain image-rendering-pixelated"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <h3 className="text-[#FFF8E7] font-bold text-sm truncate uppercase leading-none">
-                        {item.name}
-                      </h3>
-                      <span className="bg-[#0D9488] text-white text-xs px-1.5 py-0.5 border border-black font-bold shrink-0 leading-none">
-                        {currentLevel}/{item.maxLevel}
-                      </span>
-                    </div>
-                    <p className="text-[#FFF8E7]/70 text-xs mt-1 line-clamp-1 leading-none">
-                      {item.effect}
-                    </p>
-                    <span className="text-[#FFD700] text-xs font-bold mt-1 block leading-none">
-                      {isMax ? 'ĐÃ ĐẠT CẤP TỐI ĐA' : `GIÁ: ${formatVND(nextCost)}`}
-                    </span>
+                {/* Upgrade image */}
+                <div className="w-16 h-16 bg-[#FAF0E1] border border-[#D8C7B5] rounded-xl flex items-center justify-center p-1 shadow-inner">
+                  <img
+                    src={
+                      item.id === 'phin_nhom_xin'
+                        ? '/assets/sprites/phin_ca_phe.png'
+                        : item.id === 'staff_barista_1'
+                        ? '/assets/sprites/khach_sinh_vien.png'
+                        : item.id === 'staff_cat_shipper'
+                        ? '/assets/sprites/pet_meo_muop.png'
+                        : '/assets/sprites/ghe_nhua_do.png'
+                    }
+                    alt={item.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                {/* Details */}
+                <div className="w-full">
+                  <h3 className="text-xs font-bold text-[#3E2415] truncate">
+                    {item.name}
+                  </h3>
+                  <div className="flex items-center justify-center gap-1 text-[11px] text-[#8C6E54] font-bold mt-0.5">
+                    <span className="text-[#4E8A47]">Lv.{currentLevel}/{item.maxLevel}</span>
+                    <span>•</span>
+                    <span className="text-[#E08738]">{isMax ? 'Tối đa' : formatVND(nextCost)}</span>
                   </div>
                 </div>
 
-                <div className="shrink-0">
+                {/* Button */}
+                <div className="w-full pt-1">
                   <button
                     onClick={() => buyUpgrade(item.id, nextCost)}
                     disabled={isMax || !canAfford}
-                    className={`px-3 py-1 text-xs font-bold border-2 transition-transform cursor-pointer text-center uppercase ${
+                    className={`w-full py-1.5 px-1 text-xs font-bold rounded-xl transition-all ${
                       isMax
-                        ? 'bg-stone-800 text-stone-500 border-stone-900 cursor-not-allowed'
+                        ? 'cozy-btn-gray opacity-70 cursor-not-allowed'
                         : canAfford
-                        ? 'bg-[#F59E0B] hover:bg-[#FBBF24] text-[#1A0E05] border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none'
-                        : 'bg-stone-800 text-stone-500 border-stone-900 opacity-60 cursor-not-allowed'
+                        ? 'cozy-btn-orange'
+                        : 'cozy-btn-gray opacity-70 cursor-not-allowed'
                     }`}
                   >
-                    {isMax ? 'MAX' : 'NÂNG CẤP'}
+                    {isMax ? 'Cấp tối đa' : 'Nâng cấp'}
                   </button>
                 </div>
               </div>
             );
           })}
+        </div>
 
-          {/* Cột mốc cuối Stage 1: Xe Đẩy Lưu Động */}
-          {currentStage === 1 && (
-            <div className="bg-[#3B1515] border-2 border-[#DC2626] shadow-[2px_2px_0px_#000] p-2 flex items-center justify-between gap-2 mt-1">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-base">🛵</span>
-                  <h3 className="text-[#FFF8E7] font-bold text-sm truncate uppercase leading-none">
-                    XE ĐẨY LƯU ĐỘNG (GĐ 1 ▶ GĐ 2)
-                  </h3>
-                </div>
-                <p className="text-[#FFF8E7]/70 text-xs mt-1 leading-none">
-                  Bán mang đi tại ngã tư sầm uất, x2 lượng khách!
+        {/* Milestone Stage 2 Promo Card */}
+        {currentStage === 1 && (
+          <div className="mt-2.5 p-2.5 bg-[#FAF0E1] border-2 border-[#D8C7B5] rounded-2xl flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-2xl shrink-0">🛵</span>
+              <div className="min-w-0">
+                <h4 className="text-xs font-bold text-[#3E2415] truncate">
+                  Xe Đẩy Lưu Động (Giai đoạn 2)
+                </h4>
+                <p className="text-[10px] text-[#8C6E54] font-semibold line-clamp-1">
+                  {isXeDayOwned ? 'Đã mở khóa! Quán tiến hóa sang Stage 2.' : 'Bán mang đi + Món Cà phê muối & Trà chanh'}
                 </p>
-                <span className="text-[#FFD700] text-xs font-bold mt-1 block leading-none">
-                  {isXeDayOwned ? 'ĐÃ SỞ HỮU XE ĐẨY' : `GIÁ: ${formatVND(250000)}`}
-                </span>
-              </div>
-
-              <div className="shrink-0">
-                <button
-                  onClick={handleUnlockStage2}
-                  disabled={isXeDayOwned || !canBuyXeDay}
-                  className={`px-3 py-1 text-xs font-bold border-2 transition-transform cursor-pointer text-center uppercase ${
-                    isXeDayOwned
-                      ? 'bg-[#16A34A] text-white border-black cursor-default'
-                      : canBuyXeDay
-                      ? 'bg-[#DC2626] hover:bg-[#EF4444] text-white border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none'
-                      : 'bg-stone-800 text-stone-500 border-stone-900 opacity-60 cursor-not-allowed'
-                  }`}
-                >
-                  {isXeDayOwned ? 'ĐÃ ĐẠT' : 'MỞ KHÓA GĐ 2'}
-                </button>
               </div>
             </div>
-          )}
+            <div>
+              <button
+                onClick={handleUnlockStage2}
+                disabled={isXeDayOwned || !canBuyXeDay}
+                className={`py-1.5 px-3 text-xs font-bold rounded-xl shrink-0 ${
+                  isXeDayOwned
+                    ? 'cozy-btn-green cursor-default'
+                    : canBuyXeDay
+                    ? 'cozy-btn-gold'
+                    : 'cozy-btn-gray opacity-70 cursor-not-allowed'
+                }`}
+              >
+                {isXeDayOwned ? 'Đã đạt' : '250.000đ'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="mt-2.5 pt-2 border-t border-[#D8C7B5] flex justify-between items-center text-xs text-[#8C6E54]">
+          <span className="font-semibold">Vốn hiện có:</span>
+          <span className="font-bold text-[#3E2415] bg-[#FAF0E1] px-2 py-0.5 rounded-lg border border-[#DECBB9]">
+            🪙 {formatVND(gold)}
+          </span>
         </div>
       </div>
     </div>

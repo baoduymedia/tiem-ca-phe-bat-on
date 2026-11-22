@@ -19,79 +19,103 @@ export const DailyQuestPanel: React.FC = () => {
   };
 
   return (
-    <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 select-none font-pixel">
-      <div className="w-full max-w-[380px] bg-[#24140B] border-4 border-black shadow-[4px_4px_0px_#000] p-3 flex flex-col max-h-[82vh] overflow-hidden">
-        {/* Header */}
-        <div className="w-full flex items-center justify-between border-b-2 border-black pb-2 mb-2.5">
+    <div className="absolute inset-0 z-40 flex items-center justify-center cozy-modal-backdrop p-3 select-none font-sans">
+      <div className="w-full max-w-[390px] cozy-card p-4 flex flex-col max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-150">
+        {/* Header Ribbon (matching Mockup 5) */}
+        <div className="w-full flex items-center justify-between border-b-2 border-[#D8C7B5] pb-2.5 mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-xl">📜</span>
+            <span className="w-9 h-9 rounded-2xl bg-[#FAF0E1] border border-[#D8C7B5] flex items-center justify-center text-lg">
+              📜
+            </span>
             <div>
-              <h3 className="font-bold text-base text-[#FFD700] uppercase tracking-wide leading-none">
-                NHIỆM VỤ HÔM NAY
+              <h3 className="font-serif font-black text-base text-[#3E2415] tracking-wide leading-none">
+                Nhiệm vụ hàng ngày
               </h3>
-              <p className="text-xs text-[#D4A373] mt-0.5 leading-none">
+              <p className="text-[11px] text-[#8C6E54] mt-1 font-semibold leading-none">
                 Ngày {currentDay} • Thưởng Hạt Cà Phê Vàng 🫘
               </p>
             </div>
           </div>
           <button
             onClick={() => setActiveTab(null)}
-            className="w-7 h-7 flex items-center justify-center bg-[#DC2626] hover:bg-[#EF4444] text-white text-xs font-bold border-2 border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer transition-transform"
+            className="w-8 h-8 rounded-full bg-[#FAF0E1] hover:bg-[#EADDC9] text-[#5D4037] text-sm font-black border border-[#DECBB9] flex items-center justify-center cursor-pointer transition-colors"
+            title="Đóng bảng"
           >
             ✕
           </button>
         </div>
 
         {/* Quests List */}
-        <div className="flex-1 overflow-y-auto space-y-2 pr-1">
-          {dailyQuests.map((quest) => {
+        <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
+          {dailyQuests.map((quest, index) => {
             const isCompleted = quest.current >= quest.target;
             const progressPct = Math.min(100, Math.round((quest.current / quest.target) * 100));
+
+            // Matching Mockup 5 mascots: 1: Mèo mướp vàng, 2: Cún ngủ, 3: Chú Ba / Shipper
+            const mascotIcon = index === 0 ? '🐱' : index === 1 ? '🐶' : '🛵';
+            const mascotLabel = index === 0 ? 'Mèo Mướp' : index === 1 ? 'Cún Vàng' : 'Giao Hàng';
 
             return (
               <div
                 key={quest.id}
-                className="bg-[#2D180C] border-2 border-black shadow-[2px_2px_0px_#000] p-2.5 flex flex-col gap-1.5"
+                className="cozy-card-inner p-3 flex flex-col gap-2"
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <h4 className="text-sm font-bold text-[#FFF8E7] leading-tight">{quest.description}</h4>
-                    <span className="text-xs text-[#D4A373]">
-                      Tiến độ: {quest.current.toLocaleString('vi-VN')} / {quest.target.toLocaleString('vi-VN')}
-                    </span>
+                <div className="flex items-center gap-2.5">
+                  {/* Left mascot avatar */}
+                  <div className="w-12 h-12 rounded-xl bg-[#FAF0E1] border border-[#D8C7B5] flex flex-col items-center justify-center shrink-0">
+                    <span className="text-xl">{mascotIcon}</span>
+                    <span className="text-[8px] text-[#8C6E54] font-bold mt-0.5">{mascotLabel}</span>
                   </div>
-                  {/* Reward Badge */}
-                  <span className="px-2 py-0.5 bg-[#F59E0B] border border-black text-xs font-bold text-[#1A0E05] flex items-center gap-1 shrink-0">
-                    🫘 +{quest.rewardBeans}
+
+                  {/* Center Quest Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      <h4 className="text-xs font-bold text-[#3E2415] truncate">
+                        {quest.description}
+                      </h4>
+                      <span className="text-[11px] text-[#8C6E54] font-bold shrink-0">
+                        {quest.current}/{quest.target}
+                      </span>
+                    </div>
+
+                    {/* Progress Bar (matching Mockup 5: dark brown track with warm caramel fill) */}
+                    <div className="w-full h-2.5 bg-[#422615] rounded-full overflow-hidden p-0.5">
+                      <div
+                        className="h-full bg-[#E08738] rounded-full transition-all duration-300"
+                        style={{ width: `${progressPct}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Row: Reward & Button */}
+                <div className="flex items-center justify-between pt-1 border-t border-[#F0E4D5]">
+                  <span className="flex items-center gap-1 text-xs font-bold text-[#B45309]">
+                    <span>🫘</span>
+                    <span>+{quest.rewardBeans} Đậu</span>
                   </span>
-                </div>
 
-                {/* Progress Bar */}
-                <div className="w-full h-3 bg-[#1A0E05] border border-black overflow-hidden relative">
-                  <div
-                    className="h-full bg-[#F59E0B] transition-all duration-300"
-                    style={{ width: `${progressPct}%` }}
-                  />
-                </div>
-
-                {/* Claim Button */}
-                <div className="flex justify-end pt-0.5">
-                  {quest.claimed ? (
-                    <span className="text-xs font-bold text-[#4ADE80] flex items-center gap-1">
-                      ✓ ĐÃ NHẬN THƯỞNG
-                    </span>
-                  ) : isCompleted ? (
-                    <button
-                      onClick={() => handleClaim(quest.id)}
-                      className="px-3 py-1 bg-[#16A34A] hover:bg-[#22C55E] active:translate-x-0.5 active:translate-y-0.5 text-white font-bold text-xs uppercase border-2 border-black shadow-[2px_2px_0px_#000] flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>🎁</span> NHẬN {quest.rewardBeans} HẠT VÀNG
-                    </button>
-                  ) : (
-                    <span className="text-xs text-stone-400">
-                      Đang thực hiện ({progressPct}%)
-                    </span>
-                  )}
+                  <div>
+                    {quest.claimed ? (
+                      <span className="text-[11px] font-bold text-[#4E8A47] flex items-center gap-1">
+                        ✓ ĐÃ NHẬN
+                      </span>
+                    ) : isCompleted ? (
+                      <button
+                        onClick={() => handleClaim(quest.id)}
+                        className="py-1 px-3 cozy-btn-gold text-xs font-bold flex items-center gap-1"
+                      >
+                        <span>🎁</span> NHẬN
+                      </button>
+                    ) : (
+                      <button
+                        disabled
+                        className="py-1 px-3 cozy-btn-gray text-xs font-bold opacity-80 cursor-not-allowed"
+                      >
+                        Đang tiến hành
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -99,9 +123,9 @@ export const DailyQuestPanel: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-2.5 pt-1.5 border-t border-black flex justify-center">
-          <p className="text-xs text-[#D4A373] text-center">
-            Mẹo: Dùng Hạt Vàng 🫘 để mở khóa linh vật tự động & mua đồ trang trí độc quyền!
+        <div className="mt-3 pt-2 border-t border-[#D8C7B5] text-center">
+          <p className="text-[11px] text-[#8C6E54] font-semibold">
+            Mẹo: Dùng Hạt Vàng 🫘 để mở khóa decor và tăng tốc pha chế!
           </p>
         </div>
       </div>

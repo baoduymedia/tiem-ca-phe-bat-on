@@ -133,48 +133,48 @@ export const CoffeeBrewingModal: React.FC = () => {
   const foamHeightPx = Math.min(16, (stirCount / 5) * 16);
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-xs p-3 animate-in fade-in duration-200 select-none font-pixel">
-      <div className="relative w-full max-w-[400px] pixel-box-wood text-[#FFE8C2] p-4 flex flex-col items-center">
-        {/* Top Header */}
-        <div className="w-full flex items-center justify-between border-b-2 border-black/40 pb-2 mb-2.5">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl drop-shadow-[2px_2px_0px_#000]">☕</span>
+    <div className="cozy-modal-backdrop">
+      <div className="cozy-card w-full max-w-[400px] p-4 flex flex-col items-center text-[#5D4037]">
+        {/* Ribbon Header */}
+        <div className="cozy-ribbon mb-2 text-center w-full relative py-1.5 px-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-lg">☕</span>
             <div>
-              <h3 className="font-black text-sm text-[#FFD700] uppercase tracking-wide drop-shadow-[1px_1px_0px_#000]">
-                Trạm Pha Chế ASMR Sài Gòn
-              </h3>
-              <p className="text-xs text-[#FFE8C2]/80 font-bold">
-                Khách đợi: <strong className="text-[#FF8A8A]">{activeBrewing.customerName}</strong>
-              </p>
+              <span className="font-bold text-sm tracking-wide block leading-none">TRẠM PHA CHẾ ASMR</span>
+              <span className="text-[10px] text-[#3E2415]/80 font-semibold">
+                Khách: {activeBrewing.customerName}
+              </span>
             </div>
+            <button
+              onClick={() => cancelBrewing()}
+              className="w-6 h-6 rounded-full bg-[#EFE3D3] hover:bg-[#E5D4C0] text-[#5D4037] font-bold flex items-center justify-center text-xs border border-[#D8C7B5] cursor-pointer"
+              title="Hủy pha chế"
+            >
+              ✕
+            </button>
           </div>
-          <button
-            onClick={() => cancelBrewing()}
-            className="pixel-btn pixel-btn-red w-7 h-7 flex items-center justify-center text-xs"
-            title="Hủy pha chế"
-          >
-            ✕
-          </button>
         </div>
 
         {/* Current Drink Badge */}
-        <div className="w-full pixel-box bg-[#1A0E05] px-3 py-1.5 flex items-center justify-between mb-2.5">
-          <span className="text-sm font-black text-[#FFE8C2]">{activeBrewing.recipeName}</span>
-          <span className="text-sm font-black text-[#FFD700]">{formatVND(activeBrewing.price)}</span>
+        <div className="w-full cozy-card-inner px-3 py-1.5 flex items-center justify-between mb-2.5">
+          <span className="text-xs font-bold text-[#3E2415]">{activeBrewing.recipeName}</span>
+          <span className="text-xs font-bold text-[#D97706] bg-[#FAF5ED] px-2 py-0.5 rounded-lg border border-[#DECBB9]">
+            {formatVND(activeBrewing.price)}
+          </span>
         </div>
 
         {/* Step Progression Pills */}
-        <div className="w-full grid grid-cols-4 gap-1.5 mb-2.5 text-xs font-black text-center">
-          <div className={`py-1 border-2 border-black shadow-[2px_2px_0px_#000] ${step >= 0 ? 'bg-[#5C9E54] text-white' : 'bg-[#3A2213] text-[#FFE8C2]/50'}`}>
+        <div className="w-full grid grid-cols-4 gap-1.5 mb-2.5 text-xs font-bold text-center">
+          <div className={`py-1 rounded-xl transition-all ${step >= 0 ? 'bg-[#739E7A] text-white shadow-xs' : 'bg-[#EAE0D3] text-[#8C6E54]'}`}>
             1. Nước sôi
           </div>
-          <div className={`py-1 border-2 border-black shadow-[2px_2px_0px_#000] ${needsMilk ? (step >= 1 ? 'bg-[#5C9E54] text-white' : 'bg-[#3A2213] text-[#FFE8C2]/50') : 'opacity-30 bg-[#25150C] text-stone-500'}`}>
+          <div className={`py-1 rounded-xl transition-all ${needsMilk ? (step >= 1 ? 'bg-[#739E7A] text-white shadow-xs' : 'bg-[#EAE0D3] text-[#8C6E54]') : 'opacity-40 bg-[#EAE0D3] text-[#8C6E54]'}`}>
             2. Sữa đặc
           </div>
-          <div className={`py-1 border-2 border-black shadow-[2px_2px_0px_#000] ${step >= 2 ? 'bg-[#5C9E54] text-white' : 'bg-[#3A2213] text-[#FFE8C2]/50'}`}>
+          <div className={`py-1 rounded-xl transition-all ${step >= 2 ? 'bg-[#739E7A] text-white shadow-xs' : 'bg-[#EAE0D3] text-[#8C6E54]'}`}>
             3. Đá bi
           </div>
-          <div className={`py-1 border-2 border-black shadow-[2px_2px_0px_#000] ${step >= 3 ? 'bg-[#5C9E54] text-white' : 'bg-[#3A2213] text-[#FFE8C2]/50'}`}>
+          <div className={`py-1 rounded-xl transition-all ${step >= 3 ? 'bg-[#739E7A] text-white shadow-xs' : 'bg-[#EAE0D3] text-[#8C6E54]'}`}>
             4. Khuấy
           </div>
         </div>
@@ -407,14 +407,14 @@ export const CoffeeBrewingModal: React.FC = () => {
           {step === 4 ? (
             <button
               onClick={() => handleDeliverDrink(false)}
-              className="w-full pixel-btn pixel-btn-green py-2.5 text-xs uppercase tracking-wide flex items-center justify-center gap-2"
+              className="w-full cozy-btn-green py-2.5 text-xs uppercase tracking-wide flex items-center justify-center gap-2 rounded-2xl font-bold cursor-pointer transition-transform"
             >
               <span>🚚</span> TRAO LY CHO KHÁCH & NHẬN TIỀN
             </button>
           ) : (
             <button
               onClick={() => handleDeliverDrink(true)}
-              className="w-full pixel-btn pixel-btn-wood py-2 text-xs uppercase text-[#FFE8C2]/90 flex items-center justify-center gap-1.5"
+              className="w-full cozy-btn-wood py-2 text-xs uppercase flex items-center justify-center gap-1.5 rounded-2xl font-bold cursor-pointer transition-transform"
             >
               <span>⚡</span> Pha Nhanh Tự Động (Bỏ qua thao tác)
             </button>

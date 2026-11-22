@@ -24,16 +24,16 @@ export function CustomerDialogueToast() {
   if (!speech) return null;
 
   return (
-    <div className="absolute bottom-18 left-3 right-3 z-20 pointer-events-none flex justify-center animate-in fade-in slide-in-from-bottom duration-200 font-pixel select-none">
-      <div className="bg-[#24140B] border-2 border-black shadow-[3px_3px_0px_#000] px-3 py-1.5 max-w-[380px] w-full flex items-center gap-2">
-        <div className="w-6 h-6 bg-[#1A0E05] flex items-center justify-center text-xs shrink-0 border border-black">
+    <div className="absolute bottom-20 left-4 right-4 z-20 pointer-events-none flex justify-center animate-in fade-in slide-in-from-bottom duration-200 select-none">
+      <div className="bg-[#4E342E]/95 text-[#FFF9EF] border-2 border-[#3E2415] shadow-md rounded-2xl px-3.5 py-2 max-w-[380px] w-full flex items-center gap-2.5 backdrop-blur-xs">
+        <div className="w-7 h-7 bg-[#FFF9EF] text-[#5D4037] rounded-full flex items-center justify-center text-xs shrink-0 shadow-xs border border-[#3E2415]/20">
           💬
         </div>
-        <div className="text-xs leading-tight text-[#FFF8E7] flex-1">
-          <span className="font-bold text-[#FFD700] mr-1.5 uppercase">
+        <div className="text-xs leading-tight text-[#FFF9EF] flex-1">
+          <span className="font-bold text-[#F4C447] mr-1.5 uppercase tracking-wide">
             {speech.name}:
           </span>
-          <span className="text-[#FFF8E7]/90 font-semibold">"{speech.dialogue}"</span>
+          <span className="font-medium text-[#FFFDF9]/95">"{speech.dialogue}"</span>
         </div>
       </div>
     </div>

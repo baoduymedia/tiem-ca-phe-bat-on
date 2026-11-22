@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Cozy Saigon Sidewalk Idle Tycoon Theme System v3.0 */
+/* Cozy Saigon Sidewalk Idle Tycoon Theme System v3.5 */
 :root {
   /* 12 Semantic Cozy Colors */
   --color-robusta-dark: #24140B;
@@ -16,17 +16,19 @@
   --color-canopy-green: #4E8A47;
   --color-shipper-orange: #EA580C;
 
-  /* Legacy / Quick Aliases */
-  --color-cream: #FFF8E7;
-  --color-coffee: #633E24;
-  --color-green: #4E8A47;
-  --color-red: #D94141;
-  --color-teal: #1F9E93;
-  --color-dark: #24140B;
-  --color-gold: #FFD700;
+  /* Cozy Storybook Palette Tokens */
+  --color-cozy-parchment: #FFF9EF;
+  --color-cozy-card-bg: #FFFDF9;
+  --color-cozy-border: #5D4037;
+  --color-cozy-sub-border: #D8C7B5;
+  --color-cozy-text: #3E2415;
+  --color-cozy-green: #739E7A;
+  --color-cozy-orange: #E08738;
+  --color-cozy-gold: #F4C447;
+  --color-cozy-gray: #E8E2D8;
 
   /* 3D Tactile Cozy Shadows & Borders */
-  --shadow-cozy-card: 0 8px 24px -4px rgba(36, 20, 11, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+  --shadow-cozy-card: 0 8px 0 #3E2415, 0 16px 28px rgba(0, 0, 0, 0.45);
   --shadow-wood-inset: inset 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 -2px 4px rgba(255, 255, 255, 0.08);
   --shadow-kraft-paper: 0 10px 30px -5px rgba(20, 10, 5, 0.55), 0 0 1px 1px rgba(212, 163, 115, 0.3);
   --shadow-retro-btn: 0 4px 0 #321B0D, 0 6px 12px rgba(0, 0, 0, 0.4);
@@ -231,4 +233,113 @@ html, body, #root {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 215, 0, 0.8);
+}
+
+/* Cozy Storybook Palette & Tactile Classes */
+.cozy-modal-backdrop {
+  background-color: rgba(26, 15, 9, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.cozy-card {
+  background-color: #FFF9EF;
+  border: 3.5px solid #5D4037;
+  border-radius: 28px;
+  box-shadow: 0 8px 0 #3E2415, 0 16px 28px rgba(0, 0, 0, 0.45);
+  color: #3E2415;
+}
+
+.cozy-card-inner {
+  background-color: #FFFDF9;
+  border: 2px solid #DECBB9;
+  border-radius: 18px;
+  box-shadow: 0 2px 4px rgba(93, 64, 55, 0.08);
+}
+
+.cozy-ribbon {
+  background: #FFF8ED;
+  border: 2px solid #5D4037;
+  box-shadow: 0 3px 0 #3E2415;
+  border-radius: 9999px;
+  color: #3E2415;
+}
+
+.cozy-btn-orange {
+  background: #E08738;
+  color: #FFFFFF;
+  border: 2px solid #A85A1D;
+  box-shadow: 0 3px 0 #6F3B13;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.08s ease;
+}
+.cozy-btn-orange:hover {
+  background: #ED9445;
+}
+.cozy-btn-orange:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #6F3B13;
+}
+
+.cozy-btn-green {
+  background: #739E7A;
+  color: #FFFFFF;
+  border: 2px solid #4F7355;
+  box-shadow: 0 3px 0 #36503B;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.08s ease;
+}
+.cozy-btn-green:hover {
+  background: #82AD89;
+}
+.cozy-btn-green:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #36503B;
+}
+
+.cozy-btn-gold {
+  background: #F4C447;
+  color: #3E2415;
+  border: 2px solid #B88E28;
+  box-shadow: 0 3px 0 #806118;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.08s ease;
+}
+.cozy-btn-gold:hover {
+  background: #FBD058;
+}
+.cozy-btn-gold:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #806118;
+}
+
+.cozy-btn-wood {
+  background: #5D4037;
+  color: #FFF8ED;
+  border: 2px solid #3E2415;
+  box-shadow: 0 3px 0 #28150B;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.08s ease;
+}
+.cozy-btn-wood:hover {
+  background: #6D4C41;
+}
+.cozy-btn-wood:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #28150B;
+}
+
+.cozy-btn-gray {
+  background: #E8E2D8;
+  color: #8C8075;
+  border: 2px solid #C4BCB1;
+  border-radius: 14px;
+  font-weight: 700;
 }

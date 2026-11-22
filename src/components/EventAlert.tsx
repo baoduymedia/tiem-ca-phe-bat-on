@@ -73,32 +73,32 @@ export function EventAlert() {
     <>
       {/* Warning Toast */}
       {warningMsg && (
-        <div className="absolute top-18 left-4 right-4 z-40 flex justify-center animate-bounce select-none pointer-events-none font-pixel">
-          <div className="bg-[#DC2626] text-white text-xs font-bold px-3 py-1.5 border-2 border-black shadow-[3px_3px_0px_#000] flex items-center gap-2">
-            <span className="text-sm">🚨</span>
-            <span className="tracking-wide uppercase">{warningMsg}</span>
+        <div className="absolute top-20 left-4 right-4 z-40 flex justify-center animate-bounce select-none pointer-events-none">
+          <div className="bg-[#B91C1C] text-white text-xs font-bold px-3.5 py-2 rounded-2xl shadow-lg border-2 border-[#7F1D1D] flex items-center gap-2">
+            <span className="text-base">🚨</span>
+            <span className="tracking-wide uppercase font-bold">{warningMsg}</span>
           </div>
         </div>
       )}
 
       {/* Active Event Alert & Big Button */}
       {activeEvent && (
-        <div className="absolute inset-0 z-50 bg-black/75 backdrop-blur-xs flex flex-col items-center justify-center p-4 select-none font-pixel animate-in zoom-in-95 duration-150">
-          <div className="bg-[#24140B] border-4 border-black shadow-[5px_5px_0px_#000] p-4 text-center max-w-[340px] w-full flex flex-col items-center">
-            <span className="text-4xl block mb-1 drop-shadow-[2px_2px_0px_#000]">
+        <div className="cozy-modal-backdrop">
+          <div className="cozy-card p-5 text-center max-w-[340px] w-full flex flex-col items-center animate-in zoom-in-95 duration-150 text-[#5D4037]">
+            <span className="text-4xl block mb-2 filter drop-shadow">
               {getEventIcon(activeEvent.id)}
             </span>
-            <h2 className="text-[#FFD700] font-black text-lg mb-1 tracking-wide uppercase drop-shadow-[1px_1px_0px_#000]">
+            <h2 className="text-[#3E2415] font-black text-base mb-1 tracking-wide uppercase">
               {activeEvent.name}
             </h2>
-            <p className="text-[#FFF8E7]/90 text-xs mb-3 leading-relaxed font-bold">
+            <p className="text-[#5D4037]/90 text-xs mb-3 leading-relaxed font-semibold">
               {activeEvent.alertText}
             </p>
 
             {/* Timer bar */}
-            <div className="w-full bg-[#1A0E05] h-3 border-2 border-black mb-3.5 overflow-hidden">
+            <div className="w-full bg-[#EAE0D3] h-3 rounded-full border border-[#D8C7B5] mb-3.5 overflow-hidden">
               <div
-                className="bg-[#EAB308] h-full transition-all duration-1000"
+                className="bg-[#E08738] h-full transition-all duration-1000 rounded-full"
                 style={{
                   width: `${(timeLeft / activeEvent.durationSec) * 100}%`,
                 }}
@@ -108,7 +108,7 @@ export function EventAlert() {
             {/* Primary Action Button */}
             <button
               onClick={() => handleAction(false)}
-              className="w-full py-2.5 pixel-btn pixel-btn-red text-sm font-black uppercase tracking-wider mb-2 cursor-pointer"
+              className="w-full py-2.5 cozy-btn-orange text-xs font-black uppercase tracking-wider mb-2 rounded-2xl cursor-pointer"
             >
               {activeEvent.buttonLabel} ({timeLeft}S)
             </button>
@@ -117,7 +117,7 @@ export function EventAlert() {
             {activeEvent.id === 'trat_tu_do_thi' && (
               <button
                 onClick={() => handleAction(true)}
-                className="w-full py-2 pixel-btn pixel-btn-green text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full py-2 cozy-btn-green text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 rounded-2xl cursor-pointer"
               >
                 <span>🏠</span> NÉP HIÊN NHÀ CÔ BẢY (CỨU VIỆN)
               </button>

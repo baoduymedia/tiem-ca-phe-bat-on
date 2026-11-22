@@ -38,40 +38,66 @@ export const DecorPanel: React.FC = () => {
     return '🪴';
   };
 
+  const [currentCategory, setCurrentCategory] = React.useState<'all' | 'furniture' | 'decor' | 'special'>('all');
+
   return (
-    <div className="absolute inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 select-none font-pixel animate-in fade-in duration-150">
+    <div className="absolute inset-0 z-50 cozy-modal-backdrop flex items-center justify-center p-3 select-none font-sans animate-in zoom-in-95 duration-150">
       {/* Click backdrop to dismiss */}
       <div
         className="absolute inset-0 cursor-pointer"
         onClick={() => setActiveTab(null)}
       />
 
-      {/* Modal Container */}
-      <div className="relative z-10 bg-[#24140B] border-4 border-black shadow-[4px_4px_0px_#000] p-3.5 max-h-[82vh] flex flex-col max-w-[440px] w-full">
+      {/* Modal Container (matching Mockup 9) */}
+      <div className="relative z-10 w-full max-w-[420px] cozy-card p-4 max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="flex justify-between items-center pb-2 border-b-2 border-black mb-2.5">
+        <div className="flex justify-between items-center pb-2.5 border-b-2 border-[#D8C7B5] mb-2.5">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🪴</span>
+            <span className="w-9 h-9 rounded-2xl bg-[#FAF0E1] border border-[#D8C7B5] flex items-center justify-center text-lg">
+              🪴
+            </span>
             <div>
-              <h2 className="text-[#FFD700] font-bold text-base tracking-wide uppercase leading-none">
-                TRANG TRÍ QUÁN (DECOR)
+              <h2 className="text-[#3E2415] font-serif font-black text-base tracking-wide leading-none">
+                Decor (Trang trí quán)
               </h2>
-              <p className="text-xs text-[#D4A373] mt-0.5 leading-none">
+              <p className="text-[11px] text-[#8C6E54] font-semibold mt-0.5 leading-none">
                 Tăng điểm sống ảo ⭐ & thu hút khách sành điệu
               </p>
             </div>
           </div>
           <button
             onClick={() => setActiveTab(null)}
-            className="w-7 h-7 flex items-center justify-center bg-[#DC2626] hover:bg-[#EF4444] text-white text-xs font-bold border-2 border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer transition-transform"
+            className="w-8 h-8 rounded-full bg-[#FAF0E1] hover:bg-[#EADDC9] text-[#5D4037] text-sm font-black border border-[#DECBB9] flex items-center justify-center cursor-pointer transition-colors"
             title="Đóng bảng"
           >
             ✕
           </button>
         </div>
 
-        {/* Decor Items List */}
-        <div className="flex flex-col gap-2 overflow-y-auto pr-1 flex-1 pb-2">
+        {/* Sub-tabs (matching Mockup 9: New, Furniture, Decor, Special) */}
+        <div className="grid grid-cols-4 gap-1.5 mb-2.5">
+          {[
+            { id: 'all', label: 'Mới (New)' },
+            { id: 'furniture', label: 'Bàn ghế' },
+            { id: 'decor', label: 'Trang trí' },
+            { id: 'special', label: 'Đặc biệt' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setCurrentCategory(tab.id as any)}
+              className={`py-1 text-[11px] font-bold rounded-xl border transition-colors ${
+                currentCategory === tab.id
+                  ? 'bg-[#E08738] text-white border-[#A85A1D] shadow-xs'
+                  : 'bg-[#FAF0E1] text-[#6D4C41] border-[#D8C7B5] hover:bg-[#F0E4D5]'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* 3-Column Card Grid (matching Mockup 9) */}
+        <div className="grid grid-cols-3 gap-2 overflow-y-auto pr-1 flex-1 pb-1">
           {decors.map((item) => {
             const isOwned = ownedDecor.includes(item.id);
             const isEquipped = equippedDecor.includes(item.id);
@@ -84,67 +110,64 @@ export const DecorPanel: React.FC = () => {
             return (
               <div
                 key={item.id}
-                className="bg-[#2D180C] border-2 border-black shadow-[2px_2px_0px_#000] p-2 flex items-center justify-between gap-2"
+                className="cozy-card-inner p-2 flex flex-col justify-between items-center text-center gap-1"
               >
-                <div className="flex-1 flex items-center gap-2.5 min-w-0">
-                  <div className="w-10 h-10 bg-[#1A0E05] flex items-center justify-center text-2xl border border-black shrink-0">
-                    {getDecorIcon(item.id)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <h4 className="text-[#FFF8E7] font-bold text-xs truncate uppercase leading-none">
-                        {item.name}
-                      </h4>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs mt-1">
-                      <span className="text-[#FFD700] font-bold">
-                        +{item.reputationBonus} ⭐ Sống ảo
-                      </span>
-                      {isLocked && (
-                        <span className="text-red-400 font-bold">
-                          (Khóa: GĐ {item.stage})
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                {/* Item Thumbnail */}
+                <div className="w-12 h-12 rounded-xl bg-[#FAF0E1] border border-[#D8C7B5] flex items-center justify-center text-2xl shadow-inner">
+                  {getDecorIcon(item.id)}
                 </div>
 
-                <div className="shrink-0">
+                {/* Info */}
+                <div className="w-full">
+                  <h4 className="text-[11px] font-bold text-[#3E2415] truncate" title={item.name}>
+                    {item.name}
+                  </h4>
+                  <span className="text-[10px] text-[#B45309] font-bold block mt-0.5">
+                    ⭐ +{item.reputationBonus} Rep
+                  </span>
+                </div>
+
+                {/* Button */}
+                <div className="w-full pt-0.5">
                   {isOwned ? (
                     <button
                       onClick={() => toggleEquipDecor(item.id)}
-                      className={`px-3 py-1 text-xs font-bold border-2 uppercase transition-transform cursor-pointer ${
+                      className={`w-full py-1 text-[10px] font-bold rounded-lg transition-all ${
                         isEquipped
-                          ? 'bg-[#15803D] hover:bg-[#16A34A] text-white border-black shadow-[2px_2px_0px_#000]'
-                          : 'bg-[#451A03] hover:bg-[#5A2508] text-[#FFF8E7] border-black shadow-[2px_2px_0px_#000]'
+                          ? 'cozy-btn-green'
+                          : 'cozy-btn-gold'
                       }`}
                     >
-                      {isEquipped ? '✓ ĐANG BẬT' : 'CHƯA DÙNG'}
+                      {isEquipped ? 'Đang dùng' : 'Lắp đặt'}
                     </button>
                   ) : (
                     <button
                       onClick={() => handleBuy(item)}
                       disabled={isLocked || !canAfford}
-                      className={`px-3 py-1 text-xs font-bold border-2 uppercase transition-transform cursor-pointer text-center ${
+                      className={`w-full py-1 text-[10px] font-bold rounded-lg transition-all ${
                         isLocked
-                          ? 'bg-stone-800 text-stone-500 border-stone-900 opacity-50 cursor-not-allowed'
+                          ? 'cozy-btn-gray opacity-50 cursor-not-allowed'
                           : canAfford
-                          ? 'bg-[#F59E0B] hover:bg-[#FBBF24] text-[#1A0E05] border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5'
-                          : 'bg-stone-800 text-stone-500 border-stone-900 opacity-60 cursor-not-allowed'
+                          ? 'cozy-btn-orange'
+                          : 'cozy-btn-gray opacity-70 cursor-not-allowed'
                       }`}
                     >
-                      MUA NGAY
-                      <div className="text-[11px] leading-none">
-                        {item.costGold
-                          ? formatVND(item.costGold)
-                          : `${item.costGoldenBeans} Hạt Vàng 🫘`}
-                      </div>
+                      {isLocked ? `GĐ ${item.stage}` : 'Mua'}
                     </button>
                   )}
                 </div>
               </div>
             );
           })}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-2.5 pt-2 border-t border-[#D8C7B5] flex justify-between items-center text-xs text-[#8C6E54]">
+          <span className="font-semibold">Vốn & Hạt vàng:</span>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-[#3E2415]">🪙 {formatVND(gold)}</span>
+            <span className="font-bold text-[#B45309]">🫘 {goldenBeans}</span>
+          </div>
         </div>
       </div>
     </div>

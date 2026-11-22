@@ -60,31 +60,31 @@ export function DailyPrepModal() {
   } = useGameStore();
 
   return (
-    <div className="absolute inset-0 z-40 bg-black/85 backdrop-blur-xs flex flex-col items-center justify-center p-3 animate-in fade-in duration-200 select-none font-pixel">
-      <div className="w-full max-w-[380px] pixel-box-wood text-[#FFE8C2] p-4 flex flex-col max-h-[92vh]">
+    <div className="absolute inset-0 z-40 cozy-modal-backdrop flex flex-col items-center justify-center p-3 animate-in fade-in duration-200 select-none font-sans">
+      <div className="w-full max-w-[390px] cozy-card p-4 flex flex-col max-h-[92vh]">
         {/* Header */}
-        <div className="text-center pb-2 border-b-2 border-black/40">
-          <span className="pixel-badge bg-[#E8C547] text-[#2D1B0E] mb-1">
+        <div className="text-center pb-2.5 border-b-2 border-[#D8C7B5]">
+          <span className="py-0.5 px-3 bg-[#FAF0E1] text-[#E08738] border border-[#DECBB9] rounded-full text-[11px] font-bold mb-1 inline-block">
             GIAI ĐOẠN CHUẨN BỊ
           </span>
-          <h2 className="text-[#FFD700] font-black text-xl tracking-wide drop-shadow-[2px_2px_0px_#000]">
+          <h2 className="text-[#3E2415] font-serif font-black text-xl tracking-wide">
             ☀️ Bình Minh — Ngày {currentDay}
           </h2>
-          <p className="text-[#FFE8C2]/70 text-xs mt-0.5">
+          <p className="text-[#8C6E54] text-xs font-semibold mt-0.5">
             Xem tin thị trường, chuẩn bị vốn & sắm nguyên liệu!
           </p>
         </div>
 
         {/* Scrollable Content Container */}
-        <div className="overflow-y-auto pr-1 space-y-2 mt-2 flex-1">
+        <div className="overflow-y-auto pr-1 space-y-2.5 mt-2.5 flex-1">
           {/* Market News Banner (Biến Động Chợ Đầu Mối) */}
           {marketNews && (
-            <div className="pixel-box bg-[#382012] p-2.5">
-              <span className="text-xs font-black uppercase text-[#FFD700] block mb-0.5 tracking-wider">
+            <div className="cozy-card-inner p-2.5">
+              <span className="text-xs font-bold text-[#B45309] block mb-0.5 tracking-wide">
                 📢 {marketNews.headline}
               </span>
               {marketNews.multiplier !== 1.0 && (
-                <span className="text-[11px] font-bold text-amber-300">
+                <span className="text-[11px] font-bold text-[#E08738]">
                   {marketNews.multiplier > 1.0
                     ? `⚠️ Giá tăng +${Math.round((marketNews.multiplier - 1) * 100)}%`
                     : `🎉 Trợ giá giảm -${Math.round((1 - marketNews.multiplier) * 100)}%`}
@@ -94,7 +94,7 @@ export function DailyPrepModal() {
           )}
 
           {/* Weather Forecast Banner */}
-          <div className="pixel-box bg-[#2E180C] p-2.5 flex items-start gap-2.5">
+          <div className="cozy-card-inner p-2.5 flex items-start gap-2.5">
             <div className="text-2xl mt-0.5 shrink-0">
               {weatherForecast.type === 'sunny'
                 ? '☀️'
@@ -103,30 +103,30 @@ export function DailyPrepModal() {
                 : '🚨'}
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="text-[#FFD700] font-black text-xs uppercase tracking-wide">
+              <h4 className="text-[#3E2415] font-bold text-xs uppercase tracking-wide">
                 {weatherForecast.title}
               </h4>
-              <p className="text-[#FFE8C2]/80 text-[11px] mt-0.5 leading-snug">
+              <p className="text-[#8C6E54] text-[11px] font-semibold mt-0.5 leading-snug">
                 {weatherForecast.desc}
               </p>
             </div>
           </div>
 
           {/* Solidarity Rescue: Chú Ba Xe Ôm Cho Vay Vốn */}
-          <div className="pixel-box bg-[#1A2E16] border-[#437A22] p-2.5 flex items-start gap-2.5">
+          <div className="cozy-card-inner bg-[#F1F8F1] border-[#B7DFB9] p-2.5 flex items-start gap-2.5">
             <span className="text-2xl shrink-0 mt-0.5">🛵</span>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h4 className="text-[#A3E635] font-black text-xs uppercase tracking-wide">
+                <h4 className="text-[#2E7D32] font-black text-xs uppercase tracking-wide">
                   Chú Ba Xe Ôm Trợ Vốn
                 </h4>
                 {loanAmount > 0 && (
-                  <span className="text-xs text-amber-300 font-black">
+                  <span className="text-xs text-[#B45309] font-black">
                     Nợ: {formatVND(loanAmount)}
                   </span>
                 )}
               </div>
-              <p className="text-[#FFE8C2]/80 text-[11px] mt-0.5 leading-snug">
+              <p className="text-[#4E6B4E] text-[11px] font-semibold mt-0.5 leading-snug">
                 {loanAmount > 0
                   ? "Chú Ba: 'Cứ lo buôn bán cho tốt nghen con, cuối ngày gửi lại chú!'"
                   : "Chú Ba: 'Kẹt vốn hả con? Chú cho mượn 50.000đ xoay vòng 0% lãi nghen!'"}
@@ -138,7 +138,7 @@ export function DailyPrepModal() {
                     borrowFromUncleBa(50000);
                     SoundManager.playCoinTing();
                   }}
-                  className="mt-1.5 pixel-btn pixel-btn-green py-1 px-2.5 text-[11px] flex items-center gap-1.5"
+                  className="mt-1.5 py-1 px-3 cozy-btn-green text-[11px] flex items-center gap-1.5"
                 >
                   <span>🤝</span> MƯỢN 50.000đ (0% LÃI)
                 </button>
@@ -147,9 +147,9 @@ export function DailyPrepModal() {
           </div>
 
           {/* Current Capital Status */}
-          <div className="pixel-box bg-[#1C0F08] flex justify-between items-center px-3 py-1.5 text-xs">
-            <span className="text-[#FFE8C2]/80 font-bold uppercase">Vốn hiện có:</span>
-            <span className="text-[#FFD700] font-black text-base">{formatVND(gold)}</span>
+          <div className="cozy-card-inner flex justify-between items-center px-3 py-2 text-xs">
+            <span className="text-[#8C6E54] font-bold uppercase">Vốn hiện có:</span>
+            <span className="text-[#E08738] font-black text-base">{formatVND(gold)}</span>
           </div>
 
           {/* Ingredients Purchase List */}
@@ -166,22 +166,22 @@ export function DailyPrepModal() {
               return (
                 <div
                   key={item.type}
-                  className="pixel-box bg-[#2B170B] p-2 flex items-center justify-between gap-2"
+                  className="cozy-card-inner p-2 flex items-center justify-between gap-2"
                 >
                   <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <span className="text-xl shrink-0 p-1 bg-[#150A05] border-2 border-black">
+                    <span className="text-xl shrink-0 p-1 bg-[#FAF0E1] border border-[#D8C7B5] rounded-lg">
                       {item.icon}
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between pr-1">
-                        <h5 className="text-[#FFE8C2] font-black text-xs truncate">
+                        <h5 className="text-[#3E2415] font-bold text-xs truncate">
                           {item.name}
                         </h5>
-                        <span className="text-[#4CE0D2] font-black text-xs">
+                        <span className="text-[#0D9488] font-black text-xs">
                           Kho: {currentStock}
                         </span>
                       </div>
-                      <p className="text-[#FFE8C2]/60 text-[10px] truncate">
+                      <p className="text-[#8C6E54] text-[10px] truncate font-semibold">
                         +{item.packSize} phần {isAffected && marketNews.multiplier > 1.0 && '• Bão giá'}
                       </p>
                     </div>
@@ -190,8 +190,8 @@ export function DailyPrepModal() {
                   <button
                     onClick={() => buyIngredient(item.type, item.packSize, finalCost)}
                     disabled={!canAfford}
-                    className={`pixel-btn py-1 px-2.5 text-xs font-black shrink-0 ${
-                      canAfford ? 'pixel-btn-gold' : 'opacity-40 cursor-not-allowed bg-stone-700 text-stone-400'
+                    className={`py-1 px-3 text-xs font-black shrink-0 rounded-xl transition-all ${
+                      canAfford ? 'cozy-btn-orange' : 'cozy-btn-gray opacity-50 cursor-not-allowed'
                     }`}
                   >
                     {formatVND(finalCost)}
@@ -203,10 +203,10 @@ export function DailyPrepModal() {
         </div>
 
         {/* Start Day Button */}
-        <div className="pt-2.5 mt-2 border-t-2 border-black/40">
+        <div className="pt-2.5 mt-2 border-t-2 border-[#D8C7B5]">
           <button
             onClick={startDay}
-            className="w-full pixel-btn pixel-btn-green py-2.5 text-sm uppercase tracking-wider flex items-center justify-center gap-2"
+            className="w-full py-3 cozy-btn-green text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2"
           >
             <span>☕</span>
             <span>BẮT ĐẦU MỞ QUÁN NGAY!</span>

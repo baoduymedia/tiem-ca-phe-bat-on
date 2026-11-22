@@ -59,31 +59,33 @@ export const ShopPanel: React.FC = () => {
   };
 
   return (
-    <div className="absolute inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 select-none font-pixel animate-in fade-in duration-150">
+    <div className="absolute inset-0 z-50 cozy-modal-backdrop flex items-center justify-center p-3 select-none font-sans animate-in zoom-in-95 duration-150">
       {/* Click backdrop to dismiss */}
       <div
         className="absolute inset-0 cursor-pointer"
         onClick={() => setActiveTab(null)}
       />
 
-      {/* Modal Container */}
-      <div className="relative z-10 bg-[#24140B] border-4 border-black shadow-[4px_4px_0px_#000] p-3.5 max-h-[82vh] flex flex-col max-w-[440px] w-full">
+      {/* Modal Container (matching Mockup 7) */}
+      <div className="relative z-10 w-full max-w-[420px] cozy-card p-4 max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="flex justify-between items-center pb-2 border-b-2 border-black mb-2.5">
+        <div className="flex justify-between items-center pb-2.5 border-b-2 border-[#D8C7B5] mb-2.5">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🏪</span>
+            <span className="w-9 h-9 rounded-2xl bg-[#FAF0E1] border border-[#D8C7B5] flex items-center justify-center text-lg">
+              🧺
+            </span>
             <div>
-              <h2 className="text-[#FFD700] font-bold text-base tracking-wide uppercase leading-none">
-                CHỢ PHỐ SÀI GÒN (SHOP)
+              <h2 className="text-[#3E2415] font-serif font-black text-base tracking-wide leading-none">
+                Cửa hàng
               </h2>
-              <p className="text-xs text-[#D4A373] mt-0.5 leading-none">
-                Gói hỗ trợ khởi nghiệp & quà tặng miễn phí mỗi ngày
+              <p className="text-[11px] text-[#8C6E54] font-semibold mt-0.5 leading-none">
+                Gói khởi nghiệp, nạp hạt cà phê & quà xem video
               </p>
             </div>
           </div>
           <button
             onClick={() => setActiveTab(null)}
-            className="w-7 h-7 flex items-center justify-center bg-[#DC2626] hover:bg-[#EF4444] text-white text-xs font-bold border-2 border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer transition-transform"
+            className="w-8 h-8 rounded-full bg-[#FAF0E1] hover:bg-[#EADDC9] text-[#5D4037] text-sm font-black border border-[#DECBB9] flex items-center justify-center cursor-pointer transition-colors"
             title="Đóng bảng"
           >
             ✕
@@ -92,67 +94,123 @@ export const ShopPanel: React.FC = () => {
 
         {/* Ad Player Simulation */}
         {watchingAdSku ? (
-          <div className="my-6 p-4 bg-[#1A0E05] border-2 border-black text-center">
+          <div className="my-6 p-4 bg-[#FAF0E1] border-2 border-[#D8C7B5] rounded-2xl text-center">
             <span className="text-3xl block mb-2">📺</span>
-            <p className="text-sm text-amber-200 font-bold mb-1">
+            <p className="text-xs text-[#6D4C41] font-bold mb-1">
               Đang xem thước phim phóng sự Sài Gòn xưa...
             </p>
-            <span className="text-2xl font-black text-[#FFD700] block">{adCountdown}s</span>
+            <span className="text-2xl font-black text-[#E08738] block">{adCountdown}s</span>
           </div>
         ) : (
-          /* SKU List */
-          <div className="flex flex-col gap-2 overflow-y-auto pr-1 flex-1 pb-2">
-            {skus.map((sku) => {
-              const isIap = sku.type === 'iap';
-              const isPurchased = purchasedSkus.includes(sku.sku);
-
-              return (
-                <div
-                  key={sku.sku}
-                  className="bg-[#2D180C] border-2 border-black shadow-[2px_2px_0px_#000] p-2.5 flex items-center justify-between gap-2"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-base">{isIap ? '🎁' : '🎬'}</span>
-                      <h4 className="text-[#FFF8E7] font-bold text-xs uppercase leading-none">
-                        {sku.title}
-                      </h4>
-                    </div>
-                    <p className="text-[#D4A373] text-xs mt-1 leading-tight">
-                      {sku.reward}
-                    </p>
+          <div className="flex-1 overflow-y-auto space-y-3 pr-1 pb-1">
+            {/* Section 1: Gói Ưu Đãi (matching Mockup 7) */}
+            <div>
+              <h3 className="text-xs font-bold text-[#8C6E54] uppercase tracking-wider mb-1.5 px-1">
+                Gói Ưu Đãi
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="cozy-card-inner p-2.5 flex flex-col items-center justify-between text-center gap-1.5">
+                  <span className="text-3xl">☕🪙</span>
+                  <div>
+                    <h4 className="text-xs font-bold text-[#3E2415]">Gói Khởi Nghiệp</h4>
+                    <p className="text-[10px] text-[#8C6E54]">+200k Xu & +50 Đậu</p>
                   </div>
-
-                  <div className="shrink-0">
-                    {isIap ? (
-                      <button
-                        onClick={() => handleBuyIap(sku)}
-                        disabled={isPurchased}
-                        className={`px-3 py-1.5 text-xs font-bold border-2 uppercase transition-transform cursor-pointer ${
-                          isPurchased
-                            ? 'bg-stone-800 text-stone-500 border-stone-900 cursor-default'
-                            : 'bg-[#16A34A] hover:bg-[#22C55E] text-white border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5'
-                        }`}
-                      >
-                        {isPurchased ? 'ĐÃ MUA' : formatVND(sku.priceVnd)}
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleClaimAdReward(sku)}
-                        className="px-3 py-1.5 bg-[#F59E0B] hover:bg-[#FBBF24] text-[#1A0E05] font-bold text-xs uppercase border-2 border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer transition-transform flex items-center gap-1"
-                      >
-                        <span>▶</span> MIỄN PHÍ
-                      </button>
-                    )}
-                  </div>
+                  <button
+                    onClick={() => handleBuyIap(skus[0])}
+                    className="w-full py-1.5 cozy-btn-orange text-xs"
+                  >
+                    22.000 đ
+                  </button>
                 </div>
-              );
-            })}
+
+                <div className="cozy-card-inner p-2.5 flex flex-col items-center justify-between text-center gap-1.5">
+                  <span className="text-3xl">🎟️✨</span>
+                  <div>
+                    <h4 className="text-xs font-bold text-[#3E2415]">Vé Bỏ Quảng Cáo</h4>
+                    <p className="text-[10px] text-[#8C6E54]">Trải nghiệm mượt mà</p>
+                  </div>
+                  <button
+                    onClick={() => handleBuyIap(skus[0])}
+                    className="w-full py-1.5 cozy-btn-gold text-xs"
+                  >
+                    99.000 đ
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Nạp Hạt Cà Phê (matching Mockup 7) */}
+            <div>
+              <h3 className="text-xs font-bold text-[#8C6E54] uppercase tracking-wider mb-1.5 px-1">
+                Nạp Hạt Cà Phê
+              </h3>
+              <div className="grid grid-cols-3 gap-1.5">
+                {[
+                  { amount: '60 Hạt', price: '22.000 đ', icon: '🫘' },
+                  { amount: '300 Hạt', price: '109.000 đ', icon: '🫘🫘' },
+                  { amount: '680 Hạt', price: '219.000 đ', icon: '🫘✨' },
+                ].map((pack, i) => (
+                  <div
+                    key={i}
+                    className="cozy-card-inner p-2 flex flex-col items-center justify-between text-center gap-1"
+                  >
+                    <span className="text-xl">{pack.icon}</span>
+                    <span className="text-[11px] font-bold text-[#3E2415]">{pack.amount}</span>
+                    <button
+                      onClick={() => {
+                        SoundManager.playCoinTing();
+                        addGoldenBeans(i === 0 ? 60 : i === 1 ? 300 : 680);
+                      }}
+                      className="w-full py-1 cozy-btn-gold text-[10px]"
+                    >
+                      {pack.price}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Section 3: Quảng Cáo Miễn Phí (matching Mockup 7) */}
+            <div>
+              <h3 className="text-xs font-bold text-[#8C6E54] uppercase tracking-wider mb-1.5 px-1">
+                Quảng Cáo Miễn Phí
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="cozy-card-inner p-2.5 flex flex-col items-center justify-between text-center gap-1.5">
+                  <span className="text-2xl">🫘</span>
+                  <div>
+                    <h4 className="text-xs font-bold text-[#3E2415]">Nhận Hạt Miễn Phí</h4>
+                    <p className="text-[10px] text-[#8C6E54]">Xem video +5 Hạt</p>
+                  </div>
+                  <button
+                    onClick={() => handleClaimAdReward(skus[1] || skus[0])}
+                    className="w-full py-1.5 cozy-btn-green text-xs flex items-center justify-center gap-1"
+                  >
+                    <span>▶</span> Xem Video
+                  </button>
+                </div>
+
+                <div className="cozy-card-inner p-2.5 flex flex-col items-center justify-between text-center gap-1.5">
+                  <span className="text-2xl">🚀</span>
+                  <div>
+                    <h4 className="text-xs font-bold text-[#3E2415]">Tốc Độ Bán Hàng</h4>
+                    <p className="text-[10px] text-[#8C6E54]">Gấp đôi khách trong 60s</p>
+                  </div>
+                  <button
+                    onClick={() => handleClaimAdReward(skus[0])}
+                    className="w-full py-1.5 cozy-btn-green text-xs flex items-center justify-center gap-1"
+                  >
+                    <span>▶</span> Xem Video
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
-        <div className="mt-2 pt-2 border-t border-black/40 text-center">
-          <p className="text-[11px] text-amber-300/80">
+        {/* Footer */}
+        <div className="mt-2 pt-2 border-t border-[#D8C7B5] text-center">
+          <p className="text-[11px] text-[#8C6E54] font-semibold">
             Mẹo: Xem clip ủng hộ giúp bạn nhận tiền và gọi sóng khách VIP tăng tốc độ bán!
           </p>
         </div>

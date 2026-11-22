@@ -25,102 +25,106 @@ export function TopHUD() {
   };
 
   return (
-    <div className="absolute top-0 left-0 right-0 z-30 pointer-events-none select-none pt-1.5 px-2 md:px-4 max-w-[420px] mx-auto w-full transition-all duration-300 font-pixel">
-      {/* Outer Pixel Wooden HUD Frame with Solid Black Border and Hard Drop Shadow */}
-      <div className="bg-[#2D180C] border-2 border-black shadow-[3px_3px_0px_#000] p-1.5 rounded-none">
+    <div className="absolute top-0 left-0 right-0 z-30 pointer-events-none select-none pt-2 px-2.5 md:px-4 max-w-[420px] mx-auto w-full transition-all duration-300 font-sans">
+      {/* Outer Cozy Wooden HUD Frame */}
+      <div className="bg-[#FFF8ED] border-2 border-[#8C6E54] shadow-[0_4px_0_#5D4037] p-2 rounded-2xl pointer-events-auto">
         
-        {/* Tier 1: Day Badge, Shop Signboard & Action Buttons */}
-        <div className="flex items-center justify-between gap-1.5">
-          {/* Day & Shift Pixel Badge */}
-          <div className="bg-[#1A0E05] border-2 border-black shadow-[1.5px_1.5px_0px_#000] px-2 py-0.5 flex items-center gap-1 shrink-0 pointer-events-auto h-7">
-            <span className="text-xs">📅</span>
-            <div className="flex flex-col -space-y-1">
-              <span className="text-[#FFD700] text-sm font-bold tracking-wider leading-none">
-                NGÀY {currentDay}
-              </span>
-              <span className="text-[#FFF8E7]/80 text-[11px] leading-none">
-                {dayPhase === 'OPEN'
-                  ? `⏱${Math.ceil(dayTimeRemainingSec)}S`
-                  : dayPhase === 'PREP'
-                  ? 'SÁNG SỚM'
-                  : 'NGHỈ CA'}
-              </span>
-            </div>
-          </div>
+        {/* Tier 1: Left Coffee Cup, Center Ribbon Shop Banner, Right Wealth Counters */}
+        <div className="flex items-center justify-between gap-2">
+          {/* Left Coffee Cup Logo Button */}
+          <button
+            onClick={() => setRenameModalOpen(true)}
+            className="w-10 h-10 rounded-xl bg-[#FAF0E1] border border-[#D8C7B5] flex items-center justify-center shrink-0 text-xl shadow-inner cursor-pointer hover:bg-[#F2ECE1] transition-transform active:scale-95"
+            title="Đổi tên quán hoặc đổi chủ quán"
+          >
+            ☕
+          </button>
 
-          {/* Center Pixel Brass Signboard */}
-          <div className="flex-1 min-w-0 bg-[#3E2413] border-2 border-black shadow-[1.5px_1.5px_0px_#000] px-2 py-0.5 flex items-center justify-between gap-1.5 pointer-events-auto h-7">
+          {/* Center Ribbon Banner (matching Mockup 1-10) */}
+          <div className="flex-1 min-w-0 bg-[#FAF3E7] border border-[#8C6E54] rounded-xl px-2.5 py-1 flex items-center justify-between gap-1 shadow-xs">
             <button
               onClick={() => setRenameModalOpen(true)}
-              className="flex items-center gap-1.5 text-left group cursor-pointer truncate min-w-0 flex-1 hover:text-[#FFD700] transition-colors"
-              title="Đổi tên quán của bạn"
+              className="flex items-center gap-1 text-left truncate min-w-0 flex-1 cursor-pointer group"
+              title="Nhấn để đổi tên quán"
             >
-              <span className="text-xs shrink-0">☕</span>
-              <span className="text-[#FFF8E7] text-sm font-bold tracking-wide truncate group-hover:text-[#FFD700] leading-none">
-                {shopName || 'TIỆM CÀ PHÊ BẤT ỔN'}
+              <span className="text-[#3E2415] font-serif font-black text-sm tracking-wide truncate group-hover:text-[#E08738] transition-colors">
+                {shopName || 'Tiệm Cà Phê Bất Ổn'}
               </span>
-              <span className="text-[10px] text-amber-400 opacity-70 group-hover:opacity-100 shrink-0">✏️</span>
+              <span className="text-[10px] text-[#8C6E54] opacity-60">✏️</span>
             </button>
 
             <button
               onClick={() => setRoadmapModalOpen(true)}
-              className="px-2 py-0.5 bg-[#EA580C] hover:bg-[#F97316] text-[#FFF8E7] text-xs font-bold uppercase border border-black shadow-[1px_1px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none shrink-0 cursor-pointer transition-transform"
+              className="px-2 py-0.5 bg-[#E08738] hover:bg-[#ED9445] text-white text-[10px] font-bold uppercase rounded-lg border border-[#A85A1D] shadow-xs active:translate-y-0.5 shrink-0 cursor-pointer transition-all"
               title="Xem bản đồ tiến hóa 6 giai đoạn"
             >
-              GĐ {currentStage} ▶
+              GĐ {currentStage}
             </button>
           </div>
 
-          {/* Quick Retro Pixel Action Buttons */}
-          <div className="flex items-center gap-1 shrink-0 pointer-events-auto">
-            <button
-              onClick={() => setPhotoModeOpen(true)}
-              className="w-7 md:w-auto md:px-2 h-7 bg-[#451A03] hover:bg-[#5A2508] border-2 border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center justify-center text-xs text-[#FFF8E7] transition-transform cursor-pointer gap-1"
-              title="Chụp ảnh thiệp Polaroid kỷ niệm [P]"
-            >
-              <span>📷</span>
-              <span className="hidden md:inline text-[10px] text-amber-300 font-bold">[P]</span>
-            </button>
-            <button
-              onClick={handleToggleSound}
-              className="w-7 md:w-auto md:px-2 h-7 bg-[#451A03] hover:bg-[#5A2508] border-2 border-black shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center justify-center text-xs text-[#FFF8E7] transition-transform cursor-pointer gap-1"
-              title={isMuted ? 'Bật âm thanh [M]' : 'Tắt âm thanh [M]'}
-            >
-              <span>{isMuted ? '🔇' : '🔊'}</span>
-              <span className="hidden md:inline text-[10px] text-amber-300 font-bold">[M]</span>
-            </button>
+          {/* Right Wealth Pills (matching Mockup 1-10) */}
+          <div className="flex flex-col gap-1 shrink-0">
+            <div className="flex items-center gap-1.5">
+              {/* Gold Pill */}
+              <div className="flex items-center gap-1 font-bold text-[#3E2415] bg-[#FAF0E1] px-2 py-0.5 border border-[#D8C7B5] rounded-lg text-xs leading-none shadow-xs">
+                <span className="text-[11px]">🪙</span>
+                <span>{formatVND(gold)}</span>
+              </div>
+
+              {/* Beans Pill */}
+              <div className="flex items-center gap-0.5 font-bold text-[#B45309] bg-[#FAF0E1] px-1.5 py-0.5 border border-[#D8C7B5] rounded-lg text-xs leading-none shadow-xs">
+                <span className="text-[11px]">🫘</span>
+                <span>{goldenBeans}</span>
+              </div>
+
+              {/* Stars Pill */}
+              <div className="flex items-center gap-0.5 font-bold text-[#E08738] bg-[#FAF0E1] px-1.5 py-0.5 border border-[#D8C7B5] rounded-lg text-xs leading-none shadow-xs">
+                <span className="text-[11px]">⭐</span>
+                <span>{reputation}</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Tier 2: Wealth Counters & Quick Stock Pills */}
-        <div className="mt-1 pt-1 border-t-2 border-black flex items-center justify-between pointer-events-auto">
-          {/* Wealth: Gold, Beans, Stars */}
-          <div className="flex items-center gap-1.5">
-            <div className="flex items-center gap-1 font-bold text-[#FFD700] bg-[#1A0E05] px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000] text-sm leading-none">
-              <span className="text-xs">🪙</span>
-              <span className="tracking-wide">{formatVND(gold)}</span>
-            </div>
-
-            <div className="flex items-center gap-1 font-bold text-[#F59E0B] bg-[#1A0E05] px-1.5 py-0.5 border border-black shadow-[1px_1px_0px_#000] text-sm leading-none">
-              <span className="text-xs">🫘</span>
-              <span>{goldenBeans}</span>
-            </div>
-
-            <div className="flex items-center gap-1 font-bold text-amber-300 bg-[#1A0E05] px-1.5 py-0.5 border border-black shadow-[1px_1px_0px_#000] text-sm leading-none">
-              <span className="text-xs">⭐</span>
-              <span>{reputation}</span>
-            </div>
+        {/* Tier 2: Day Tracker & Quick Stock Indicators */}
+        <div className="mt-1.5 pt-1.5 border-t border-[#DECBB9] flex items-center justify-between text-xs">
+          {/* Day & Shift Timer */}
+          <div className="flex items-center gap-1.5 text-[#6D4C41] font-semibold text-[11px]">
+            <span className="font-bold text-[#3E2415]">Ngày {currentDay}</span>
+            <span>•</span>
+            <span className="text-[#E08738] font-bold">
+              {dayPhase === 'OPEN'
+                ? `⏱ ${Math.ceil(dayTimeRemainingSec)}s`
+                : dayPhase === 'PREP'
+                ? 'Sáng sớm'
+                : 'Nghỉ ca'}
+            </span>
           </div>
 
-          {/* Quick Inventory Stock Indicators */}
-          <div className="flex items-center gap-1 text-xs text-[#FFF8E7] font-bold bg-[#1A0E05] px-1.5 py-0.5 border border-black shadow-[1px_1px_0px_#000]">
-            <span title="Cà phê bột">☕{inventory.coffee}</span>
-            <span className="opacity-30">•</span>
-            <span title="Sữa đặc Ông Thọ">🥛{inventory.milk}</span>
-            <span className="opacity-30">•</span>
-            <span title="Đá bi lạnh">🧊{inventory.ice}</span>
-            <span className="opacity-30">•</span>
-            <span title="Trà xanh">🍵{inventory.tea}</span>
+          {/* Quick Inventory Stock */}
+          <div className="flex items-center gap-2 text-[11px] text-[#3E2415] font-bold">
+            <span title="Cà phê bột">☕ {inventory.coffee}</span>
+            <span title="Sữa đặc">🥛 {inventory.milk}</span>
+            <span title="Đá bi">🧊 {inventory.ice}</span>
+            <span title="Trà">🍵 {inventory.tea}</span>
+          </div>
+
+          {/* Sound & Photo quick buttons */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setPhotoModeOpen(true)}
+              className="w-6 h-6 rounded-md bg-[#FAF0E1] hover:bg-[#F2ECE1] border border-[#D8C7B5] flex items-center justify-center text-[10px] cursor-pointer"
+              title="Chụp ảnh Polaroid [P]"
+            >
+              📷
+            </button>
+            <button
+              onClick={handleToggleSound}
+              className="w-6 h-6 rounded-md bg-[#FAF0E1] hover:bg-[#F2ECE1] border border-[#D8C7B5] flex items-center justify-center text-[10px] cursor-pointer"
+              title={isMuted ? 'Bật âm thanh [M]' : 'Tắt âm thanh [M]'}
+            >
+              {isMuted ? '🔇' : '🔊'}
+            </button>
           </div>
         </div>
 
